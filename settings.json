@@ -1,0 +1,437 @@
+{
+  "sockets": {
+    "port": 80
+  },
+  "debug": true,
+  "mysensors": {
+    "comport": "/dev/ttyUSB0",
+    "baud": 115200,
+    "autoopen": false,
+    "sensornodes": [
+      {
+        "id": "1",
+        "name": "Tom",
+        "value": 16.1,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "°C",
+        "type": "0",
+        "updated": 1593021984423,
+        "freq": 300
+      },
+      {
+        "id": "2",
+        "name": "Bedroom",
+        "value": 15.5,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "°C",
+        "type": "0",
+        "updated": 1593021806420,
+        "freq": 300
+      },
+      {
+        "id": "5",
+        "name": "Balcony",
+        "value": 14.8,
+        "units": "°C",
+        "control": "GAU",
+        "contact_status": "0",
+        "type": "0",
+        "updated": 1593021996213,
+        "freq": 300
+      },
+      {
+        "id": "6",
+        "name": "Laundry",
+        "value": 14.5,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "°C",
+        "type": "0",
+        "updated": 1593022027263,
+        "freq": 300
+      },
+      {
+        "id": "7",
+        "name": "Laundry",
+        "value": 1,
+        "control": "STA",
+        "contact_status": "0",
+        "units": "",
+        "type": "2",
+        "updated": 1593022063779,
+        "freq": 300
+      },
+      {
+        "id": "8",
+        "name": "Door",
+        "value": 1,
+        "control": "STA",
+        "contact_status": "0",
+        "units": "",
+        "type": "2",
+        "updated": 1593022097618,
+        "freq": 300
+      },
+      {
+        "id": "10",
+        "name": "Hall",
+        "value": 1,
+        "control": "STA",
+        "contact_status": "0",
+        "units": "",
+        "type": "2",
+        "updated": 1593022048918,
+        "freq": 300
+      },
+      {
+        "id": "11",
+        "name": "Disco",
+        "value": 0,
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592984185728,
+        "freq": 300
+      },
+      {
+        "id": "12",
+        "name": "Light",
+        "value": "1",
+        "control": "BUT",
+        "contact_status": "1",
+        "units": "",
+        "type": "15",
+        "updated": 1593021492804,
+        "freq": 300
+      },
+      {
+        "id": "14",
+        "name": "Outside",
+        "value": 11.8,
+        "control": "GAU",
+        "contact_status": "1",
+        "units": "°C",
+        "type": "0",
+        "updated": 1593021581296,
+        "freq": 300
+      },
+      {
+        "id": "15",
+        "name": "Kitchen",
+        "value": 1,
+        "control": "STA",
+        "contact_status": "0",
+        "units": "",
+        "type": "2",
+        "updated": 1593021922437,
+        "freq": 300
+      },
+      {
+        "id": "17",
+        "name": "Balcony",
+        "value": 1,
+        "control": "STA",
+        "contact_status": "0",
+        "units": "",
+        "type": "2",
+        "updated": 1593021955296,
+        "freq": 300
+      },
+      {
+        "id": "21",
+        "name": "Heater",
+        "value": 0,
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592996531933,
+        "freq": 300
+      },
+      {
+        "id": "22",
+        "name": "Michael",
+        "value": "0",
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592983265045,
+        "freq": 300
+      },
+      {
+        "id": "23",
+        "name": "Fish",
+        "value": 0,
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592984185707,
+        "freq": 300
+      },
+      {
+        "id": "24",
+        "name": "Sophie",
+        "value": 0,
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592987387042,
+        "freq": 300
+      },
+      {
+        "id": "25",
+        "name": "FanSwitch",
+        "value": 1,
+        "control": "BUT",
+        "contact_status": "0",
+        "units": "",
+        "type": "15",
+        "updated": 1592996723310,
+        "freq": "31536000"
+      },
+      {
+        "id": "50",
+        "name": "Humidity",
+        "value": 81,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "%",
+        "type": "0",
+        "updated": 1593022098610,
+        "freq": 1800
+      },
+      {
+        "id": "51",
+        "name": "Pressure",
+        "value": 1021,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "mmHg",
+        "type": "0",
+        "updated": 1593022098611,
+        "freq": 1800
+      },
+      {
+        "id": "99",
+        "name": "Tmp 1w",
+        "value": "temp_graph_1w.png",
+        "control": "IMG",
+        "contact_status": "0",
+        "units": "",
+        "type": "39",
+        "updated": 1593022098619,
+        "freq": 1800
+      },
+      {
+        "id": "100",
+        "name": "Web Temp",
+        "value": 10,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "°C",
+        "type": "0",
+        "updated": 1593022098609,
+        "freq": 1800
+      },
+      {
+        "id": "103",
+        "name": "Debug",
+        "value": "0",
+        "control": "CHK",
+        "contact_status": "2",
+        "units": "",
+        "type": "2",
+        "updated": 1592953554812,
+        "freq": 0
+      },
+      {
+        "id": "105",
+        "name": "Fan",
+        "value": "0",
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592990088434,
+        "freq": 300
+      },
+      {
+        "id": "200",
+        "name": "Weather",
+        "value": "http://openweathermap.org/img/w/04n.png",
+        "control": "IMG",
+        "contact_status": "0",
+        "units": "",
+        "type": "39",
+        "updated": 1593022098618,
+        "freq": 1800
+      },
+      {
+        "id": "202",
+        "name": "Wind",
+        "value": 160,
+        "control": "COM",
+        "contact_status": "0",
+        "units": "",
+        "type": "10",
+        "updated": 1593022098612,
+        "freq": 1800
+      },
+      {
+        "id": "203",
+        "name": "Speed",
+        "value": 26,
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "km/h",
+        "type": "0",
+        "updated": 1593022098613,
+        "freq": 1800
+      },
+      {
+        "id": "204",
+        "name": "Sunrise",
+        "value": "7:47 AM",
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "",
+        "type": "0",
+        "updated": 1593022098614,
+        "freq": 1800
+      },
+      {
+        "id": "205",
+        "name": "Sunset",
+        "value": "4:59 PM",
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "",
+        "type": "0",
+        "updated": 1593022098615,
+        "freq": 1800
+      },
+      {
+        "id": "206",
+        "name": "Hum 1w",
+        "value": "humidity_1w.png",
+        "control": "IMG",
+        "contact_status": "0",
+        "units": "",
+        "type": "39",
+        "updated": 1593022098624,
+        "freq": 1800
+      },
+      {
+        "id": "207",
+        "name": "Pre 1w",
+        "value": "pressure_1w.png",
+        "control": "IMG",
+        "contact_status": "0",
+        "units": "",
+        "type": "39",
+        "updated": 1593022098625,
+        "freq": 1800
+      },
+      {
+        "id": "208",
+        "name": "Spd 1w",
+        "value": "speed_1w.png",
+        "control": "IMG",
+        "contact_status": "0",
+        "units": "",
+        "type": "39",
+        "updated": 1593022098626,
+        "freq": 1800
+      },
+      {
+        "id": "209",
+        "name": "W Desc",
+        "value": "broken clouds",
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "",
+        "type": "0",
+        "updated": 1593022098616,
+        "freq": 1800
+      },
+      {
+        "id": "210",
+        "name": "W Main",
+        "value": "Clouds",
+        "control": "GAU",
+        "contact_status": "0",
+        "units": "",
+        "type": "0",
+        "updated": 1593022098618,
+        "freq": 1800
+      },
+      {
+        "id": "998",
+        "name": "Save Settings",
+        "value": 0,
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592983914802,
+        "freq": 300
+      },
+      {
+        "id": "999",
+        "name": "Restart",
+        "value": "0",
+        "control": "BUT",
+        "contact_status": "2",
+        "units": "",
+        "type": "15",
+        "updated": 1592983917713,
+        "freq": 0
+      },
+      {
+        "id": "",
+        "name": "template",
+        "value": "",
+        "control": "",
+        "contact_status": "2",
+        "units": "",
+        "type": "",
+        "updated": 0,
+        "freq": 0
+      }
+    ]
+  },
+  "polling": {
+    "interval": 1800
+  },
+  "weather": {
+    "externalTempURL": "http://api.openweathermap.org/data/2.5/weather?id=2179538&APPID=cce91f7f0d86e2f338101f1ca24dd37f",
+    "temp": 283.1,
+    "pressure": 1027,
+    "humidity": 87,
+    "wind": {
+      "speed": 35,
+      "direction": 160
+    },
+    "main": "Mist",
+    "desc": "mist",
+    "sunrise": "7:46 AM",
+    "sunset": "4:58 PM",
+    "icon": "http://openweathermap.org/img/w/50n.png"
+  },
+  "validclients": [
+    "192.168",
+    "121.73.",
+    "49.",
+    "203.144.40",
+    "203.97",
+    "::1",
+    "203.167",
+    "124."
+  ]
+}
