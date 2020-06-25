@@ -5,7 +5,7 @@
   "description": "AutoHome Test",
   "main": "autohome.js",
   "scripts": {
-    "start": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
+    "start": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "author": "David Jacobsen",
