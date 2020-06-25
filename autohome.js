@@ -42,96 +42,96 @@ app.use(bodyParser.json());
 var plugs = [];
 
 // TP-Link Smart Switch setup ---------------------------------------------------------------
-const { Client } = require('tplink-smarthome-api');
-const client = new Client();
+// const { Client } = require('tplink-smarthome-api');
+// const client = new Client();
 
-client.on('plug-new', device => {
+// client.on('plug-new', device => {
 
-	logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
+// 	logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
 
-	// Assumes plug will be found
-	var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-	decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
+// 	// Assumes plug will be found
+// 	var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 	decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
 
-	plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
+// 	plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
 
-	device.startPolling(SENSORCHECKINTERVAL);
+// 	device.startPolling(SENSORCHECKINTERVAL);
   
-	device.on('power-on', () => {
-		logMsg('I', `TP-Link device ${device.alias} is on`);
-		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';1');
+// 	device.on('power-on', () => {
+// 		logMsg('I', `TP-Link device ${device.alias} is on`);
+// 		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';1');
 
-	});
-	device.on('power-off', () => {
-		logMsg('I', `TP-Link device ${device.alias} is off`);
-		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';0');
+// 	});
+// 	device.on('power-off', () => {
+// 		logMsg('I', `TP-Link device ${device.alias} is off`);
+// 		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';0');
 
-	});
-	device.on('in-use-update', inUse => {
-		if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
-		//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		//decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
-	});  
-  });
-  client.on('plug-online', device => {
-	if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is contactable`);
-	// Could mark sensor as uncontactable
-  });
-  client.on('plug-offline', device => {
-	if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is uncontactable`);
-  });
+// 	});
+// 	device.on('in-use-update', inUse => {
+// 		if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
+// 		//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 		//decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
+// 	});  
+//   });
+//   client.on('plug-online', device => {
+// 	if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is contactable`);
+// 	// Could mark sensor as uncontactable
+//   });
+//   client.on('plug-offline', device => {
+// 	if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is uncontactable`);
+//   });
 
-logMsg('I', 'Starting TP-Link Device Discovery');
-client.startDiscovery();
+// logMsg('I', 'Starting TP-Link Device Discovery');
+// client.startDiscovery();
 
 
-// Tuya Switch setup ---------------------------------------------------------------------
-const TuyAPI = require('tuyapi');
-const util = require('util');
-const tuyaDev = new TuyAPI({
-	id: '550705303c71bf20a967',
-	key: '6590d93429b1034a'});
+// // Tuya Switch setup ---------------------------------------------------------------------
+// const TuyAPI = require('tuyapi');
+// const util = require('util');
+// const tuyaDev = new TuyAPI({
+// 	id: '550705303c71bf20a967',
+// 	key: '6590d93429b1034a'});
 
-// Find device on network
-tuyaDev.find().then(() => {
- 	// Connect to device
- 	tuyaDev.connect();
-	});
+// // Find device on network
+// tuyaDev.find().then(() => {
+//  	// Connect to device
+//  	tuyaDev.connect();
+// 	});
   
-// Add event listeners
-tuyaDev.on('connected', () => {
-	logMsg('I','Connected to Tuya device');
-	// Hard coded name. Really need to get name from the switch and match.
-	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
+// // Add event listeners
+// tuyaDev.on('connected', () => {
+// 	logMsg('I','Connected to Tuya device');
+// 	// Hard coded name. Really need to get name from the switch and match.
+// 	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
 
-});
+// });
 
-tuyaDev.on('disconnected', () => {
-	logMsg('I','Disconnected from Tuya device.');
-});
+// tuyaDev.on('disconnected', () => {
+// 	logMsg('I','Disconnected from Tuya device.');
+// });
 
-tuyaDev.on('error', error => {
-	logMsg('E','Tuya general error!' + error);
-});
+// tuyaDev.on('error', error => {
+// 	logMsg('E','Tuya general error!' + error);
+// });
 
-tuyaDev.on('data', data => {
-	try {
-// //		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
-// //		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
+// tuyaDev.on('data', data => {
+// 	try {
+// // //		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
+// // //		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
+// // 	}
+// 		logMsg('I','Tuya data: ' + util.inspect(data));
 // 	}
-		logMsg('I','Tuya data: ' + util.inspect(data));
-	}
-	catch (error) {
-		logMsg('E', 'Tuya data error: ' + error);
-	}
+// 	catch (error) {
+// 		logMsg('E', 'Tuya data error: ' + error);
+// 	}
 	
-	// Can set Tuya switch via:
-	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
-	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
+// 	// Can set Tuya switch via:
+// 	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
+// 	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
 
-});
+// });
 
   // Disconnect after 10 seconds
 //setTimeout(() => { tuyaDev.disconnect(); }, 10000);
@@ -350,36 +350,57 @@ function writeSettingsSync() {
 }
 
 
-// Open serial port to connect to MySensor Gateway
-var SerialPort = require('serialport');
-const e = require('express');
-var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
-var gwErrFlag = true;  // We're in an error state until the port is officially open
 
-gw.open();
-gw.on('open', function() {
-	logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
-	gwErrFlag = false;
-	}).on('data', function(rd) {
-		appendData(rd.toString());
-		gwErrFlag = false;
-	}).on('end', function() {
-	 	logMsg('I', 'Disconnected from gateway');
-		gwErrFlag = true;
-	}).on('error', function() {
-		logMsg('E', "Connection error. Can't connect to com port. Please restart later.");
-		gwErrFlag = true;
-	});
+// Timer
+function startDummyTimer () {
+    setTimeout(dummyData, 5000);  // 5 secs
+}
+
+startDummyTimer();
+var dmyNodes = ['1','2','5','6','14'];
+
+// Create dummy data and send for processing
+function dummyData() {
+
+	var data = dmyNodes[Math.floor(Math.random() * dmyNodes.length)] + ';0;' + C_SET + ';0;' + V_TEMP + ';' + (Math.floor(Math.random() * 25) + 4);
+	decode(data);
+	startDummyTimer();
+}
+
+
+
+// e.g. appendData()
+
+// Open serial port to connect to MySensor Gateway
+// var SerialPort = require('serialport');
+// const e = require('express');
+// var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
+// var gwErrFlag = true;  // We're in an error state until the port is officially open
+
+// gw.open();
+// gw.on('open', function() {
+// 	logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
+// 	gwErrFlag = false;
+// 	}).on('data', function(rd) {
+// 		appendData(rd.toString());
+// 		gwErrFlag = false;
+// 	}).on('end', function() {
+// 	 	logMsg('I', 'Disconnected from gateway');
+// 		gwErrFlag = true;
+// 	}).on('error', function() {
+// 		logMsg('E', "Connection error. Can't connect to com port. Please restart later.");
+// 		gwErrFlag = true;
+// 	});
 
 
 // Send a text message off to the gateway
 function gwWrite(msg, logtxt) {
-	gw.write(msg + '\n', function(err) {
-		if (err) {
-	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
-	  	}
-	  	if (DEBUG) { logMsg('I', logtxt); }
-	});
+//	gw.write(msg + '\n', function(err) {
+	// 	if (err) {
+	//     	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
+	//   	}
+	//   	if (DEBUG) { logMsg('I', logtxt); }
+	// });
 }
 
 // Helper function to build up a message string from a sensor
@@ -779,7 +800,8 @@ function processButton(butID) {
 		//Handle smart plugs/switches
 		else {
 			// Is it in the plugs array?
-			var plug = plugs.find(p => p.id == butID);
+// 				var plug = plugs.find(p => p.id == butID);
+			var plug = undefined;
 			// If yes then change state
 			if (plug != undefined) {
 				switch (plug.type) {
@@ -893,30 +915,3 @@ const I_GATEWAY_READY 	= 14;
 const I_REQUEST_SIGNING	= 15; // Used between sensors when initialting signing.
 const I_GET_NONCE 		= 16; // Used between sensors when requesting nonce.
 const I_GET_NONCE_RESPONSE = 17; // Used between sensors for nonce response.
-
-const S_DOOR		= 0;
-const S_MOTION		= 1;
-const S_SMOKE		= 2;
-
-const S_LIGHT		= 3;
-const S_BINARY		= 3;
-
-const S_DIMMER		= 4;
-const S_COVER		= 5;
-const S_TEMP		= 6;
-const S_HUM			= 7;
-const S_BARO		= 8;
-const S_WIND		= 9;
-const S_RAIN		= 10;
-const S_UV			= 11;
-const S_WEIGHT		= 12;
-const S_POWER		= 13;
-const S_HEATER		= 14;
-const S_DISTANCE	= 15;
-const S_LIGHT_LEVEL	= 16;
-const S_ARDUINO_NODE	= 17;
-const S_REPEATER_NODE	= 18;
-const S_LOCK		= 19;
-const S_IR			= 20;
-const S_WATER		= 21;
-const S_AIR_QUALITY	= 22;

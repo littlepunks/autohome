@@ -1,2 +1,4 @@
 autohome-test1.code-workspace
 node_modules/**
+images/**
+autohome.log

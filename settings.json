@@ -1,6 +1,6 @@
 {
   "sockets": {
-    "port": 80
+    "port": 81
   },
   "debug": true,
   "mysensors": {
@@ -11,45 +11,45 @@
       {
         "id": "1",
         "name": "Tom",
-        "value": 16.1,
+        "value": 27,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593021984423,
+        "updated": 1593075502761,
         "freq": 300
       },
       {
         "id": "2",
         "name": "Bedroom",
-        "value": 15.5,
+        "value": 22,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593021806420,
+        "updated": 1593075527793,
         "freq": 300
       },
       {
         "id": "5",
         "name": "Balcony",
-        "value": 14.8,
+        "value": 23,
         "units": "°C",
         "control": "GAU",
         "contact_status": "0",
         "type": "0",
-        "updated": 1593021996213,
+        "updated": 1593075537807,
         "freq": 300
       },
       {
         "id": "6",
         "name": "Laundry",
-        "value": 14.5,
+        "value": 5,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593022027263,
+        "updated": 1593075532801,
         "freq": 300
       },
       {
@@ -88,34 +88,34 @@
       {
         "id": "11",
         "name": "Disco",
-        "value": 0,
+        "value": "0",
         "control": "BUT",
-        "contact_status": "2",
+        "contact_status": "0",
         "units": "",
         "type": "15",
-        "updated": 1592984185728,
+        "updated": 1593075295696,
         "freq": 300
       },
       {
         "id": "12",
         "name": "Light",
-        "value": "1",
+        "value": "0",
         "control": "BUT",
-        "contact_status": "1",
+        "contact_status": "0",
         "units": "",
         "type": "15",
-        "updated": 1593021492804,
+        "updated": 1593075286909,
         "freq": 300
       },
       {
         "id": "14",
         "name": "Outside",
-        "value": 11.8,
+        "value": 19,
         "control": "GAU",
-        "contact_status": "1",
+        "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593021581296,
+        "updated": 1593075517783,
         "freq": 300
       },
       {
@@ -203,18 +203,18 @@
         "contact_status": "0",
         "units": "%",
         "type": "0",
-        "updated": 1593022098610,
+        "updated": 1593075542665,
         "freq": 1800
       },
       {
         "id": "51",
         "name": "Pressure",
-        "value": 1021,
+        "value": 1022,
         "control": "GAU",
         "contact_status": "0",
         "units": "mmHg",
         "type": "0",
-        "updated": 1593022098611,
+        "updated": 1593075542666,
         "freq": 1800
       },
       {
@@ -225,18 +225,18 @@
         "contact_status": "0",
         "units": "",
         "type": "39",
-        "updated": 1593022098619,
+        "updated": 1593075542676,
         "freq": 1800
       },
       {
         "id": "100",
         "name": "Web Temp",
-        "value": 10,
+        "value": 11.2,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593022098609,
+        "updated": 1593075542663,
         "freq": 1800
       },
       {
@@ -244,10 +244,10 @@
         "name": "Debug",
         "value": "0",
         "control": "CHK",
-        "contact_status": "2",
+        "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1592953554812,
+        "updated": 1593075125538,
         "freq": 0
       },
       {
@@ -255,10 +255,10 @@
         "name": "Fan",
         "value": "0",
         "control": "BUT",
-        "contact_status": "2",
+        "contact_status": "0",
         "units": "",
         "type": "15",
-        "updated": 1592990088434,
+        "updated": 1593075298640,
         "freq": 300
       },
       {
@@ -269,18 +269,18 @@
         "contact_status": "0",
         "units": "",
         "type": "39",
-        "updated": 1593022098618,
+        "updated": 1593075542675,
         "freq": 1800
       },
       {
         "id": "202",
         "name": "Wind",
-        "value": 160,
+        "value": 150,
         "control": "COM",
         "contact_status": "0",
         "units": "",
         "type": "10",
-        "updated": 1593022098612,
+        "updated": 1593075542667,
         "freq": 1800
       },
       {
@@ -291,7 +291,7 @@
         "contact_status": "0",
         "units": "km/h",
         "type": "0",
-        "updated": 1593022098613,
+        "updated": 1593075542668,
         "freq": 1800
       },
       {
@@ -302,7 +302,7 @@
         "contact_status": "0",
         "units": "",
         "type": "0",
-        "updated": 1593022098614,
+        "updated": 1593075542670,
         "freq": 1800
       },
       {
@@ -313,7 +313,7 @@
         "contact_status": "0",
         "units": "",
         "type": "0",
-        "updated": 1593022098615,
+        "updated": 1593075542672,
         "freq": 1800
       },
       {
@@ -324,7 +324,7 @@
         "contact_status": "0",
         "units": "",
         "type": "39",
-        "updated": 1593022098624,
+        "updated": 1593075542677,
         "freq": 1800
       },
       {
@@ -335,7 +335,7 @@
         "contact_status": "0",
         "units": "",
         "type": "39",
-        "updated": 1593022098625,
+        "updated": 1593075542683,
         "freq": 1800
       },
       {
@@ -346,18 +346,18 @@
         "contact_status": "0",
         "units": "",
         "type": "39",
-        "updated": 1593022098626,
+        "updated": 1593075542684,
         "freq": 1800
       },
       {
         "id": "209",
         "name": "W Desc",
-        "value": "broken clouds",
+        "value": "overcast clouds",
         "control": "GAU",
         "contact_status": "0",
         "units": "",
         "type": "0",
-        "updated": 1593022098616,
+        "updated": 1593075542673,
         "freq": 1800
       },
       {
@@ -368,7 +368,7 @@
         "contact_status": "0",
         "units": "",
         "type": "0",
-        "updated": 1593022098618,
+        "updated": 1593075542674,
         "freq": 1800
       },
       {
