@@ -1,18 +1,16 @@
-// ---------------------------------
+// ------------------------------------------------------
+// AutoHome
 // (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
-// See README
+// See README.md
+
 /*jshint esversion: 6 */
-
-// Load third party modules
-
 "use strict";
 
 
-// Check command line arguments before anything else
+// Check command line arguments before anything else:
 // -d = debug on
 // -t = test (no serial ports, port = 81, no smart switches)
 var args = process.argv.slice(2);
-
 var DEBUG = args.includes('-d');
 var TEST = args.includes('-t');
 var PROD = !TEST;
@@ -29,6 +27,11 @@ const fs 	   = require('fs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+
+// Common list for smart plugs/switches
+var plugs = [];
+
+// Certificate management
 // const privateKey = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem', 'utf8');
 // const certificate = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/cert.pem', 'utf8');
 // const ca = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/chain.pem', 'utf8');
@@ -47,9 +50,6 @@ app.use(bodyParser.json());
 // version of this certificate in the future, simply run certbot
 // again. To non-interactively renew *all* of your certificates, run
 // "certbot renew"
-
-// Common list for smart plugs/switches
-var plugs = [];
 
 // TP-Link Smart Switch setup ---------------------------------------------------------------
 if (PROD) {
@@ -211,7 +211,7 @@ function stopSensorCheckTimer() {
 	// if (DEBUG) logMsg('I', ' Checking for sensor timeouts');
 	logMsg('I', 'Checking for sensor timeouts');
 	// Check that the COM port (MySensors gateway) is still open and hasn't had an error
-	if (!gw.isOpen) { gwErrFlag = true; }
+	if (PROD) { if (!gw.isOpen) { gwErrFlag = true; }}
 	if (gwErrFlag) { logMsg('E', 'Error with the COM port connecting to the gateway. Please restart.'); }
 
 	// Iterate through all the sensors and
@@ -516,25 +516,25 @@ function getOutsideWeather() {
 // Write a message to the console
 // Used to write to file. 
 
-function logMsg____new(type, txt) {
-	var msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
+// function logMsg____new(type, txt) {
+// 	var msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
 
-	switch (type) {
-		case 'E':
-			console.log(msgTxt.red);
-			break;
-		case 'C':
-			console.log(msgTxt.yellow);
-			break;
-		case 'R':
-			console.log(msgTxt.green);
-			break;
-		default:
-			console.log(msgTxt);
-	}
+// 	switch (type) {
+// 		case 'E':
+// 			console.log(msgTxt.red);
+// 			break;
+// 		case 'C':
+// 			console.log(msgTxt.yellow);
+// 			break;
+// 		case 'R':
+// 			console.log(msgTxt.green);
+// 			break;
+// 		default:
+// 			console.log(msgTxt);
+// 	}
 
-	consoleMsgs += msgTxt + '\n';
-}
+// 	consoleMsgs += msgTxt + '\n';
+// }
 
 function logMsg(type, txt) {
 	var msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
