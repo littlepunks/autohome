@@ -1,9 +1,9 @@
-HISTCONTROL=ignoreboth
+happy1HISTCONTROL=ignoreboth
 # do these first before calling this script
 #git clone https://github.com/littlepunks/autohome.git
 #chmod +x autohome-build.sh
 #./autohome-build.sh
-
+mnnne
 
 # Install node version manager
 #curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
@@ -52,5 +52,4 @@ sudo npm install -g nodemon
 npm install
 # May also need to do:
 #sudo npm install -g node-gyp
-# ?? git clone https://github.com/Orion98MC/node_rrd.git
 
