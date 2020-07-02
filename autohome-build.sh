@@ -5,25 +5,25 @@ HISTCONTROL=ignoreboth
 #chmod +x autohome-build.sh
 #./autohome-build.sh
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-sudo apt update
-sudo apt full-upgrade -y
-sudo apt install -y samba samba-common-bin
-sudo tee -a /etc/samba/smb.conf > /dev/null <<EOT
-[Autohome]
-comment=AutoHome Share
-path=/home/pi/autohome
-browsable=yes
-writeable=yes
-only guest=no
-create mask=0777
-directory mask=0777
-ublic=no
-EOT
-sudo smbpasswd -a pi
-sudo service smbd restart
-echo 'Your IP is:'
-ifconfig | grep 192
-sudo apt autoremove -y
+#sudo apt update
+#sudo apt full-upgrade -y
+#sudo apt install -y samba samba-common-bin
+#sudo tee -a /etc/samba/smb.conf > /dev/null <<EOT
+#[Autohome]
+#comment=AutoHome Share
+#path=/home/pi/autohome
+#browsable=yes
+#writeable=yes
+#only guest=no
+#create mask=0777
+#directory mask=0777
+#ublic=no
+#EOT
+#sudo smbpasswd -a pi
+#sudo service smbd restart
+#echo 'Your IP is:'
+#ifconfig | grep 192
+#sudo apt autoremove -y
 #sudo apt-get install -y node.js
 #sudo apt-get install -y gcc g++ make screen
 #sudo npm install -g nodemon
