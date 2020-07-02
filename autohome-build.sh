@@ -4,6 +4,7 @@ HISTCONTROL=ignoreboth
 #git clone https://github.com/littlepunks/autohome.git
 #chmod +x autohome-build.sh
 #./autohome-build.sh
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt update
 sudo apt full-upgrade -y
 sudo apt install -y samba samba-common-bin
@@ -23,7 +24,6 @@ sudo service smbd restart
 echo 'Your IP is:'
 ifconfig | grep 192
 sudo apt autoremove -y
-curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 #sudo apt-get install -y node.js
 #sudo apt-get install -y gcc g++ make screen
 #sudo npm install -g nodemon
