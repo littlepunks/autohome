@@ -18,6 +18,7 @@
     "socket.io": "^2.3.0",
     "tplink-smarthome-api": "^2.0.0",
     "tuyapi": "^5.3.1",
-    "util": "^0.12.3"
+    "util": "^0.12.3",
+    "request": "^2.88.2"
   }
 }
