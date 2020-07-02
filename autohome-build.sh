@@ -1,11 +1,8 @@
 HISTCONTROL=ignoreboth
 # do these first before calling this script
-#cd /home/pi
 #git clone https://github.com/littlepunks/autohome.git
 #chmod +x autohome-build.sh
 #./autohome-build.sh
-#curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-
 
 # Install node version manager
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
