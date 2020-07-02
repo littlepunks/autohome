@@ -14,8 +14,6 @@ HISTCONTROL=ignoreboth
 #cd node-v12.18.2-linux-arm64/
 #sudo cp -R * /usr/local/
 
-
-
 sudo apt update
 sudo apt full-upgrade -y
 
@@ -47,11 +45,11 @@ sudo apt autoremove -y
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo apt-get install -y gcc g++ make screen
-# npm install -g nodemon node-gyp
 
 # should replace this line with npm install which will use package.json
-npm install serialport tplink-smarthome-api colors socket.io express body-parser tuyapi request util
-
+#npm install serialport tplink-smarthome-api colors socket.io express body-parser tuyapi request util
+sudo npm install -g nodemon
+npm install
 # May also need to do:
 #sudo npm install -g node-gyp
 # ?? git clone https://github.com/Orion98MC/node_rrd.git
