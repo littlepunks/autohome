@@ -1,22 +1,24 @@
 (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 
 DESCRIPTION
+
 AutoHome is a Node.js based software controller that runs on a Raspberry Pi and utilises a MySensors (www.mysensors.org) radio based sensor network.
 The controller connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
 The software is currently design to connect to MySensor API 1.5
 
 FILES
+
 All files must reside in the same folder:
-	index.js          The main node server component
-	settings.json     A local settings file read at startup
-	dash.html         The main html based dashboard
-	make-graph.cmd    Calls rrdtool to generate graphs
-	temps.rrd         (In rrdtool directory) temperature log data
-	README.txt        This file
-	sorry.html        Message for geo-blocked users
-	cert.js           Cert details for littlepunk.co.nz
-	sensor_mappings.xlsx
-	graphs.html
+- index.js          The main node server component
+- settings.json     A local settings file read at startup
+- dash.html         The main html based dashboard
+- make-graph.cmd    Calls rrdtool to generate graphs
+- temps.rrd         (In rrdtool directory) temperature log data
+- README.txt        This file
+- sorry.html        Message for geo-blocked users
+- cert.js           Cert details for littlepunk.co.nz
+- sensor_mappings.xlsx
+- graphs.html
 
 
 EXECUTION
@@ -65,8 +67,7 @@ OTHER DEPENDENCIES
 ARDUINO SETTINGS
 Arduino with USB: Arduino Nano V3, ATmega328, 5V
 Arduino without USB: ArduinPro Mini, ATmega328, 3V?
-
------------------------------------------------------------------------------
+---
 BUILD INSTRUCTIONS
 
 Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
