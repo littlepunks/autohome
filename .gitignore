@@ -1,6 +1,8 @@
 autohome-test1.code-workspace
 node_modules/**
 images/**
+test/**
+node_rrd/**
 autohome.log
 alexa_basic_skill_interaction_model.json
 alexa_old_interaction_model.json
@@ -27,3 +29,4 @@ dash - Copy.html
 .vscode/settings.json
 .vscode/launch.json
 package-lock.json
+node_rrd
