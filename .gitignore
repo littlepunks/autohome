@@ -1,7 +1,6 @@
 autohome-test1.code-workspace
 node_modules/
-images/
-test/
+images/*
 node_rrd/
 autohome.log
 alexa_basic_skill_interaction_model.json
@@ -28,5 +27,4 @@ dash - Copy.html
 .well-known/
 .vscode/
 package-lock.json
-test/autohome-1
 .gitignore

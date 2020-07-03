@@ -50,6 +50,7 @@ sudo apt-get install -y gcc g++ make screen
 #npm install serialport tplink-smarthome-api colors socket.io express body-parser tuyapi request util
 sudo npm install -g nodemon
 npm install
+mkdir ./images
 # May also need to do:
 #sudo npm install -g node-gyp
 

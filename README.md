@@ -1,9 +1,7 @@
 (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 
-
-
 DESCRIPTION
-AutoHome is a Node.js (currently version) based software controller that runs on a Raspberry Pi and utilises a MySensors (www.mysensors.org) radio based sensor network.
+AutoHome is a Node.js based software controller that runs on a Raspberry Pi and utilises a MySensors (www.mysensors.org) radio based sensor network.
 The controller connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
 The software is currently design to connect to MySensor API 1.5
 
@@ -23,25 +21,16 @@ All files must reside in the same folder:
 
 EXECUTION
 
-Using 'screen' utility to created a detached sessions that survives Putty exits.
+Using 'screen' utility to created a detached sessions that survives Putty exits. Later will setup as a service.
 Using nodemon to auto restart script when autohome.js is changed.
 
 > screen -S autohome
-> sudo nodemon --ignore '*.json' --ignore '*.html' autohome.js               // will auto-restart script when file changes
+> sudo nodemon --ignore '*.json' --ignore '*.html' autohome.js               // checkpackage.json for full command line
 > { Ctrl-A,D }
 > screen -r autohome      // at any time to reconnect
 > screen -list     // to see sessions
 
 Refer to https://y-ax.com/nodejs-app-auto-start-in-server for how to set up on boot.
-
-Deprecated:
-	To start the server side components from a Windows commmand line run:   node index.js
-	To start the server side components from a Windows commmand line run:   /home/pi/foreverStartup.sh
-
-	To start the server side components from a Linux commmand line run:   (sudo) node index.js
-	To start the server side components from a Linux commmand line run:   /home/pi/foreverStartup.sh
-
-To view the dashboard in a browser open: localhost (on Pi) or littlepunk.co.nz from external
 
 HARDWARE
 A MySensors gateway must be connected to a known serial port on the local PC.
@@ -66,124 +55,40 @@ The app requires the following node modules:
 - socket.io
 - tplink-smarthome-api
 - tuyapi
-- wemo-client
-- nodemailer
 - request
 - colors
-- ping
 
 OTHER DEPENDENCIES
 - RRDTool (in Windows needs Cygwin installed with defaults as well)
 
-USEFUL COMMANDS
-node -v : displays the installed version of node.js
-npm -v : displays the installed version of npm
 
 ARDUINO SETTINGS
-Basic Temperature Sensor
-	C:\Users\Dell User\Documents\Arduino\TempSensor\DallasTemperatureSensor\DallasTemperatureSensor.ino
-
-Temp Sensor + Local LCD
-	C:\Users\Dell User\Documents\Arduino\TempSensorDisplay\TempSensorDisplay.ino
-
-Arduino with USB: Arduino Nano V3, ATmega328
+Arduino with USB: Arduino Nano V3, ATmega328, 5V
 Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 
 -----------------------------------------------------------------------------
 BUILD INSTRUCTIONS
 
-Download Raspian image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
+Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
 Unzip the file.
 Use the Win32DiskImager utility to write to an SD card (8 GB+)
 Boot from SD
-Follow th wizard onscreen to:
+Follow the wizard onscreen to:
 - Choose your country
-- Set pi password
+- Set password
 - Select Wifi network
 - Allow it to update software
-- Let it restart
-- Choose "Preferences"->"Raspberry Pi Configuration" to do : autohomeSet to boot to command line, change host name, enable ssh, check expand filesystem
-- restart again
+- Decline restart
+- Choose "Preferences"->"Raspberry Pi Configuration" to set to boot to command line, change host name, enable ssh
+- Restart
 
-To build from scratch on a blank Raspbian image (excludes SAMBA stuff), or upgrade existing:  (Node 14.x)
-
-??	Command lines to set up Wifi??
-
-	Prompt for ssid and password then add following to /etc/wpa_supplicant/wpa_supplicant.conf file:
-		ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-		update_config=1
-		country=NZ
-
-		network={
-				ssid="littlepunk-fast"
-				psk="#1"
-		}
-
-		network={
-				ssid="lp"
-				psk="#2"
-		}
-	
-	May need to do "wpa_cli -i wlan0 reconfigure" after this.
-	Wait 30 secs, check output of" ifconfig wlan0" for "inet addr", if not connected, leave a restart flag to continue from this point, and force a reboot. 
-
-	HISTCONTROL=ignoreboth
-	cd /home/pi
+Then do:
 	git clone https://github.com/littlepunks/autohome.git
-	sudo mkdir -m 1777 /home/pi/autohome
-	cd /home/pi/autohome
+	cd autohome
 	chmod +x autohome-build.sh
-**  sudo /home/pi/autohome-build.sh      **** Needs to include the lines below...
+	./autohome-build.sh
 
-	sudo apt update
-	sudo apt full-upgrade -y
-	curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -                  #errors here
-	sudo apt-get install -y nodejs 
-	sudo apt-get install -y gcc g++ make screen
-
-	# Samba/CIFS server
-	sudo apt install -y samba samba-common-bin        **** Get a pop up window about WINS and DHCP. Annoying!! Chose no.
-	# At these if needing to be a client as well: smbclient cifs-utils
-
-	# append to /etc/samba/smb.conf :
-	sudo tee -a /etc/samba/smb.conf > /dev/null <<EOT
-	[Autohome]
-	comment=AutoHome Share
-	path=/home/pi/autohome
-	browsable=yes
-	writeable=yes
-	only guest=no
-	create mask=0777
-	directory mask=0777
-	public=no"
-	EOT
-
-	# Possibly not needed: sudo sed -i 's/workgroup =.*/workgroup = WORKGROUP/g' /etc/samba/smb.conf
-
-	# in the same file find the line "workgroup = " and add WORKGROUP after the '='
-	sudo smbpasswd -a pi <  #### PASSWORD ####
-	sudo service smbd restart
-	echo 'Your IP Address is:'
-	ifconfig | grep 192
-	sudo apt autoremove
-	sudo npm install -g nodemon
-	npm install serialport tplink-smarthome-api colors socket.io express body-parser tuyapi util
-
-	# RRD Tool
-	sudo apt-get install librrds-perl rrdtool
-	# May also need to do:
-	# sudo npm install -g node-gyp
-	# ?? git clone https://github.com/Orion98MC/node_rrd.git
-
-
-	copy other source files (rrd data etc) into /home/pi/autohome, the follow lifecycle below ...
-
-----------
-
-Lifecycle Management
-npm install (uses package.json)
-npm start  (runs the command line for scripts/start in package,json)
-npm run mytest (runs a test called mytest as specified in package.json)
+When done type: npm start (or npm test)
 
 -----------------------------------------------------------------------------
 SENSOR DETAILS
@@ -205,11 +110,6 @@ mailOptions - to/from addresses, subject and message format settings for email a
 smtpConfig - mail server and authentication settings
 weather.externalTempURL - URL for openweathermap.org to get the local weather conditions. You need to register with the website to get a unique id for your location
 
-
------------------------------------------------------------------------------
-CONTROLS
-Controls are displayed on the web page. Each sensor has a standard control type (e.g. Gauge).
-
 -----------------------------------------------------------------------------
 BASIC OPERATION
 At startup:
@@ -217,7 +117,6 @@ At startup:
 - Various constant, variables and helper functions are defined
 - Settings are read and stored in a controls array
 - TP-Link, Tuya and Wemo devices are discovered
-- Connection to email is checked (GMail)
 - Serial port to the controller is opened
 - Web client event handler started
 - Web server started
@@ -285,89 +184,3 @@ TO DO
 - Combine multiple sensors into one (Laundry - motion, room temp, freezer temp, washing machine action,floor moisture, door part open(drier), door full open)
 - Create LCD/OLED/Table console
 - Have schedules, e.g. alert on motion when no-one home
-
------------------------------------------------------------
-PLANNING
-
-** Controls
-Each control has a type, and a datasource
-	"controls" : [
-		{
-		  "id" : 1,
-          "type": "gf",
-          "name": "Tom",
-          "value": "15.8°C",
-          "source": "1"
-        },
-        {
-          "id" : 2,
-          "type": "therm",
-          "name": "Outside",
-          "value": 23,
-          "source": "2"
-        },
-        {
-          "id" : 3,
-          "type": "text",
-          "name": "External Temperatures",
-          "source": "static"
-      	}
-
-
-Data Sources
-All weather data is collected and stored centrally.
-A gauge control could have a JSON reference to the weather data, or to MySensor data
-All MySensors go into a MySensor data structure
-There is a list of Wemos
-There is a list of IP's to be checked
-
-Active Data
-Wemo and MySensors actively create data
-
-Passive Sources
-When a URL needs to be called or a file read on a schedule
-
-	"sources" : [
-		{
-			"id" : 1,
-			"type" : "mysensor",
-			"sensorID" : 1,
-			"prefix" : "",
-			"suffix" : "oC"
-		},
-		{
-			"id" : 2,
-			"type" : "weather",
-			"value" : "externalTemp",
-			"prefix" : "",
-			"suffix" : "oC"
-		}
-	]
-
-
-indexOf
-	var fruits = ["Banana", "Orange", "Apple", "Mango"];
-	var a = fruits.indexOf("Apple");
-	a will equal 2
-
-
-find
-	var ages = [3, 10, 18, 20];
-	function checkAdult(age) {
-	    return age >= 18;
-	}
-	function myFunction() {
-	    document.getElementById("demo").innerHTML = ages.find(checkAdult);
-	}
-	Result will be 18
-
-findIndex
-	var ages = [3, 10, 18, 20];
-	function checkAdult(age) {
-	    return age >= 18;
-	}
-	function myFunction() {
-	    document.getElementById("demo").innerHTML = ages.findIndex(checkAdult);
-	}
-	Result will be 2
-
