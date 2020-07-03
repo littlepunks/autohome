@@ -115,7 +115,7 @@ tuyaDev.on('data', data => {
 
 });
 
-  // Disconnect after 10 seconds
+// Disconnect after 10 seconds
 //setTimeout(() => { tuyaDev.disconnect(); }, 10000);
 
 // =============================================================================

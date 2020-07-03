@@ -1,8 +1,8 @@
 autohome-test1.code-workspace
-node_modules/**
-images/**
-test/**
-node_rrd/**
+node_modules/
+images/
+test/
+node_rrd/
 autohome.log
 alexa_basic_skill_interaction_model.json
 alexa_old_interaction_model.json
@@ -25,10 +25,8 @@ error.log
 create-rrd.sh
 cert.js
 dash - Copy.html
-.well-known/acme-challenge/g3fYPZAtZDWGmyE_f9rRKxI7QmR8EYSdOqxF4Hug8Gk
-.vscode/settings.json
-.vscode/launch.json
+.well-known/
+.vscode/
 package-lock.json
-node_rrd
 test/autohome-1
-node_rrd
+.gitignore
