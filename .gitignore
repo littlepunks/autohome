@@ -30,3 +30,5 @@ dash - Copy.html
 .vscode/launch.json
 package-lock.json
 node_rrd
+test/autohome-1
+node_rrd

@@ -16,7 +16,7 @@
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593751390806,
+        "updated": 1593751691219,
         "freq": 300
       },
       {
@@ -27,7 +27,7 @@
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593751427047,
+        "updated": 1593751727788,
         "freq": 300
       },
       {
@@ -38,7 +38,7 @@
         "control": "GAU",
         "contact_status": "0",
         "type": "0",
-        "updated": 1593751434698,
+        "updated": 1593751735378,
         "freq": 300
       },
       {
@@ -49,7 +49,7 @@
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593751485075,
+        "updated": 1593751785877,
         "freq": 300
       },
       {
@@ -60,7 +60,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751554876,
+        "updated": 1593751869075,
         "freq": 300
       },
       {
@@ -71,7 +71,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751624805,
+        "updated": 1593751924645,
         "freq": 300
       },
       {
@@ -82,7 +82,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751429855,
+        "updated": 1593751735085,
         "freq": 300
       },
       {
@@ -110,12 +110,12 @@
       {
         "id": "14",
         "name": "Outside",
-        "value": 11.2,
+        "value": 11.1,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1593751541453,
+        "updated": 1593751842331,
         "freq": 300
       },
       {
@@ -126,7 +126,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751434226,
+        "updated": 1593751747311,
         "freq": 300
       },
       {
@@ -137,7 +137,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751505825,
+        "updated": 1593751895282,
         "freq": 300
       },
       {
@@ -192,7 +192,7 @@
         "contact_status": "0",
         "units": "",
         "type": "2",
-        "updated": 1593751545026,
+        "updated": 1593751919069,
         "freq": "31536000"
       },
       {

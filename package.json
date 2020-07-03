@@ -1,12 +1,12 @@
 {
-  "name": "autohome-test",
+  "name": "autohome",
   "version": "1.0.0",
   "private": true,
-  "description": "AutoHome Test",
+  "description": "AutoHome",
   "main": "autohome.js",
   "scripts": {
-    "start": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "start": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
+    "test": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d"
   },
   "author": "David Jacobsen",
   "license": "ISC",
