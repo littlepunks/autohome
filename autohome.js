@@ -1,19 +1,11 @@
-// ------------------------------------------------------
-// AutoHome
-// (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
+// ----------------------------------------------------
+// © 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 // See README.md
-
 /*jshint esversion: 6 */
+
+// Load third party modules
+
 "use strict";
-
-
-// Check command line arguments before anything else:
-// -d = debug on
-// -t = test (no serial ports, port = 81, no smart switches)
-var args = process.argv.slice(2);
-var DEBUG = args.includes('-d');
-var TEST = args.includes('-t');
-var PROD = !TEST;
 
 var express    = require('express');
 var bodyParser = require("body-parser");
@@ -27,122 +19,101 @@ const fs 	   = require('fs');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
 // Common list for smart plugs/switches
 var plugs = [];
 
-// Certificate management
-// const privateKey = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/cert.pem', 'utf8');
-// const ca = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/chain.pem', 'utf8');
-
-// const credentials = {
-// 	key: privateKey,
-// 	cert: certificate,
-// 	ca: ca
-// };
-
-// - Congratulations! Your certificate and chain have been saved at:
-// /etc/letsencrypt/live/littlepunk.duckdns.org/fullchain.pem
-// Your key file has been saved at:
-// /etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem
-// Your cert will expire on 2020-08-30. To obtain a new or tweaked
-// version of this certificate in the future, simply run certbot
-// again. To non-interactively renew *all* of your certificates, run
-// "certbot renew"
-
 // TP-Link Smart Switch setup ---------------------------------------------------------------
-if (PROD) {
-	const { Client } = require('tplink-smarthome-api');
-	const client = new Client();
+const { Client } = require('tplink-smarthome-api');
+const client = new Client();
 
-	client.on('plug-new', device => {
+client.on('plug-new', device => {
 
-		logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
+	logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
 
-		// Assumes plug will be found
-		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
+	// Assumes plug will be found
+	var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+	decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
 
-		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
+	plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
 
-		device.startPolling(SENSORCHECKINTERVAL);
-	
-		device.on('power-on', () => {
-			logMsg('I', `TP-Link device ${device.alias} is on`);
-			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';1');
-
-		});
-		device.on('power-off', () => {
-			logMsg('I', `TP-Link device ${device.alias} is off`);
-			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';0');
-
-		});
-		device.on('in-use-update', inUse => {
-			if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
-			//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			//decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
-		});  
-	});
-	client.on('plug-online', device => {
-		if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is contactable`);
-		// Could mark sensor as uncontactable
-	});
-	client.on('plug-offline', device => {
-		if (DEBUG) logMsg('I', `TP-Link device ${device.alias} is uncontactable`);
-	});
-
-	logMsg('I', 'Starting TP-Link Device Discovery');
-	client.startDiscovery();
-}
-
-// // Tuya Switch setup ---------------------------------------------------------------------
-// const TuyAPI = require('tuyapi');
-// const util = require('util');
-// const tuyaDev = new TuyAPI({
-// 	id: '550705303c71bf20a967',
-// 	key: '6590d93429b1034a'});
-
-// // Find device on network
-// tuyaDev.find().then(() => {
-//  	// Connect to device
-//  	tuyaDev.connect();
-// 	});
+	device.startPolling(SENSORCHECKINTERVAL);
   
-// // Add event listeners
-// tuyaDev.on('connected', () => {
-// 	logMsg('I','Connected to Tuya device');
-// 	// Hard coded name. Really need to get name from the switch and match.
-// 	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
+	device.on('power-on', () => {
+		logMsg('I', `TP-Link device ${device.alias} is on`);
+		// Need to check if it exists otherwise the decode will error
+		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';1');
 
-// });
+	});
+	device.on('power-off', () => {
+		logMsg('I', `TP-Link device ${device.alias} is off`);
+		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';0');
 
-// tuyaDev.on('disconnected', () => {
-// 	logMsg('I','Disconnected from Tuya device.');
-// });
+	});
+	device.on('in-use-update', inUse => {
+		//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
+		//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+		//decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
+	});  
+  });
+  client.on('plug-online', device => {
+	//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
+	// Could mark sensor as uncontactable
+  });
+  client.on('plug-offline', device => {
+	logMsg('DI', `TP-Link device ${device.alias} is uncontactable`);
+  });
 
-// tuyaDev.on('error', error => {
-// 	logMsg('E','Tuya general error!' + error);
-// });
+logMsg('I', 'Starting TP-Link Device Discovery');
+client.startDiscovery();
 
-// tuyaDev.on('data', data => {
-// 	try {
-// // //		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
-// // //		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
-// // 	}
-// 		logMsg('I','Tuya data: ' + util.inspect(data));
+
+// Tuya Switch setup ---------------------------------------------------------------------
+const TuyAPI = require('tuyapi');
+const util = require('util');
+const tuyaDev = new TuyAPI({
+	id: '550705303c71bf20a967',
+	key: '6590d93429b1034a'});
+
+// Find device on network
+tuyaDev.find().then(() => {
+ 	// Connect to device
+ 	tuyaDev.connect();
+	});
+  
+// Add event listeners
+tuyaDev.on('connected', () => {
+	logMsg('I','Connected to Tuya device');
+	// Hard coded name. Really need to get name from the switch and match.
+	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
+
+});
+
+tuyaDev.on('disconnected', () => {
+	logMsg('I','Disconnected from Tuya device.');
+});
+
+tuyaDev.on('error', error => {
+	logMsg('E','Tuya general error!' + error);
+});
+
+tuyaDev.on('data', data => {
+	try {
+//		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
+//		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
 // 	}
-// 	catch (error) {
-// 		logMsg('E', 'Tuya data error: ' + error);
-// 	}
+		logMsg('I','Tuya data: ' + util.inspect(data));
+	}
+	catch (error) {
+		logMsg('E', 'Tuya data error: ' + error);
+	}
 	
-// 	// Can set Tuya switch via:
-// 	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
-// 	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
+	// Can set Tuya switch via:
+	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
+	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
 
-// });
+});
 
   // Disconnect after 10 seconds
 //setTimeout(() => { tuyaDev.disconnect(); }, 10000);
@@ -150,22 +121,25 @@ if (PROD) {
 // =============================================================================
 // CONFIGURATION:
 
+// Set to false to turn off debugging
+var DEBUG = false;
+
+// settings.json will be loaded in here later
 var conf = {};
 
 // Console messages are saved in this string and written to autohome.log when the app shutsdown normally.
 // Is a risk that something useful may be missed.
-var consoleMsgs = "";
 
-const colDkBlue   = "#152934";
-const colLtBlue   = "#6596C4";
-const colNavBack  = "#01649D"; // Nav button background blue
-const colText     = "#E1F4F4";
-const colRed      = "#B00000";
-const colAmber    = "#F0A946";
-const colGreen    = "#00A000";
-const colLtGrn    = "#20F020";
-const colYellow   = "#F0F000"; 
-const colBrtBlue  = "#00A0F0";
+// const colDkBlue   = "#152934";
+// const colLtBlue   = "#6596C4";
+// const colNavBack  = "#01649D"; // Nav button background blue
+// const colText     = "#E1F4F4";
+// const colRed      = "#B00000";
+// const colAmber    = "#F0A946";
+// const colGreen    = "#00A000";
+// const colLtGrn    = "#20F020";
+// const colYellow   = "#F0F000"; 
+// const colBrtBlue  = "#00A0F0";
 
 const SENSORCHECKINTERVAL = 300000;  // 5 mins
 
@@ -182,7 +156,6 @@ var rMsgtype 	= "";
 var rAck 		= "";
 var rSubtype 	= "";
 var rPayload 	= "";
-var rNodeID 	= "";
 
 // Loop to do any regular activities ============================================
 function updateStatuses() {
@@ -208,10 +181,9 @@ function startSensorCheckTimer() {
 }
 
 function stopSensorCheckTimer() {
-	// if (DEBUG) logMsg('I', ' Checking for sensor timeouts');
 	logMsg('I', 'Checking for sensor timeouts');
 	// Check that the COM port (MySensors gateway) is still open and hasn't had an error
-	if (PROD) { if (!gw.isOpen) { gwErrFlag = true; }}
+	if (!gw.isOpen) { gwErrFlag = true; }
 	if (gwErrFlag) { logMsg('E', 'Error with the COM port connecting to the gateway. Please restart.'); }
 
 	// Iterate through all the sensors and
@@ -255,56 +227,45 @@ function startTempTimer () {
 
 function stopTempTimer () {
 	// Write out current temperatures readings to RRDTool and generate new graphs
+	// Sensors MUST be in the order shown
 	// "U" is the value for UNKNOWN and is handled by RRDTOOL more gracefully than an empty string
-	var getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == 'Outside');
-	var t1 = (getSensor !== undefined) ? getSensor.value : "U";
+	var updStr = "N";
+	var getSensor;
 
-	getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == 'Tom');
-	var t2 = (getSensor !== undefined) ? getSensor.value : "U";
+	// Build up RRD update string from each sensor in order
+	['Outside','Tom','Bedroom','Laundry','Balcony','Humidity','Pressure','Speed'].forEach(s => {
+		getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == s);
+		updStr += ":" + ((getSensor !== undefined) ? getSensor.value : "U");
+	})
 
-	getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == 'Bedroom');
-	var t3 = (getSensor !== undefined) ? getSensor.value : "U";
+	logMsg('DI', 'RRD data update: ' + updStr);
 
-	getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == 'Laundry');
-	var t4 = (getSensor !== undefined) ? getSensor.value : "U";
+	const spawn = require('child_process').spawn;
+	const bat = spawn('rrdtool', ['update', '/home/pi/autohome/temps.rrd', updStr]);
 
-	getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == 'Balcony');
-	var t5 = (getSensor !== undefined) ? getSensor.value : "U";
+	bat.stdout.on('data', (data) => { logMsg('DI', 'RRD data updating: ' + data.toString());});
+	bat.stderr.on('data', (data) => { logMsg('E', 'RRD data update error: ' + data.toString());	});
 
-	var updStr = "N:" + t1 + ":" + t2 + ":" + t3 + ":" + t4 + ":" + t5 +  ":" + conf.weather.humidity +  ":" + conf.weather.pressure +  ":" + conf.weather.wind.speed;
-	if (DEBUG) logMsg('I', 'RRD data update: ' + updStr);
+	bat.on('exit', (code) => {
+		if (code != 0) { logMsg('E', 'RRD data update error code: ' + code);}
+		const bat2 = spawn('/home/pi/autohome/make-graph.sh');
 
-	if (PROD) {
-		const spawn = require('child_process').spawn;
-		const bat = spawn('rrdtool', ['update', '/home/pi/autohome/temps.rrd', updStr]);
+		bat2.stdout.on('data', (data) => { logMsg('DI', 'RRD graph being created: ' + data.toString().trim()); });
+		bat2.stderr.on('data', (data) => { logMsg('DE', 'RRD graph creation error: ' + data.toString()); });
 
-		bat.stdout.on('data', (data) => { if (DEBUG) { logMsg('I', 'RRD data updating: ' + data.toString());}});
-		bat.stderr.on('data', (data) => { logMsg('E', 'RRD data update error: ' + data.toString());	});
-
-		bat.on('exit', (code) => {
-			if (code != 0) { logMsg('E', 'RRD data update error code: ' + code);}
-			const bat2 = spawn('/home/pi/autohome/make-graph.sh');
-
-			bat2.stdout.on('data', (data) => { if (DEBUG) {	logMsg('I', 'RRD graph being created: ' + data.toString().trim()); }});
-			bat2.stderr.on('data', (data) => { if (DEBUG) { logMsg('E', 'RRD graph creation error: ' + data.toString()); }});
-
-			bat2.on('exit', (code) => {
-				if (code != 0) {
-					if (DEBUG) { logMsg('E', 'RRD graph creation error code: ' + code);	}}
-				else {
-					// Uncomment line below and remove copy of this line above when ready for Prod
-					//io.emit('SMv2','{"id": "4","name": "Temps","value":"images/temp_graph_1d.png","type":"4"}' );
-				}
-			});
+		bat2.on('exit', (code) => {
+			if (code != 0) {
+				logMsg('DE', 'RRD graph creation error code: ' + code);	}
 		});
-	}
+	});
+
     startTempTimer();
 
     // Worth savings settings every now and then
     writeSettings();
 }
 
-// Reenable later
+// Start the timer to update RRD data and graphs regularly
 startTempTimer();
 
 // --------------------------------------
@@ -359,58 +320,36 @@ function writeSettingsSync() {
 }
 
 
+// Open serial port to connect to MySensor Gateway
+var SerialPort = require('serialport');
 
-// Timer
-if (TEST) {
-	function startDummyTimer () {
-		setTimeout(dummyData, 5000);  // 5 secs
-	}
+var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
+var gwErrFlag = true;  // We're in an error state until the port is officially open
 
-	startDummyTimer();
-	var dmyNodes = ['1','2','5','6','14'];
-
-	// Create dummy data and send for processing
-	function dummyData() {
-
-		var data = dmyNodes[Math.floor(Math.random() * dmyNodes.length)] + ';0;' + C_SET + ';0;' + V_TEMP + ';' + (Math.floor(Math.random() * 25) + 4);
-		decode(data);
-		startDummyTimer();
-	}
-}
-
-if (PROD) {
-	//Open serial port to connect to MySensor Gateway
-	var SerialPort = require('serialport');
-	const e = require('express');
-	var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
-	var gwErrFlag = true;  // We're in an error state until the port is officially open
-
-	gw.open();
-	gw.on('open', function() {
-		logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
+gw.open();
+gw.on('open', function() {
+	logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
+	gwErrFlag = false;
+	}).on('data', function(rd) {
+		appendData(rd.toString());
 		gwErrFlag = false;
-		}).on('data', function(rd) {
-			appendData(rd.toString());
-			gwErrFlag = false;
-		}).on('end', function() {
-			logMsg('I', 'Disconnected from gateway');
-			gwErrFlag = true;
-		}).on('error', function() {
-			logMsg('E', "Connection error. Can't connect to com port. Please restart later.");
-			gwErrFlag = true;
-		});
-}
+	}).on('end', function() {
+	 	logMsg('I', 'Disconnected from gateway');
+		gwErrFlag = true;
+	}).on('error', function() {
+		logMsg('E', "Connection error. Can't connect to com port. Please restart later.");
+		gwErrFlag = true;
+	});
+
 
 // Send a text message off to the gateway
 function gwWrite(msg, logtxt) {
-	if (PROD) {
-		gw.write(msg + '\n', function(err) {
-			if (err) {
-				return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
-			}
-			if (DEBUG) { logMsg('I', logtxt); }
-		});
-	}
+	gw.write(msg + '\n', function(err) {
+		if (err) {
+	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
+	  	}
+	  	logMsg('DI', logtxt);
+	});
 }
 
 // Helper function to build up a message string from a sensor
@@ -426,46 +365,13 @@ function appendData(str) {
 		// Process the message contained in appendedString as it's a full line
 		// Decode will decode and perform actions
         decode(appendedString.trim());
-        if (DEBUG) {
-        	logMsg('R', "Sensor message: NodeID:" + rNode + "(" + rNodeID + "),SensorID:" + rSensor + ",MsgType:" + rMsgtype + ",Ack:" + rAck + ",SubType:" + rSubtype + ",PLoad:" + rPayload);
-        }
+        logMsg('DR', "Sensor message: NodeID:" + rNode + ",SensorID:" + rSensor + ",MsgType:" + rMsgtype + ",Ack:" + rAck + ",SubType:" + rSubtype + ",PLoad:" + rPayload);
     }
     if (pos < str.length) {
         // There's still more data to process so chop of what's been processed and recurse
         appendData(str.substr(pos + 1, str.length - pos - 1));
     }
  }
-
-// Returns a string of the form "01-12-2017 12:34:56"
-function dateTimeString() {
-  var   d = new Date()
-  return (('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear() +
-  	 ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2));
-}
-
-function convertTimestampToTime(timestamp) {
-  var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
-		hh = d.getHours(),
-		h = hh,
-		min = ('0' + d.getMinutes()).slice(-2),		// Add leading 0.
-		ampm = 'AM',
-		time;
-			
-	if (hh > 12) {
-		h = hh - 12;
-		ampm = 'PM';
-	} else if (hh === 12) {
-		h = 12;
-		ampm = 'PM';
-	} else if (hh == 0) {
-		h = 12;
-	}
-	
-	// ie: 8:35 AM	
-	time = h + ':' + min + ' ' + ampm;
-		
-	return time;
-}
 
 
 // Get external weather
@@ -512,32 +418,52 @@ function getOutsideWeather() {
 	 });
 }
 
+// Returns a string of the form "01-12-2017 12:34:56" from the current time
+function dateTimeString() {
+	var   d = new Date()
+	return (('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear() +
+		 ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2));
+  }
+  
+  function convertTimestampToTime(timestamp) {
+	var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
+		  hh = d.getHours(),
+		  h = hh,
+		  min = ('0' + d.getMinutes()).slice(-2),		// Add leading 0.
+		  ampm = 'AM',
+		  time;
+			  
+	  if (hh > 12) {
+		  h = hh - 12;
+		  ampm = 'PM';
+	  } else if (hh === 12) {
+		  h = 12;
+		  ampm = 'PM';
+	  } else if (hh == 0) {
+		  h = 12;
+	  }
+	  
+	  // ie: 8:35 AM	
+	  time = h + ':' + min + ' ' + ampm;
+		  
+	  return time;
+  }
+  
 
-// Write a message to the console
-// Used to write to file. 
-
-// function logMsg____new(type, txt) {
-// 	var msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
-
-// 	switch (type) {
-// 		case 'E':
-// 			console.log(msgTxt.red);
-// 			break;
-// 		case 'C':
-// 			console.log(msgTxt.yellow);
-// 			break;
-// 		case 'R':
-// 			console.log(msgTxt.green);
-// 			break;
-// 		default:
-// 			console.log(msgTxt);
-// 	}
-
-// 	consoleMsgs += msgTxt + '\n';
-// }
-
+// Writes a log message to the console.
+// If the type start with a D then it will only be displayed if the global DEBUG is true
 function logMsg(type, txt) {
-	var msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
+	var msgTxt = "";
+	// If DEBUG is not true then don't print debug messages
+	if (type[0] == 'D') {
+		if (DEBUG) {
+			msgTxt = ((type.length == 2) ? type[1] : 'D') + ' ' + dateTimeString() + ' ' + txt;
+		} else {
+			return 0;
+		}
+	} else {
+		msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
+	}
 
 	switch (type) {
 		case 'E':
@@ -560,23 +486,14 @@ function logMsg(type, txt) {
 	});
 }
 
-function redrawAllControls() {
-	conf.mysensors.sensornodes.forEach(s => {
-		io.emit('SMv2', JSON.stringify(s));
-	});
-
-	// And refresh the weather data
-	getOutsideWeather();
-}
-
 // Decode a message received from a sensor
 function decode(msg) {
 	var msgs = msg.toString().split(";");
 
-//	logMsg('I', 'Decoding: ' + msg);
+	//	logMsg('I', 'Decoding: ' + msg);
 	// Should really check that all these parameters are available
 	if (msgs.length < 6) {
-		// if (DEBUG)  logMsg("E", "Incomplete message from gateway: " + msg);
+		// logMsg("DE", "Incomplete message from gateway: " + msg);
 		logMsg("E", "Incomplete message from gateway: " + msg);
 		return 1;
 	}
@@ -590,95 +507,73 @@ function decode(msg) {
 	if (isNaN(rPayload)) {
 		rPayload = msgs[5].trim();
 	}
-	//logMsg("I", "Received from gateway: " + msg);
 
-	// Next few lines are messy. Sort it out!
-	rNodeID = rNode;   //?  RN 14; S0; MT1; ACK0; ST0; Pay9.1
-	if (1) {
-	// if (rNodeID <= conf.mysensors.sensornodes.length) {   // Ensure Node ID is valid
-		switch (rMsgtype) {
-			case C_PRESENTATION:  // = 0
-				break;
-			case C_SET:  //SET message = 1
-				switch (rSubtype) {
-					case V_TRIPPED:
-					case V_LOCK_STATUS:
-					case V_SWITCH:
-					case V_TEMP:
-					case V_IMAGE:
-						var getSensor = conf.mysensors.sensornodes.find(sensor => sensor.id == rNode);
-						if (getSensor !== undefined) {
-							var oldVal = getSensor.value;
-							getSensor.updated = new Date().getTime();
-							getSensor.value = rPayload;
-							getSensor.contact_status = '0';
-							// Send JSON of sensor
-							io.emit('SMv2', JSON.stringify(getSensor));
-							logMsg('I', "Got: " + getSensor.name + " : " + getSensor.value);
-							if (DEBUG) {
-								logMsg('I', "Sending JSON: " + JSON.stringify(getSensor));
-							}
+	switch (rMsgtype) {
+		case C_PRESENTATION:  // = 0
+		case C_REQ:  // = 2 = A sensor is asking for data
+			break;
+		case C_SET:  //SET message = 1
+			switch (rSubtype) {
+				case V_TRIPPED:
+				case V_LOCK_STATUS:
+				case V_SWITCH:
+				case V_TEMP:
+				case V_IMAGE:
+					var getSensor = conf.mysensors.sensornodes.find(sensor => sensor.id == rNode);
+					if (getSensor !== undefined) {
+						var oldVal = getSensor.value;
+						getSensor.updated = new Date().getTime();
+						getSensor.value = rPayload;
+						getSensor.contact_status = '0';
+						// Send JSON of sensor
+						io.emit('SMv2', JSON.stringify(getSensor));
+						logMsg('I', "Got: " + getSensor.name + " : " + getSensor.value);
+						logMsg('DI', "Sending JSON: " + JSON.stringify(getSensor));
 
-							// If from FanSwitch(25) then send of to fan switch (105)
-							// Check to see if the value has changed at all
-							if ((rNodeID == '25') && (rPayload != oldVal)) {
-								logMsg('I', 'Received message from Fan Switch. Sending to fan: ' + '105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
-								decode('105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
-								processButton('105');
-							}
- 						} else {
-							logMsg('E', "Working with: " + msg + " but wasn't found");
+						// If from FanSwitch(25) then send of to fan switch (105)
+						// Check to see if the value has changed at all
+						if ((rNode == '25') && (rPayload != oldVal)) {
+							logMsg('I', 'Received message from Fan Switch. Sending to fan: ' + '105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
+							decode('105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
+							processButton('105');
 						}
-						break;
-					case V_STATUS:
-						break;
-					default:
-						logMsg ('E', 'Unknown Sensor message: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + String(rPayload));
-				}
-				break;
+					} else {
+						logMsg('E', "Working with: " + msg + " but wasn't found");
+					}
+					break;
+				case V_STATUS:
+					break;
+				default:
+					logMsg ('E', 'Unknown Sensor message: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + String(rPayload));
+			}
+			break;
 
-			case C_REQ:  // = 2 = A sensor is asking for data
-				break;
+		case C_INTERNAL:  //INTERNAL messages = 3
+			switch (rSubtype) {
+				case I_BATTERY_LEVEL:
+					logMsg('I', "Internal battery level is " + rPayload + "%");
+					break;
+				case I_LOG_MESSAGE:
+					logMsg('DI', 'MySensors Internal Log Message: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
+					break;
 
-			case C_INTERNAL:  //INTERNAL messages = 3
-				switch (rSubtype) {
-					case I_BATTERY_LEVEL:
-						logMsg('I', "Internal battery level is " + rPayload + "%");
-						break;
-					case I_LOG_MESSAGE:
-						if (DEBUG) {
-							logMsg('I', 'MySensors Internal Log Message: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
-						}
-						break;
+				case I_GATEWAY_READY:
+					logMsg('I', 'MySensors Gateway startup is complete.');
+					break;
 
-					case I_GATEWAY_READY:
-						logMsg('I', 'MySensors Gateway startup is complete.');
-						break;
+				default:
+					logMsg('DI', 'MySensors Int Msg: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
+			}
+			break;
+		case C_BROADCAST:   // Usually at sensor startup
+			logMsg ('DI', 'Sensor Broadcast: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + rPayload);
+			break;
 
-					default:
-						if (DEBUG) {
-							logMsg('I', 'MySensors Int Msg: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
-						}
-						// All other INTERNAL MSGS
-				}
-				break;
-			case C_BROADCAST:   // Usually at sensor startup
-				if (DEBUG) {
-					logMsg ('I', 'Sensor Broadcast: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + rPayload);
-				}
-				break;
+		default:
+			logMsg ('E', 'Sensor Msg Unknown: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + rPayload);
 
-			default:
-				logMsg ('E', 'Sensor Msg Unknown: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + rPayload);
-
-		}
-	}
-	else {
-		logMsg ('E', 'Unknown sensor message: ' + msg);
 	}
 }
-
-
 
 
 // What to serve from the root address. http://localhost/
@@ -727,18 +622,19 @@ io.on('connection', function(socket){
     // This only fires when message received from an IP Socket NOT sensors 
     // Clean up text
 	msg = msg.replace(/(\r\n|\n|\r)/gm,"");
-    // if "redraw" is received from client then 
-    // iterate through all controls and emit details out
 	var msgs = msg.toString().split(";");
 
+    // if "redraw" is received from client then redraw all controls
 	if (msgs[0] == 'redraw') {
-    	// Call function that sends back all sensor data
-    	redrawAllControls();
-	    if (DEBUG) { logMsg('R', 'Redraw requested'); }
+    	// Emit all sensors
+		conf.mysensors.sensornodes.forEach(s => {
+			io.emit('SMv2', JSON.stringify(s));
+		});
+		logMsg('DR', 'Redraw requested');
     }
     // Click event received
     else if ((msgs[0] == 'BUT') || (msgs[0] == 'CHK')) {
-		if (DEBUG) { logMsg('R', 'Button/Checkbox: ' + msgs[1]); }
+		logMsg('DR', 'Button/Checkbox: ' + msgs[1]);
 		processButton(msgs[1]);
     }
     else {
@@ -747,28 +643,22 @@ io.on('connection', function(socket){
   });
 
   socket.on('disconnect', function(){
-    if (DEBUG) { logMsg('C', 'Web client disconnected'); }
+    logMsg('DC', 'Web client disconnected');
   });
 });
 
 // Start Web Service listening on TCP specified in the settings
-/* ???????? */
-if (PROD) {
-	http.listen(conf.sockets.port, function(){
-		logMsg('C', 'Listening on *:' + conf.sockets.port);
-	});
-} else {
-	http.listen(81, function(){
-		logMsg('C', 'Listening on *:' + 81);
-	});
-
-}
-
-
-
+http.listen(conf.sockets.port, function(){
+	logMsg('C', 'Listening on *:' + conf.sockets.port);
+});
+  
+// https.listen(443, () => {
+// 	logMsg('C', 'Listening on 443');
+// });
+  
 // Process button or checkbox switch presses from the client
 function processButton(butID) {
-	if (DEBUG) { logMsg('R', 'Handling button ' + butID);}
+	logMsg('DR', 'Handling button ' + butID);
 	var sID = conf.mysensors.sensornodes.find(sensor => sensor.id == butID);
 	if (sID !== undefined) {
 		sID.updated = new Date().getTime();
@@ -789,7 +679,7 @@ function processButton(butID) {
 			});
 		}
 		else if (butID == '103') {
-			if (DEBUG) {logMsg('I', 'Checkbox ' + butID + ' : ' + sID.value);}
+			logMsg('DI', 'Checkbox ' + butID + ' : ' + sID.value);
 			DEBUG = (sID.value == '1');
 			logMsg('I', 'Debug is now: ' + DEBUG);
 		}
@@ -813,7 +703,7 @@ function processButton(butID) {
 		//Handle smart plugs/switches
 		else {
 			// Is it in the plugs array?
-			var plug = (PROD) ? plugs.find(p => p.id == butID) : undefined;
+			var plug = plugs.find(p => p.id == butID);
 			// If yes then change state
 			if (plug != undefined) {
 				switch (plug.type) {
@@ -844,7 +734,6 @@ function processButton(butID) {
 					
 						break;
 					default:
-						//??
 						logMsg('E', "Unexpected smart switch type: " + plug.type);
 				}
 
@@ -927,3 +816,49 @@ const I_GATEWAY_READY 	= 14;
 const I_REQUEST_SIGNING	= 15; // Used between sensors when initialting signing.
 const I_GET_NONCE 		= 16; // Used between sensors when requesting nonce.
 const I_GET_NONCE_RESPONSE = 17; // Used between sensors for nonce response.
+
+const S_DOOR		= 0;
+const S_MOTION		= 1;
+const S_SMOKE		= 2;
+
+const S_LIGHT		= 3;
+const S_BINARY		= 3;
+
+const S_DIMMER		= 4;
+const S_COVER		= 5;
+const S_TEMP		= 6;
+const S_HUM			= 7;
+const S_BARO		= 8;
+const S_WIND		= 9;
+const S_RAIN		= 10;
+const S_UV			= 11;
+const S_WEIGHT		= 12;
+const S_POWER		= 13;
+const S_HEATER		= 14;
+const S_DISTANCE	= 15;
+const S_LIGHT_LEVEL	= 16;
+const S_ARDUINO_NODE	= 17;
+const S_REPEATER_NODE	= 18;
+const S_LOCK		= 19;
+const S_IR			= 20;
+const S_WATER		= 21;
+const S_AIR_QUALITY	= 22;
+
+// const privateKey = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem', 'utf8');
+// const certificate = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/cert.pem', 'utf8');
+// const ca = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/chain.pem', 'utf8');
+
+// const credentials = {
+// 	key: privateKey,
+// 	cert: certificate,
+// 	ca: ca
+// };
+
+// - Congratulations! Your certificate and chain have been saved at:
+// /etc/letsencrypt/live/littlepunk.duckdns.org/fullchain.pem
+// Your key file has been saved at:
+// /etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem
+// Your cert will expire on 2020-08-30. To obtain a new or tweaked
+// version of this certificate in the future, simply run certbot
+// again. To non-interactively renew *all* of your certificates, run
+// "certbot renew"

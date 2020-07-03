@@ -50,10 +50,7 @@
   // Shift to id's being the main identifier. Names should just be labels and duplicates allowed
   // eg. Temp sensor and motion sensor both called "Laundry"
 
-  // Bug . If data is received for something listed below, but there's no html for it, error occurs
-
-
-  var sensors = [];
+//  var sensors = [];
 
   function statusColour(status) {
     switch (status) {
@@ -81,7 +78,7 @@
     // });
     
     // Set recommended canvas size (width = height)
-    cSize = 400;
+    cSize = 320;
 
     // Receive message from controller
     // incomingMsg will always be JSON of a single sensor settings
@@ -95,18 +92,9 @@
       // Check to see if the sensor already exists and update the values
       // if not, add to the 
       //
-      // msg should have:
-      // msg.id
-      // msg.name
-      // msg.value
-      // msg.control
-      // msg.units
-      // msg.type
-      // msg.updated
-      // msg.freq
-      // msg.contact_status
+      // msg should have: id,name,value,control,units,type,updated,freq,contact_status
 
-      // Should check that msg.id exists first
+      // Should check that id exists first
       ctrl = document.getElementById(msg.id);  //returns null if not found
       
       if (ctrl != null) {
@@ -181,11 +169,11 @@
       }
       else {
         //Control not found in html DOM
-        console.log('Control id ' + msg.id + ' not found in DOM');
+        console.log('Control id ' + msg.id + ' not found in DOM. Message was:' + incomingMsg);
       }
     })
 
-    // Force a redraw from the Controller
+    // Request an initial load of sensor data from the Controller
     socket.emit('ClientMsg', 'redraw');
   });
 
@@ -207,35 +195,6 @@
       document.getElementById(oldPageId).classList.add("hidden");	    // Hide old page content
       document.getElementById(newPageId).classList.remove("hidden");	// Display current page content
     }
-  }
-
-  // Handle button press
-  function buttonPress(btnID, btnState) {
-    // toggle button state and send to controller
-    // Up to the controller to perform the action and confirm the state change 
-    // with a new sensor update that will force a redraw
-    console.log("Handling btn press: " + btnID + " " + btnState);
-    if (btnState == '0') {
-      socket.emit('ClientMsg', 'BUT;' + btnID + ';1');
-    }
-    else {
-      socket.emit('ClientMsg', 'BUT;' + btnID + ';0');
-    }
-  }
-
-  // Handle checkbox press
-  function cbPress(cbID, cbState) {
-    // toggle button state and send to controller
-    // Up to the controller to perform the action and confirm the state change 
-    // with a new sensor update that will force a redraw
-    if (cbState == '0') {
-      socket.emit('ClientMsg', 'CHK;' + cbID + ';1');
-    }
-    else {
-      socket.emit('ClientMsg', 'CHK;' + cbID + ';0');
-    }
-    debug = (cbState == '1');
-
   }
 
   // DRAWING FUNCTIONS ===============================
@@ -566,11 +525,13 @@
           <td><div id="11"><font color=grey>...</font></div></td>
           <td><div id="12"><font color=grey>...</font></div></td>
           <td><div id="105"><font color=grey>...</font></div></td>
+          <td><div id="26"><font color=grey>...</font></div></td>
         </tr>
         <tr>
           <td><div id="21"><font color=grey>...</font></div></td>
           <td><div id="23"><font color=grey>...</font></div></td>
           <td><div id="22"><font color=grey>...</font></div></td>
+          <td><div id="25"><font color=grey>...</font></div></td>
         </tr>
         <tr>
           <td><div id="24"><font color=grey>...</font></div></td>

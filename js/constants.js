@@ -1,6 +1,6 @@
 const colDkBlue   = "#152934";
 const colLtBlue   = "#6596C4";
-const colNavBack  = "#01649D"; // Nav button background blue
+const colNavBack  = "#01649D";
 const colText     = "#E1F4F4";
 const colRed      = "#B00000";
 const colAmber    = "#F0A946";
