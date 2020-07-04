@@ -582,19 +582,20 @@ function decode(msg) {
 app.get('/', function(req, res){
 // Iterate through validClientIPs array to check client IP is ok
 
-	var sendFileName = __dirname + '/sorry.html';
+	var sendFileName = __dirname + '/dash.html';
 
 	// Geo check	
-	var ip = "151.101.166.133";
 	var geo = geoip.lookup(req.connection.remoteAddress);
 
-	if ((geo.country == 'NZ') || (geo.country == 'AU')) {
-		logMsg('I', 'Hello ' + req.connection.remoteAddressAll + ' from ' + geo.country);
-		sendFileName = __dirname + '/dash.html';
-	} else {
-		logMsg('I', 'Sorry ' + req.connection.remoteAddressAll + ' from ' + geo.country);
-	}
+	if (geo) {
 
+		if ((geo.country == 'NZ') || (geo.country == 'AU')) {
+			logMsg('I', 'Hello ' + req.connection.remoteAddressAll + ' from ' + geo.country);
+		} else {
+			logMsg('I', 'Sorry ' + req.connection.remoteAddressAll + ' from ' + geo.country);
+			sendFileName = __dirname + '/sorry.html';
+		}
+	}
 	// for (var i=0; i<conf.validclients.length; i++){
 	// 	if (req.connection.remoteAddress.indexOf(conf.validclients[i]) !== -1){
 	// 		sendFileName = __dirname + '/dash.html';
