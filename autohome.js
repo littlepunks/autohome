@@ -15,6 +15,8 @@ var io         = require('socket.io')(http);
 var request    = require('request');
 var colors     = require('colors');
 const fs 	   = require('fs');
+const geoip    = require('geoip-lite');
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -582,12 +584,23 @@ app.get('/', function(req, res){
 
 	var sendFileName = __dirname + '/sorry.html';
 
-	for (var i=0; i<conf.validclients.length; i++){
-		if (req.connection.remoteAddress.indexOf(conf.validclients[i]) !== -1){
-			sendFileName = __dirname + '/dash.html';
-			break;
-		}
+	// Geo check	
+	var ip = "151.101.166.133";
+	var geo = geoip.lookup(req.connection.remoteAddress);
+
+	if ((geo.country == 'NZ') || (geo.country == 'AU')) {
+		logMsg('I', 'Hello ' + req.connection.remoteAddressAll + ' from ' + geo.country);
+		sendFileName = __dirname + '/dash.html';
+	} else {
+		logMsg('I', 'Sorry ' + req.connection.remoteAddressAll + ' from ' + geo.country);
 	}
+
+	// for (var i=0; i<conf.validclients.length; i++){
+	// 	if (req.connection.remoteAddress.indexOf(conf.validclients[i]) !== -1){
+	// 		sendFileName = __dirname + '/dash.html';
+	// 		break;
+	// 	}
+	// }
 
 	res.sendFile(sendFileName);
 
