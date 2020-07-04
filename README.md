@@ -1,13 +1,13 @@
 (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 
-# DESCRIPTION
+# Description
 
 AutoHome is a Node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based sensor network for sensor data.
 The controller is connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
 It supports TP-Link, Tuya and Wemo smart switches.
 The software is currently design to connect to MySensor API 1.5
 
-# FILES
+# Files
 
 All files must reside in the same folder:
 - index.js -         The main node server component
@@ -22,7 +22,7 @@ All files must reside in the same folder:
 - graphs.html
 
 
-# EXECUTION
+# Execution
 
 Using 'screen' utility to created a detached sessions that survives Putty exits. Later will setup as a service.
 Using nodemon to auto restart script when autohome.js is changed.
@@ -37,19 +37,22 @@ Using nodemon to auto restart script when autohome.js is changed.
 
 Refer to https://y-ax.com/nodejs-app-auto-start-in-server for how to set up on boot.
 
-# HARDWARE
+# Hardware
 
 A MySensors gateway must be connected to a known serial port on the local PC.
 e.g. COM1 in Windows, or /dev/ttyUSB0 in Raspbian
 
 Gateway and sensors use Arduino Nano V3 modules
 
-# NODE.JS DETAILS (tested working)
-Windows
-  Node Version 4.5.0
+# Node.JS Details
+
+Tested Working:
+
+**Windows**
+Node Version 4.5.0
   NPM Version 2.15.9
 
-Raspbian
+**Raspbian**
   Node Version 14.4.0
   NPM Version 6.14.5
 
@@ -64,14 +67,15 @@ The app requires the following node modules:
 - request
 - colors
 
-# OTHER DEPENDENCIES
+# Other Dependencies
 - RRDTool (in Windows needs Cygwin installed with defaults as well)
 
-# ARDUINO SETTINGS
+# Arduino Settings
+
 Arduino with USB: Arduino Nano V3, ATmega328, 5V
 Arduino without USB: ArduinPro Mini, ATmega328, 3V?
----
-# BUILD INSTRUCTIONS
+
+# Build Instructions
 
 1. Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
 2. Unzip the file.
@@ -87,20 +91,23 @@ Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 - Restart
 
 6. Then do:
+```
 	git clone https://github.com/littlepunks/autohome.git
 	cd autohome
 	chmod +x autohome-build.sh
 	./autohome-build.sh
+```
+7. When done type:
+```
+npm start (or npm test)
+```
 
-7. When done type: npm start (or npm test)
-
----
-# SENSOR DETAILS
+# Sensor Details
 
 Refer to sensor_mappings.xlsx for sensor details
 
----
-# SETTINGS
+# Settings
+
 All settings are stored in JSON format in settings.json
 
 Entries from the settings file are detailed below with default or example values
@@ -117,7 +124,7 @@ weather.externalTempURL - URL for openweathermap.org to get the local weather co
 ```
 ---
 
-# BASIC OPERATION
+# Basic Operation
 At startup:
 - All node modules are loaded
 - Various constant, variables and helper functions are defined
@@ -130,7 +137,7 @@ At startup:
 - Regular WeatherAPI calls are started
 
 ---
-# BUGS/KNOWN ERRORS
+# Bugs/Known Errors
 - [All] When Wemo automatically turns off, AutoHome doesn't pick it up --> poll regularly?
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
 - [PC] The com port is hard coded in settings.json. Check Windows device manager and edit the port name as required. The wrong port will display "Connection error - trying to reconnect" messages in the console and the code will exit.
@@ -138,7 +145,7 @@ At startup:
 = [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
 
 ---
-# TO DO
+# To Do
 
 - RRDTOOL uses conf.weather settings from the settings file but that should be changed to search and use the sensor values instead
 - Convert remaining weather items such as Description and images to the Decode mode
