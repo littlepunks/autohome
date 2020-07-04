@@ -2,7 +2,7 @@
 
 # Description
 
-AutoHome is a Node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based sensor network for sensor data.
+AutoHome is a node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based sensor network for sensor data.
 The controller is connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
 It supports TP-Link, Tuya and Wemo smart switches.
 The software is currently design to connect to MySensor API 1.5
@@ -49,12 +49,14 @@ Gateway and sensors use Arduino Nano V3 modules
 Tested Working:
 
 **Windows**
+
 Node Version 4.5.0
-  NPM Version 2.15.9
+NPM Version 2.15.9
 
 **Raspbian**
-  Node Version 14.4.0
-  NPM Version 6.14.5
+
+Node Version 14.4.0
+NPM Version 6.14.5
 
 The app requires the following node modules:
 - express
@@ -136,64 +138,43 @@ At startup:
 - Regular status check timers are started
 - Regular WeatherAPI calls are started
 
----
 # Bugs/Known Errors
-- [All] When Wemo automatically turns off, AutoHome doesn't pick it up --> poll regularly?
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
-- [PC] The com port is hard coded in settings.json. Check Windows device manager and edit the port name as required. The wrong port will display "Connection error - trying to reconnect" messages in the console and the code will exit.
-- [All] The Wemo IP is hardcoded. Check IP/MAC excel sheet and arp table
-= [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
+- [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
 
----
 # To Do
 
-- RRDTOOL uses conf.weather settings from the settings file but that should be changed to search and use the sensor values instead
-- Convert remaining weather items such as Description and images to the Decode mode
+- Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
 - TPLINK - plug online/offline events should change sensor status to red
 - Weather image doesn't resize like the other canvases. Is an image not a canvas, so may need action on a resize event. Or draw image on canvas
 - Updates from switches should be processed and the sensor values updated automatically.
 - [Alexa] Add getting switch status, e.g. is the fan on, or "is anything turned on"
 - Record last motion detected for motion sensors. Useful to report on.
 - Need "status_check" values for switches (and all oddball sensors)
-- Add weather data as individual sensors to conf.mysensors.sensornodes - useful when sending to Alexa. Already in settings.json but in the wrong place
-- ACTIVE: Changing from id's to classes in html to allow duplicate controls.
-- Testing setting radio levels on troublesome nodes to/from  RF24_PA_MAX/RF24_PA_LOW/RF24_PA_MIN. Using glad wrap/foil around radio module when using a
-  external attenna, trying further away. Checkout https://docs.google.com/spreadsheets/d/1fsJyOGhNGL9IeZMMSuVwluUpo9he43wcWjM_w6xTL5k/edit#gid=0 for radio
-  capabilities
-- dash.html - iterate through all matching controls on an update not just the first
+- Changing from id's to classes in html to allow duplicate controls. dash.html will then need to iterate over all matching classes
+- Testing setting radio levels on troublesome nodes to/from  RF24_PA_MAX/RF24_PA_LOW/RF24_PA_MIN. Using glad wrap/foil around radio module when using an external attenna, trying further away. Checkout https://docs.google.com/spreadsheets/d/1fsJyOGhNGL9IeZMMSuVwluUpo9he43wcWjM_w6xTL5k/edit#gid=0 for radio capabilities
 - How to handle nodes with multiple sensors. Deal with NodeID and SensorID as a unique pair (key). E.g. temp node with multiple sensors
 - Alert (email) when more than a "few" sensors are missing too long
-- add 2 way comms (to change update times) to all modules, also add "query" to find out description
+- Add 2 way comms (to change update times) to all modules, also add "query" to find out description
 - Show IR sensor movement map (security)
 - Show trend arrows, e.g. is the air pressure going up or down since the last reading
 - replace "colors" npm module with "chalk"
-- move validClientIPs to settings.json
-- allow a reload of settings once started
+- Use a geoip module instead of validClientIPs
 - more granular control of when to send emails, e.g. priority
 - have a page displaying sensor settings and make then adjustable
 - change RRDTOOL data to show averages too.
 - RRDTOOL to capture motion events
-- Set the waitInterval on nodes remotely usually a code like W20000. Other letter codes could be used for other tasks.
-  Apply to one or more sensors
+- Set the waitInterval on nodes remotely usually a code like W20000. Other letter codes could be used for other tasks. Apply to one or more sensors
 - Add a +/- control for setting the waitInterval
 - For actions such as turning a switch on/off, need to process the ACK message that the sensor sends through to confirm.
 - Gather all the functions that execute at startup in one place. Maybe wrap with a main()
 - Maybe add a "source" field to controls. e.g. "url:http://weatheraddress" or "sensor,sensorid" or "file:filename"
-- Occasionally the Wemo goes "wacky" and refuses connections. This will cause the wemo commands to error and autohome to crash
-  Need to check that the URL is available (via a get) before executing the Wemo commands
-- Occasionally poll Wemo status as it is sometimes wrong after it auto timeouts
-- Have Wemo be a special kind of control to allow for event subscription
 - Poll devices on startup
 - Separate web page to add/remove controls
 - Move to database for all data
-- Auto discover all Wemo switches
-- Auto allocate node id's when a client first tries to register
-- have a web page to add/change/delete sensor details
-- Allow for more than one Wemo
-- Get onto Github?
 - Displays can be sent to rather than having to poll themselves.
 - Add a +/- counter control
 - sort out https/cert access via littlepunk.co.nz or littlepunk.duckdns.org
 - Combine multiple sensors into one (Laundry - motion, room temp, freezer temp, washing machine action,floor moisture, door part open(drier), door full open)
-- Create LCD/OLED/Table console
-- Have schedules, e.g. alert on motion when no-one home
+- Create LCD/OLED/Table console for kitchen
+- Have schedules and structure, e.g. alert on motion when no-one home, or heater on when after 5pm and someone home
