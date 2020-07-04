@@ -1,46 +1,50 @@
 (C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 
-DESCRIPTION
+# DESCRIPTION
 
-AutoHome is a Node.js based software controller that runs on a Raspberry Pi and utilises a MySensors (www.mysensors.org) radio based sensor network.
-The controller connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
+AutoHome is a Node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based sensor network for sensor data.
+The controller is connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
+It supports TP-Link, Tuya and Wemo smart switches.
 The software is currently design to connect to MySensor API 1.5
 
-FILES
+# FILES
 
 All files must reside in the same folder:
-- index.js          The main node server component
-- settings.json     A local settings file read at startup
-- dash.html         The main html based dashboard
-- make-graph.cmd    Calls rrdtool to generate graphs
-- temps.rrd         (In rrdtool directory) temperature log data
-- README.txt        This file
-- sorry.html        Message for geo-blocked users
-- cert.js           Cert details for littlepunk.co.nz
+- index.js -         The main node server component
+- settings.json -     A local settings file read at startup
+- dash.html -        The main html based dashboard
+- make-graph.cmd -   Calls rrdtool to generate graphs
+- temps.rrd -        (In rrdtool directory) temperature log data
+- README.txt -       This file
+- sorry.html -       Message for geo-blocked users
+- cert.js -          Cert details for littlepunk.co.nz
 - sensor_mappings.xlsx
 - graphs.html
 
 
-EXECUTION
+# EXECUTION
 
 Using 'screen' utility to created a detached sessions that survives Putty exits. Later will setup as a service.
 Using nodemon to auto restart script when autohome.js is changed.
 
+```
 > screen -S autohome
 > sudo nodemon --ignore '*.json' --ignore '*.html' autohome.js               // checkpackage.json for full command line
 > { Ctrl-A,D }
 > screen -r autohome      // at any time to reconnect
 > screen -list     // to see sessions
+```
 
 Refer to https://y-ax.com/nodejs-app-auto-start-in-server for how to set up on boot.
 
-HARDWARE
+# HARDWARE
+
 A MySensors gateway must be connected to a known serial port on the local PC.
 e.g. COM1 in Windows, or /dev/ttyUSB0 in Raspbian
 
 Gateway and sensors use Arduino Nano V3 modules
 
-NODE.JS DETAILS (tested working)
+# NODE.JS DETAILS (tested working)
 Windows
   Node Version 4.5.0
   NPM Version 2.15.9
@@ -60,21 +64,20 @@ The app requires the following node modules:
 - request
 - colors
 
-OTHER DEPENDENCIES
+# OTHER DEPENDENCIES
 - RRDTool (in Windows needs Cygwin installed with defaults as well)
 
-
-ARDUINO SETTINGS
+# ARDUINO SETTINGS
 Arduino with USB: Arduino Nano V3, ATmega328, 5V
 Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 ---
-BUILD INSTRUCTIONS
+# BUILD INSTRUCTIONS
 
-Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
-Unzip the file.
-Use the Win32DiskImager utility to write to an SD card (8 GB+)
-Boot from SD
-Follow the wizard onscreen to:
+1. Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
+2. Unzip the file.
+3. Use the Win32DiskImager utility to write to an SD card (8 GB+)
+4. Boot from SD
+5. Follow the wizard onscreen to:
 - Choose your country
 - Set password
 - Select Wifi network
@@ -83,24 +86,25 @@ Follow the wizard onscreen to:
 - Choose "Preferences"->"Raspberry Pi Configuration" to set to boot to command line, change host name, enable ssh
 - Restart
 
-Then do:
+6. Then do:
 	git clone https://github.com/littlepunks/autohome.git
 	cd autohome
 	chmod +x autohome-build.sh
 	./autohome-build.sh
 
-When done type: npm start (or npm test)
+7. When done type: npm start (or npm test)
 
------------------------------------------------------------------------------
-SENSOR DETAILS
+---
+# SENSOR DETAILS
 
 Refer to sensor_mappings.xlsx for sensor details
 
------------------------------------------------------------------------------
-SETTINGS
+---
+# SETTINGS
 All settings are stored in JSON format in settings.json
 
 Entries from the settings file are detailed below with default or example values
+```
 sockets:
 	port:3000 - TCP port to connect a Web client to.
 mysensors:
@@ -110,9 +114,10 @@ mysensors:
 mailOptions - to/from addresses, subject and message format settings for email alerts
 smtpConfig - mail server and authentication settings
 weather.externalTempURL - URL for openweathermap.org to get the local weather conditions. You need to register with the website to get a unique id for your location
+```
+---
 
------------------------------------------------------------------------------
-BASIC OPERATION
+# BASIC OPERATION
 At startup:
 - All node modules are loaded
 - Various constant, variables and helper functions are defined
@@ -124,16 +129,16 @@ At startup:
 - Regular status check timers are started
 - Regular WeatherAPI calls are started
 
------------------------------------------------------------------------------
-BUGS/KNOWN ERRORS
+---
+# BUGS/KNOWN ERRORS
 - [All] When Wemo automatically turns off, AutoHome doesn't pick it up --> poll regularly?
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
 - [PC] The com port is hard coded in settings.json. Check Windows device manager and edit the port name as required. The wrong port will display "Connection error - trying to reconnect" messages in the console and the code will exit.
 - [All] The Wemo IP is hardcoded. Check IP/MAC excel sheet and arp table
 = [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
 
------------------------------------------------------------------------------
-TO DO
+---
+# TO DO
 
 - RRDTOOL uses conf.weather settings from the settings file but that should be changed to search and use the sensor values instead
 - Convert remaining weather items such as Description and images to the Decode mode
