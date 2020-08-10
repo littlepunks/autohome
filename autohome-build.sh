@@ -1,4 +1,4 @@
-happy1HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth
 # do these first before calling this script
 #git clone https://github.com/littlepunks/autohome.git
 #chmod +x autohome-build.sh
