@@ -1,9 +1,8 @@
-happy1HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth
 # do these first before calling this script
 #git clone https://github.com/littlepunks/autohome.git
 #chmod +x autohome-build.sh
 #./autohome-build.sh
-mnnne
 
 # Install node version manager
 #curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
@@ -54,3 +53,9 @@ mkdir ./images
 # May also need to do:
 #sudo npm install -g node-gyp
 
+# Install cronjob for duckdns updates
+chmod 700 duck.sh
+# Add this line to crontab:
+# */5 * * * * ~/duckdns/duck.sh >/dev/null 2>&1
+duckline="*/5 * * * * ~/autohome/duck.sh >/dev/null 2>&1"
+(crontab -u pi -l; echo "$duckline" ) | crontab -u pi -
