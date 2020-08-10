@@ -146,6 +146,7 @@ At startup:
 
 - Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
 - TPLINK - plug online/offline events should change sensor status to red
+- Consider using MY_RX_MESSAGE_BUFFER_FEATURE on gateway/repeaters to buffer messages. Needs IRQ (Pin2) connected.
 - Weather image doesn't resize like the other canvases. Is an image not a canvas, so may need action on a resize event. Or draw image on canvas
 - Updates from switches should be processed and the sensor values updated automatically.
 - [Alexa] Add getting switch status, e.g. is the fan on, or "is anything turned on"

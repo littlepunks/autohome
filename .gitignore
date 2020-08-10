@@ -28,3 +28,5 @@ dash - Copy.html
 .vscode/
 package-lock.json
 .gitignore
+settings.json
+
