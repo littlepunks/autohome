@@ -1,6 +1,7 @@
 // ----------------------------------------------------
 // © 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
 // See README.md
+// ----------------------------------------------------
 /*jshint esversion: 6 */
 
 // Load third party modules

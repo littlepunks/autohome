@@ -22,17 +22,23 @@ All files must reside in the same folder:
 - graphs.html
 
 
-# Execution
+# Execution (New)
+
+From the autohome directory:
+> npm start
+
+# Execution (OLD)
 
 Using 'screen' utility to created a detached sessions that survives Putty exits. Later will setup as a service.
 Using nodemon to auto restart script when autohome.js is changed.
 
 ```
 > screen -S autohome
-> sudo nodemon --ignore '*.json' --ignore '*.html' autohome.js               // checkpackage.json for full command line
+> npm start                  [ OLD is: > sudo nodemon --ignore '*.json' --ignore '*.html' autohome.js  // check package.json for full command line ]
 > { Ctrl-A,D }
 > screen -r autohome      // at any time to reconnect
 > screen -list     // to see sessions
+
 ```
 
 Refer to https://y-ax.com/nodejs-app-auto-start-in-server for how to set up on boot.
@@ -104,6 +110,13 @@ Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 npm start (or npm test)
 ```
 
+
+# Fedora build instructions
+1. Install Fedora with username littlepunk
+2. Create /home/littlepunk/autohome
+3. sudo dnf update
+4. curl -sL https://
+
 # Sensor Details
 
 Refer to sensor_mappings.xlsx for sensor details
@@ -141,6 +154,17 @@ At startup:
 # Bugs/Known Errors
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
 - [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
+
+- If Tuya devices offline will sometimes get:
+		(node:855) UnhandledPromiseRejectionWarning: Error: find() timed out. Is the device powered on and the ID or IP correct?
+			at /home/pi/autohome/node_modules/tuyapi/index.js:619:13
+			at Timeout._onTimeout (/home/pi/autohome/node_modules/p-timeout/index.js:25:13)
+			at listOnTimeout (internal/timers.js:549:17)
+			at processTimers (internal/timers.js:492:7)
+		(Use `node --trace-warnings ...` to show where the warning was created)
+		(node:855) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). To terminate the node process on unhandled promise rejection, use the CLI flag `--unhandled-rejections=strict` (see https://nodejs.org/api/cli.html#cli_unhandled_rejections_mode). (rejection id: 1)
+		(node:855) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+
 
 # To Do
 
