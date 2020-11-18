@@ -168,6 +168,7 @@ At startup:
 
 # To Do
 
+- Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
 - Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
 - TPLINK - plug online/offline events should change sensor status to red
 - Consider using MY_RX_MESSAGE_BUFFER_FEATURE on gateway/repeaters to buffer messages. Needs IRQ (Pin2) connected.
