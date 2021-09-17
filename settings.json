@@ -11,12 +11,12 @@
       {
         "id": "1",
         "name": "Tom",
-        "value": 18.7,
+        "value": 18.6,
         "control": "GAU",
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1631858726872,
+        "updated": 1631859628111,
         "freq": 300
       },
       {
@@ -27,7 +27,7 @@
         "contact_status": "0",
         "units": "°C",
         "type": "0",
-        "updated": 1631858897910,
+        "updated": 1631859499383,
         "freq": 300
       },
       {
@@ -38,7 +38,7 @@
         "control": "GAU",
         "contact_status": "0",
         "type": "0",
-        "updated": 1631858826297,
+        "updated": 1631859728290,
         "freq": 300
       },
       {
