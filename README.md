@@ -152,6 +152,7 @@ At startup:
 - Regular WeatherAPI calls are started
 
 # Bugs/Known Errors
+- TCP port must be >1024 otherwise root access is required to run the core process
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
 - [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
 
@@ -166,13 +167,11 @@ At startup:
 		(node:855) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
 
 
-- If you get errors such as:
-
-then run 'npm rebuild'
+- [All] If you get weird node errors after a new build try running 'npm rebuild'
 
 # To Do
 
-- Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
+- [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
 - Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
 - TPLINK - plug online/offline events should change sensor status to red
 - Consider using MY_RX_MESSAGE_BUFFER_FEATURE on gateway/repeaters to buffer messages. Needs IRQ (Pin2) connected.
