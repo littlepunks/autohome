@@ -5,8 +5,8 @@
   "description": "AutoHome",
   "main": "autohome.js",
   "scripts": {
-    "start": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
-    "test": "sudo nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d"
+    "start": "nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
+    "test": "nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d"
   },
   "author": "David Jacobsen",
   "license": "ISC",
