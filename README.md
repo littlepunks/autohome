@@ -2,10 +2,10 @@
 
 # Description
 
-AutoHome is a node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based sensor network for sensor data.
+AutoHome is a node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based (NRF24L01+ 2.4 Ghz) sensor network for sensor data.
 The controller is connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
 It supports TP-Link, Tuya and Wemo smart switches.
-The software is currently design to connect to MySensor API 1.5
+The software is currently design to connect to MySensors API 1.5
 
 # Files
 
@@ -20,6 +20,7 @@ All files must reside in the same folder:
 - cert.js -          Cert details for littlepunk.co.nz
 - sensor_mappings.xlsx
 - graphs.html
+- constants.js -     Useful constants for autohome.js
 
 
 # Execution (New)
@@ -46,7 +47,7 @@ Refer to https://y-ax.com/nodejs-app-auto-start-in-server for how to set up on b
 # Hardware
 
 A MySensors gateway must be connected to a known serial port on the local PC.
-e.g. COM1 in Windows, or /dev/ttyUSB0 in Raspbian
+e.g. COM1 in Windows, or /dev/ttyUSB0 in Raspbian or Linux
 
 Gateway and sensors use Arduino Nano V3 modules
 
@@ -63,6 +64,11 @@ NPM Version 2.15.9
 
 Node Version 14.4.0
 NPM Version 6.14.5
+
+**Ubuntu 20.04.3**
+
+Node Version 16.9.1
+NPM Version 7.23.0
 
 The app requires the following node modules:
 - express
@@ -128,7 +134,7 @@ All settings are stored in JSON format in settings.json
 Entries from the settings file are detailed below with default or example values
 ```
 sockets:
-	port:3000 - TCP port to connect a Web client to.
+	port:8080 - TCP port to connect a Web client to.
 mysensors:
 	comport:COM1 or //dev/ttyUSB0 - The local com (serial) port that the MySensors controller is connected to.
 	baud - The baud rate of the serial connection in bits per second.

@@ -44,7 +44,7 @@
   // Setup socket for comms back to the server
   var socket = io();
 
-  var debug = false;
+  var debug = true;
   
   // To Do:
   // Shift to id's being the main identifier. Names should just be labels and duplicates allowed
@@ -106,8 +106,6 @@
 
           ctrl.innerHTML = "<canvas id='" + msg.control + msg.id + "' width='" + cSize
             + "' height='" + cSize + "' title='Sensor " + msg.id + "'></canvas><br>" + msg.name;
-          //alert(msg.control + "," + msg.id + "," + msg.value + "," + msg.name + "," + msg.units + ',' + msg.type);
-          //alert(ctrl.innerHTML);
 
           c = document.getElementById(msg.control + msg.id);  // Find right canvas
           if (c!= null) {
@@ -157,7 +155,6 @@
           else {
             //Control not found in html DOM
             console.log('Canvas for ' + msg.control + msg.id + ' not found');
-            alert('Canvas for ' + msg.control + msg.id + ' not found');
           }
         }
         else {
@@ -556,7 +553,6 @@
         <tr>
           <td><div id="209"><font color=grey>...</font></div></td>
           <td><div id="210"><font color=grey>...</font></div></td>
-          <td><div id="211"><font color=grey>...</font></div></td>
         </tr>
         <tr>
           <td><div id="204"><font color=grey>...</font></div></td>

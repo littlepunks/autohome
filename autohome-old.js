@@ -9,6 +9,7 @@
 "use strict";
 
 var express    = require('express');
+var bodyParser = require("body-parser");
 var app        = express();
 var http       = require('http').Server(app);
 var io         = require('socket.io')(http);
@@ -18,8 +19,8 @@ const fs 	   = require('fs');
 const geoip    = require('geoip-lite');
 
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Common list for smart plugs/switches
 var plugs = [];
@@ -72,50 +73,50 @@ client.startDiscovery();
 
 
 // Tuya Switch setup ---------------------------------------------------------------------
-//const TuyAPI = require('tuyapi');
-//const util = require('util');
-//const tuyaDev = new TuyAPI({
-//	id: '550705303c71bf20a967',
-//	key: '6590d93429b1034a'});
-//
+const TuyAPI = require('tuyapi');
+const util = require('util');
+const tuyaDev = new TuyAPI({
+	id: '550705303c71bf20a967',
+	key: '6590d93429b1034a'});
+
 // Find device on network
-//tuyaDev.find().then(() => {
- //	// Connect to device
-// 	tuyaDev.connect();
-//	});
+tuyaDev.find().then(() => {
+ 	// Connect to device
+ 	tuyaDev.connect();
+	});
   
 // Add event listeners
-//tuyaDev.on('connected', () => {
-//	logMsg('I','Connected to Tuya device');
-//	// Hard coded name. Really need to get name from the switch and match.
-//	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
+tuyaDev.on('connected', () => {
+	logMsg('I','Connected to Tuya device');
+	// Hard coded name. Really need to get name from the switch and match.
+	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
 
-//});
+});
 
-//tuyaDev.on('disconnected', () => {
-//	logMsg('I','Disconnected from Tuya device.');
-//});
+tuyaDev.on('disconnected', () => {
+	logMsg('I','Disconnected from Tuya device.');
+});
 
-//tuyaDev.on('error', error => {
-//	logMsg('E','Tuya general error!' + error);
-//});
+tuyaDev.on('error', error => {
+	logMsg('E','Tuya general error!' + error);
+});
 
-//tuyaDev.on('data', data => {
-//	try {
+tuyaDev.on('data', data => {
+	try {
 //		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
 //		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
 // 	}
-//		logMsg('I','Tuya data: ' + util.inspect(data));
-//	}
-//	catch (error) {
-//		logMsg('E', 'Tuya data error: ' + error);
-//	}
+		logMsg('I','Tuya data: ' + util.inspect(data));
+	}
+	catch (error) {
+		logMsg('E', 'Tuya data error: ' + error);
+	}
 	
 	// Can set Tuya switch via:
 	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
 	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
 
-//});
+});
 
 // Disconnect after 10 seconds
 //setTimeout(() => { tuyaDev.disconnect(); }, 10000);
@@ -243,20 +244,14 @@ function stopTempTimer () {
 	logMsg('DI', 'RRD data update: ' + updStr);
 
 	const spawn = require('child_process').spawn;
-	// BUG
-	// Hard coded path!!!
-//	const bat = spawn('rrdtool', ['update', '/home/pi/autohome/temps.rrd', updStr]);
-	const bat = spawn('rrdtool', ['update', '/home/littlepunk/autohome/temps.rrd', updStr]);
+	const bat = spawn('rrdtool', ['update', '/home/pi/autohome/temps.rrd', updStr]);
 
 	bat.stdout.on('data', (data) => { logMsg('DI', 'RRD data updating: ' + data.toString());});
 	bat.stderr.on('data', (data) => { logMsg('E', 'RRD data update error: ' + data.toString());	});
 
 	bat.on('exit', (code) => {
 		if (code != 0) { logMsg('E', 'RRD data update error code: ' + code);}
-	// BUG
-	// Hard coded path!!!
-//		const bat2 = spawn('/home/pi/autohome/make-graph.sh');
-		const bat2 = spawn('/home/littlepunk/autohome/make-graph.sh');
+		const bat2 = spawn('/home/pi/autohome/make-graph.sh');
 
 		bat2.stdout.on('data', (data) => { logMsg('DI', 'RRD graph being created: ' + data.toString().trim()); });
 		bat2.stderr.on('data', (data) => { logMsg('DE', 'RRD graph creation error: ' + data.toString()); });
@@ -274,7 +269,6 @@ function stopTempTimer () {
 }
 
 // Start the timer to update RRD data and graphs regularly
-// !!!! Re-enable once there is an RRD file in place
 startTempTimer();
 
 // --------------------------------------
@@ -330,7 +324,6 @@ function writeSettingsSync() {
 
 
 // Open serial port to connect to MySensor Gateway
-logMsg('I', 'Commence opening serial port');
 var SerialPort = require('serialport');
 
 var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
@@ -385,8 +378,7 @@ function appendData(str) {
 
 
 // Get external weather
-// URL is in settings.json
-// The new API gets way more info and also a forecast, but the JSON structure is slightly different:
+// The new API gets way more info an also a forecast:
 // https://api.openweathermap.org/data/2.5/onecall?lat=-41.29&lon=174.78&exclude=minutely&appid=cce91f7f0d86e2f338101f1ca24dd37f
 
 function getOutsideWeather() {
@@ -416,7 +408,6 @@ function getOutsideWeather() {
 				decode('205;0;'+ C_SET + ';0;' + V_TEMP + ';' + convertTimestampToTime(obj.sys.sunset));
 				decode('209;0;'+ C_SET + ';0;' + V_TEMP + ';' + obj.weather[0].description);
 				decode('210;0;'+ C_SET + ';0;' + V_TEMP + ';' + obj.weather[0].main);
-				decode('211;0;'+ C_SET + ';0;' + V_TEMP + ';' + Math.round((obj.main.feels_like-273.15)*10)/10);
 				decode('200;0;'+ C_SET + ';0;' + V_IMAGE + ';' + 'http://openweathermap.org/img/w/' + obj.weather[0].icon + '.png');
 
 				// Refresh graphs
@@ -588,7 +579,6 @@ function decode(msg) {
 }
 
 
-logMsg('I', 'Starting app.get');
 // What to serve from the root address. http://localhost/
 app.get('/', function(req, res){
 // Iterate through validClientIPs array to check client IP is ok
@@ -623,11 +613,6 @@ app.get('/test', function(req, res){
 	res.sendFile(__dirname + '/test.html');
 });
 
-// Used for testing
-app.get('/constants.js', function(req, res){
-	res.sendFile(__dirname + '/constants.js');
-});
-
 // Returns JSON version of the current sensor values
 app.get('/sensors', function(req, res){
 	var sensorJSON = JSON.stringify(conf.mysensors.sensornodes);
@@ -644,7 +629,6 @@ app.use(express.static('images'));
 app.use(express.static('js'));
 app.use(express.static('css'));
 
-logMsg('I', 'Starting io handler');
 // When a connection is made, setup the handler function
 io.on('connection', function(socket){
   logMsg('C', 'Web client connected');
@@ -678,11 +662,8 @@ io.on('connection', function(socket){
   });
 });
 
-logMsg('I', 'Starting http listen');
-
 // Start Web Service listening on TCP specified in the settings
-//http.listen(conf.sockets.port, function(){
-http.listen(8080, function(){
+http.listen(conf.sockets.port, function(){
 	logMsg('C', 'Listening on *:' + conf.sockets.port);
 });
   

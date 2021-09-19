@@ -81,4 +81,4 @@ npm rebuild
 
 # Also need to re-add the rrd data file
 # Ready for npm start now
-npm start
+echo -e '\nAll done! Check the output above for any serious errors\nType "npm start" to start AutoHome'
