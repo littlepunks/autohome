@@ -1,4 +1,4 @@
-(C) 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
+© 2017-2021 David Jacobsen / dave.jacobsen@gmail.com
 
 # Description
 
@@ -15,7 +15,7 @@ All files must reside in the same folder:
 - dash.html -        The main html based dashboard
 - make-graph.cmd -   Calls rrdtool to generate graphs
 - temps.rrd -        (In rrdtool directory) temperature log data
-- README.txt -       This file
+- README.md  -       This file
 - sorry.html -       Message for geo-blocked users
 - cert.js -          Cert details for littlepunk.co.nz
 - sensor_mappings.xlsx
@@ -177,10 +177,25 @@ At startup:
 
 # To Do
 
+## Security
+- Use helmet module for greater security
+- Run npm audit
+- Consider using snyk: npm install -g snyk; cd myapp; snyk test; snyk wizard
+- Use certbot and Lets Encrypt or https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
+- Use NGINX reverse proxy : https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-20-04
+
+## Graphing
+Move to using chart.js and storing the data a different way
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
+
+## Build
 - Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
+
+## Sensors
 - TPLINK - plug online/offline events should change sensor status to red
 - Consider using MY_RX_MESSAGE_BUFFER_FEATURE on gateway/repeaters to buffer messages. Needs IRQ (Pin2) connected.
+
+## Dashboard
 - Weather image doesn't resize like the other canvases. Is an image not a canvas, so may need action on a resize event. Or draw image on canvas
 - Updates from switches should be processed and the sensor values updated automatically.
 - [Alexa] Add getting switch status, e.g. is the fan on, or "is anything turned on"
@@ -197,7 +212,6 @@ At startup:
 - Use a geoip module instead of validClientIPs
 - more granular control of when to send emails, e.g. priority
 - have a page displaying sensor settings and make then adjustable
-- change RRDTOOL data to show averages too.
 - RRDTOOL to capture motion events
 - Set the waitInterval on nodes remotely usually a code like W20000. Other letter codes could be used for other tasks. Apply to one or more sensors
 - Add a +/- control for setting the waitInterval

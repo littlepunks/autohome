@@ -63,7 +63,6 @@ chmod +x make-graph.sh
 #Instll rrdtool
 sudo apt-get install -y rrdtool
 
-
 # This sotrs an issue with the serial module
 npm rebuild
 
