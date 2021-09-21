@@ -5,7 +5,7 @@
   "description": "AutoHome",
   "main": "autohome.js",
   "scripts": {
-    "start": "nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
+    "start": "nodemon --delay 3 --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
     "test": "nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d"
   },
   "author": "David Jacobsen",

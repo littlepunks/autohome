@@ -1,40 +1,9 @@
 HISTCONTROL=ignoreboth
-# Do these first before calling this script:
-# Change to the directory where the autohome folder will be created (typically root of home folder)
-#    git clone https://github.com/littlepunks/autohome.git
-#    chmod +x autohome-build-ubuntu.sh
-#    ./autohome-build.sh
 
-# Keep things up to date (optional)
-#sudo apt update
+# AutoHome build script for Ubuntu
 
-
-# Setup up CIFS/SAMBA share (optional)
-# Only needed if synching files to a Windows PC
-#sudo DEBIAN_FRONTEND=noninteractive apt install -y samba samba-common-bin librrds-perl rrdtool
-#sudo tee -a /etc/samba/smb.conf > /dev/null <<EOT
-#[Autohome]
-#comment=AutoHome Share
-#path=/home/pi/autohome
-#browsable=yes
-#writeable=yes
-#only guest=no
-#create mask=0777
-#directory mask=0777
-#public=no
-#EOT
-
-# Will pause and ask for a password
-#sudo smbpasswd -a pi
-#sudo service smbd restart
-
-# Show IP
-IFS=' '
-read -ra ADDR <<< $(ifconfig | grep 192)
-echo 'Your ip is: ' ${ADDR[1]}
-
-# Tidy up (optional)
-# sudo apt autoremove -y
+# Run the following:
+#  cd ~/ && git clone https://github.com/littlepunks/autohome.git && cd ./autohome && chmod +x autohome-build-ubuntu.sh && ./autohome-build-ubuntu.sh
 
 # Install nvm and setup terminal
 # Check the web for the latest NVM manager version and update string below
@@ -60,24 +29,48 @@ npm install
 mkdir ./images
 chmod +x make-graph.sh
 
-#Instll rrdtool
+#Install rrdtool
 sudo apt-get install -y rrdtool
 
-# This sotrs an issue with the serial module
+# This sorts an issue with the serial module
 npm rebuild
 
-# May also need to do:
-#sudo npm install -g node-gyp
+# Setup DuckDNS and add to crontab
+duckPath=$(eval echo ~${USER})
+duckLog="$duckPath/autohome/duck.log"
+duckScript="$duckPath/autohome/duck.sh"
 
-###### Won't work as written below for Ubuntu
+# Create duck script file
+echo "echo url=\"https://www.duckdns.org/update?domains=littlepunk&token=fd867389-42e3-4c51-8151-fda6eb2ce694&ip=\" | curl -k -o $duckLog -K -" > $duckScript
+chmod 700 $duckScript
+echo "Duck Script file created"
+# Create Conjob
+# Check if job already exists
+checkCron=$( crontab -l | grep -c $duckScript )
+if [ "$checkCron" -eq 0 ] 
+then
+  # Add cronjob
+  echo "Adding Cron job for Duck DNS"
+  crontab -l | { cat; echo "*/5 * * * * $duckScript"; } | crontab -
+fi
 
-# Install cronjob for duckdns updates
-# chmod 700 duck.sh
-# Add this line to crontab:
+# Run now
+$duckScript
+# Response
+duckResponse=$( cat $duckLog )
+echo "Duck DNS server response : $duckResponse"
+if [ "$duckResponse" != "OK" ]
+then
+  echo "[Error] Duck DNS did not update correctly. Please check your settings or run the setup again."
+else
+  echo "Duck DNS setup complete."
+fi
 
-#duckline="*/5 * * * * ~/autohome/duck.sh >/dev/null 2>&1"
-#(crontab -u littlepunk -l; echo "$duckline" ) | crontab -u littlepunk -
+# Show IP
+IFS=' '
+read -ra ADDR <<< $(ifconfig | grep 192)
+echo 'Your ip is: ' ${ADDR[1]}
 
-# Also need to re-add the rrd data file
 # Ready for npm start now
 echo -e '\nAll done! Check the output above for any serious errors\nType "npm start" to start AutoHome'
+npm start

@@ -588,32 +588,23 @@ function decode(msg) {
 }
 
 
-logMsg('I', 'Starting app.get');
+//logMsg('I', 'Starting app.get');
 // What to serve from the root address. http://localhost/
 app.get('/', function(req, res){
-// Iterate through validClientIPs array to check client IP is ok
-
 	var sendFileName = __dirname + '/dash.html';
 
-	// Geo check	
-	var geo = geoip.lookup(req.connection.remoteAddress);
+	// Geo check src ip
+	var geo = geoip.lookup(req.ip);
 
 	if (geo) {
 
 		if ((geo.country == 'NZ') || (geo.country == 'AU')) {
-			logMsg('I', 'Hello ' + req.connection.remoteAddressAll + ' from ' + geo.country);
+			logMsg('I', 'Hello ' + req.ip + ' from ' + geo.country);
 		} else {
-			logMsg('I', 'Sorry ' + req.connection.remoteAddressAll + ' from ' + geo.country);
+			logMsg('I', 'Sorry ' + req.ip + ' from ' + geo.country + 'you are denied');
 			sendFileName = __dirname + '/sorry.html';
 		}
 	}
-	// for (var i=0; i<conf.validclients.length; i++){
-	// 	if (req.connection.remoteAddress.indexOf(conf.validclients[i]) !== -1){
-	// 		sendFileName = __dirname + '/dash.html';
-	// 		break;
-	// 	}
-	// }
-
 	res.sendFile(sendFileName);
 
 });

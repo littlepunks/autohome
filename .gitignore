@@ -1,34 +1,16 @@
 duck.sh
-autohome-test1.code-workspace
+duck.log
 node_modules/
 images/*
 node_rrd/
 autohome.log
-alexa_basic_skill_interaction_model.json
-alexa_old_interaction_model.json
-autohome - Copy.js
-autohome-prod.code-workspace
-README-old.txt
-wemo-sample-json.json
-wemo-test.js
-serialtest.js
-settings - Copy.json
-temps - 2017-12-17.rrd
-temps.rrd
 test.py
-test.json
-tp-test.js
-test.html
-RRD-Notes.txt
-output.log
-error.log
 create-rrd.sh
 cert.js
-dash - Copy.html
 .well-known/
 .vscode/
 package-lock.json
 .gitignore
 settings.json
-
 notes.txt
+test.sh

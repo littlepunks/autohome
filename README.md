@@ -183,10 +183,13 @@ At startup:
 - Consider using snyk: npm install -g snyk; cd myapp; snyk test; snyk wizard
 - Use certbot and Lets Encrypt or https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
 - Use NGINX reverse proxy : https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-20-04
+- sort out https/cert access via littlepunk.co.nz or littlepunk.duckdns.org
+- consider using express-limit or express-rate-limit or NGINX rate limiting to stop DDoS
 
 ## Graphing
 Move to using chart.js and storing the data a different way
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
+- RRDTOOL to capture motion events
 
 ## Build
 - Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
@@ -194,36 +197,42 @@ Move to using chart.js and storing the data a different way
 ## Sensors
 - TPLINK - plug online/offline events should change sensor status to red
 - Consider using MY_RX_MESSAGE_BUFFER_FEATURE on gateway/repeaters to buffer messages. Needs IRQ (Pin2) connected.
-
-## Dashboard
-- Weather image doesn't resize like the other canvases. Is an image not a canvas, so may need action on a resize event. Or draw image on canvas
 - Updates from switches should be processed and the sensor values updated automatically.
-- [Alexa] Add getting switch status, e.g. is the fan on, or "is anything turned on"
 - Record last motion detected for motion sensors. Useful to report on.
 - Need "status_check" values for switches (and all oddball sensors)
-- Changing from id's to classes in html to allow duplicate controls. dash.html will then need to iterate over all matching classes
 - Testing setting radio levels on troublesome nodes to/from  RF24_PA_MAX/RF24_PA_LOW/RF24_PA_MIN. Using glad wrap/foil around radio module when using an external attenna, trying further away. Checkout https://docs.google.com/spreadsheets/d/1fsJyOGhNGL9IeZMMSuVwluUpo9he43wcWjM_w6xTL5k/edit#gid=0 for radio capabilities
 - How to handle nodes with multiple sensors. Deal with NodeID and SensorID as a unique pair (key). E.g. temp node with multiple sensors
 - Alert (email) when more than a "few" sensors are missing too long
 - Add 2 way comms (to change update times) to all modules, also add "query" to find out description
 - Show IR sensor movement map (security)
-- Show trend arrows, e.g. is the air pressure going up or down since the last reading
-- replace "colors" npm module with "chalk"
-- Use a geoip module instead of validClientIPs
-- more granular control of when to send emails, e.g. priority
-- have a page displaying sensor settings and make then adjustable
-- RRDTOOL to capture motion events
 - Set the waitInterval on nodes remotely usually a code like W20000. Other letter codes could be used for other tasks. Apply to one or more sensors
-- Add a +/- control for setting the waitInterval
-- For actions such as turning a switch on/off, need to process the ACK message that the sensor sends through to confirm.
-- Gather all the functions that execute at startup in one place. Maybe wrap with a main()
-- Maybe add a "source" field to controls. e.g. "url:http://weatheraddress" or "sensor,sensorid" or "file:filename"
 - Poll devices on startup
-- Separate web page to add/remove controls
-- Move to database for all data
 - Displays can be sent to rather than having to poll themselves.
-- Add a +/- counter control
-- sort out https/cert access via littlepunk.co.nz or littlepunk.duckdns.org
 - Combine multiple sensors into one (Laundry - motion, room temp, freezer temp, washing machine action,floor moisture, door part open(drier), door full open)
+- For actions such as turning a switch on/off, need to process the ACK message that the sensor sends through to confirm.
+
+## Dashboard
+- Weather image doesn't resize like the other canvases. Is an image not a canvas, so may need action on a resize event. Or draw image on canvas
+- Changing from id's to classes in html to allow duplicate controls. dash.html will then need to iterate over all matching classes
+- Show trend arrows, e.g. is the air pressure going up or down since the last reading
+- have a page displaying sensor settings and make then adjustable
 - Create LCD/OLED/Table console for kitchen
+- Separate web page to add/remove controls
+- Add a +/- counter control
+- Add a +/- control for setting the waitInterval
+
+## Alexa
+- Add getting switch status, e.g. is the fan on, or "is anything turned on"
+
+## Gateway
+- replace "colors" npm module with "chalk"
+- more granular control of when to send emails, e.g. priority
+- Move to database for all data
 - Have schedules and structure, e.g. alert on motion when no-one home, or heater on when after 5pm and someone home
+- Maybe add a "source" field to controls. e.g. "url:http://weatheraddress" or "sensor,sensorid" or "file:filename"
+- Gather all the functions that execute at startup in one place. Maybe wrap with a main()
+- Upgrade socket.io to the latest version
+- Maybe combine nodemon and forever to cover all eventualities
+- Use 'winston-daily-rotate-file' module to manage log files
+
+
