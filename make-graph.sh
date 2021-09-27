@@ -1,5 +1,6 @@
-# cd /home/pi/autohome/
+# cd ~/autohome/
 # Add '-x none' to remove x axis
+
 rrdtool graph images/temp_graph_4h.png -w 410 -h 240 -T 10 -a PNG -c FONT#E1F4F4 -c SHADEA#6596C4 -c SHADEB#6596C4 -c ARROW#152934 -c CANVAS#152934 -c BACK#152934 -E -s -4h -e now DEF:temp1=temps.rrd:temp1:AVERAGE DEF:temp2=temps.rrd:temp2:AVERAGE DEF:temp3=temps.rrd:temp3:AVERAGE DEF:temp4=temps.rrd:temp4:AVERAGE DEF:temp5=temps.rrd:temp5:AVERAGE LINE1:temp1#ff3030:"Outside" LINE1:temp2#6060ff:"Tom" LINE1:temp3#20ff20:"Bedroom" LINE1:temp4#FFFF00:"Laundry" LINE1:temp5#FF00FF:"Balcony"
 rrdtool graph images/temp_graph_1d.png -w 410 -h 240 -T 10 -a PNG -c FONT#E1F4F4 -c SHADEA#6596C4 -c SHADEB#6596C4 -c ARROW#152934 -c CANVAS#152934 -c BACK#152934 -E -s -24h -e now DEF:temp1=temps.rrd:temp1:AVERAGE DEF:temp2=temps.rrd:temp2:AVERAGE DEF:temp3=temps.rrd:temp3:AVERAGE DEF:temp4=temps.rrd:temp4:AVERAGE DEF:temp5=temps.rrd:temp5:AVERAGE LINE1:temp1#ff3030:"Outside" LINE1:temp2#6060ff:"Tom" LINE1:temp3#20ff20:"Bedroom" LINE1:temp4#FFFF00:"Laundry" LINE1:temp5#FF00FF:"Balcony"
 rrdtool graph images/temp_graph_1w.png -w 410 -h 240 -T 10 -a PNG -c FONT#E1F4F4 -c SHADEA#6596C4 -c SHADEB#6596C4 -c ARROW#152934 -c CANVAS#152934 -c BACK#152934 -E -s -1w -e now DEF:temp1=temps.rrd:temp1:AVERAGE DEF:temp2=temps.rrd:temp2:AVERAGE DEF:temp3=temps.rrd:temp3:AVERAGE DEF:temp4=temps.rrd:temp4:AVERAGE DEF:temp5=temps.rrd:temp5:AVERAGE LINE1:temp1#ff3030:"Outside" LINE1:temp2#6060ff:"Tom" LINE1:temp3#20ff20:"Bedroom" LINE1:temp4#FFFF00:"Laundry" LINE1:temp5#FF00FF:"Balcony"

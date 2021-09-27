@@ -2,7 +2,7 @@ HISTCONTROL=ignoreboth
 
 # AutoHome build script for Ubuntu
 
-# Run the following:
+# Run the following from a terminal window:
 #  cd ~/ && git clone https://github.com/littlepunks/autohome.git && cd ./autohome && chmod +x autohome-build-ubuntu.sh && ./autohome-build-ubuntu.sh
 
 # Install nvm and setup terminal

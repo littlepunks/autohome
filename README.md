@@ -28,7 +28,7 @@ All files must reside in the same folder:
 From the autohome directory:
 > npm start
 
-# Execution (OLD)
+## Execution (OLD)
 
 Using 'screen' utility to created a detached sessions that survives Putty exits. Later will setup as a service.
 Using nodemon to auto restart script when autohome.js is changed.
@@ -80,6 +80,9 @@ The app requires the following node modules:
 - tuyapi
 - request
 - colors
+- nodemon
+- util
+- geoip-lite
 
 # Other Dependencies
 - RRDTool (in Windows needs Cygwin installed with defaults as well)
@@ -90,6 +93,8 @@ Arduino with USB: Arduino Nano V3, ATmega328, 5V
 Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 
 # Build Instructions
+
+## Raspberry PI
 
 1. Download latest Raspberry PI OS image from: https://www.raspberrypi.org/downloads/raspberry-pi-os/
 2. Unzip the file.
@@ -115,13 +120,10 @@ Arduino without USB: ArduinPro Mini, ATmega328, 3V?
 ```
 npm start (or npm test)
 ```
+## Ubuntu
 
-
-# Fedora build instructions
-1. Install Fedora with username littlepunk
-2. Create /home/littlepunk/autohome
-3. sudo dnf update
-4. curl -sL https://
+Run:
+cd ~/ && git clone https://github.com/littlepunks/autohome.git && cd ./autohome && chmod +x autohome-build-ubuntu.sh && ./autohome-build-ubuntu.sh
 
 # Sensor Details
 
@@ -160,7 +162,7 @@ At startup:
 # Bugs/Known Errors
 - TCP port must be >1024 otherwise root access is required to run the core process
 - [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
-- [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes
+- [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes. Currently disabled in code.
 
 - If Tuya devices offline will sometimes get:
 		(node:855) UnhandledPromiseRejectionWarning: Error: find() timed out. Is the device powered on and the ID or IP correct?
@@ -173,7 +175,7 @@ At startup:
 		(node:855) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
 
 
-- [All] If you get weird node errors after a new build try running 'npm rebuild'
+- [All] If you get weird node errors after a new build try running 'npm rebuild' (is part of the Ubuntu build script)
 
 # To Do
 
@@ -190,9 +192,6 @@ At startup:
 Move to using chart.js and storing the data a different way
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
 - RRDTOOL to capture motion events
-
-## Build
-- Double check there isn't a permissions error on the graph image files when they are git cloned or written for the first time. Has crashed autohome before. There is some error checking already but may need more, like checks for dirs and permissions
 
 ## Sensors
 - TPLINK - plug online/offline events should change sensor status to red
@@ -223,6 +222,7 @@ Move to using chart.js and storing the data a different way
 
 ## Alexa
 - Add getting switch status, e.g. is the fan on, or "is anything turned on"
+- Rebuild Alexa skill
 
 ## Gateway
 - replace "colors" npm module with "chalk"
