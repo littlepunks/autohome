@@ -187,7 +187,7 @@ At startup:
 - consider using express-limit or express-rate-limit or NGINX rate limiting to stop DDoS
 
 ## Graphing
-Move to using chart.js and storing the data a different way
+- Move to Highcharts or chart.js and storing the data a different way (JSON, CSV)
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
 - RRDTOOL to capture motion events
 
