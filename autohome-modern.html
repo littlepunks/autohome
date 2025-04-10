@@ -1,0 +1,746 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autohome</title>
+  <style>
+    /* Basic CSS for menu styling */
+    body,html {
+      font-family: Arial, sans-serif;
+      height: 100%;
+      margin: 0;
+      background-color: #153555;
+    }
+    .menu {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      background-color: #333;
+      overflow: hidden;
+      font-size: 16px;
+    }
+    .menu li {
+      float: left;
+    }
+    .menu li a {
+      display: block;
+      color: white;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+    }
+    .menu li a:hover {
+      background-color: #e06000;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #a0a0a0;
+      min-width: 160px;
+      z-index: 1;
+    }
+    .dropdown-content a {
+      color: #303030;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+    }
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+    .menu li:hover .dropdown-content {
+      display: block;
+    }
+    .canvas-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+    #myCanvas {
+      background-color: lightblue;
+    }
+    .context-menu {
+        position: absolute;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 5px;
+        display: none; /* Initially hidden */
+    }
+    .context-menu ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    .context-menu ul li {
+        cursor: pointer;
+        padding: 5px;
+    }
+    .context-menu ul li:hover {
+        background-color: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+
+<ul class="menu" id="menubar">
+   <li><a onclick="handleItemClick('Home')">Home</a></li>
+    
+  <li class="dropdown">
+    <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
+    <div class="dropdown-content" style="display: none;">
+      <a href="http://192.168.68.72/autohome.html#">Webb</a>
+      <a href="http://192.168.68.72/autohome.html#">Mobile</a>
+      <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
+    </div>
+  </li>
+  
+
+  <li class="dropdown">
+    <a class="dropbtn">Services</a>
+    <div class="dropdown-content" style="display: none;">
+      <a onclick="handleItemClick('Web')">Web</a>
+      <a href="http://192.168.68.72/autohome.html#">Mobile App Development</a>
+      <a href="http://192.168.68.72/autohome.html#">UI/UX Design</a>
+    </div>
+  </li>
+  
+  <li>
+    <a id="Dev">Settings</a>
+    <div class="dropdown-content">
+      <a onclick="handleItemClick('Grid Code')">Grid Code</a>
+      <a onclick="handleItemClick('Toggle Grid')">Toggle Grid</a>
+      <a onclick="handleItemClick('Show All Items')">Show All Items</a>
+    </div>
+
+  </li>
+</ul>
+<div class="canvas-container">
+  <canvas id="myCanvas" width="150" height="754"></canvas>
+</div>
+<div id="contextMenu" class="context-menu" style="left: 444px; top: 518px; display: block;">
+  <ul>
+      <li onclick="handleContextMenuClick('Hide')">Hide</li>
+      <li onclick="handleContextMenuClick('Something')">Something</li>
+      <li onclick="handleContextMenuClick('Else')">Else</li>
+  </ul>
+</div>
+
+<script>
+
+// ============================================================================================
+//
+// To do:
+// - Ideally when dragging a control the rest of the screen shows other controls
+// - When dragging target area should show a highlight
+// - Add switches, status, plain numbers, text, clock, alarm
+// - change language to 'controls'
+// - Better classes and values including (x,y) (r,c)
+// - Different size tiles
+// - Some things lke gauges may need suffixes or prefixes like % or mmHg. Add an {option} group at the end of each control definition
+// - When dragging bars, they move as gauges (?!), need common draw gauge function
+// - Change hard coded numbers like padding in pixels to ratios
+// - Use a menu item to toggle the animation
+// - Doesn't resize properly when windows is very wide
+// - When resizing window the whole dash scales weirdly until you stop and do a proper refresh
+// ============================================================================================
+
+
+
+// Menu event handler
+document.addEventListener('DOMContentLoaded', function() {
+
+    const dropdowns = document.querySelectorAll('.dropdown');
+    dropdowns.forEach(dropdown => {
+        dropdown.addEventListener('mouseenter', () => {
+            dropdown.querySelector('.dropdown-content').style.display = 'block';
+            });
+        dropdown.addEventListener('mouseleave', () => {
+            dropdown.querySelector('.dropdown-content').style.display = 'none';
+            });
+        })
+});
+
+
+// Get the canvas element and its 2D context, and the context menu
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+const contextMenu = document.getElementById('contextMenu');
+contextMenu.style.display = 'none'; // Hide the context menu after clicking
+
+//const mainMenu = document.getElementById('menubar');
+
+
+// Set height to be full screen minus the height of the menu
+let menuObj = document.getElementById('menubar');
+canvas.height = window.innerHeight - menuObj.offsetHeight-10;
+canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth  ;
+
+// Set up canvas style settings
+ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';  // Shadow color with transparency
+ctx.shadowBlur = 10;                      // Shadow blur radius
+ctx.shadowOffsetX = 5;                    // Horizontal shadow offset
+ctx.shadowOffsetY = 5;                    // Vertical shadow offset
+
+const colGaugeBkgnd = '#907010';          // Dark orange/yellow
+const colGaugeColor = '#d0b020';          // Light orange/yellow
+const colGrid       = '#808080';          // Medium grey
+const colBackground = '#204060';          // Medium blue
+
+let showGrid = true;
+
+const PI  = Math.PI;
+const PI2 = 2 * Math.PI;
+
+// Used for detecting touch events (right click) on a mobile device
+let touchTimer = null;
+
+// Grid settings
+const cols = 4;
+const rows = 6;
+let margin = canvas.width /(cols*2);   // margin is half the column width
+
+let cspace = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
+// Top left item is at 0,0
+// cspace = 125 
+
+// Convert an X or Y coordinate to a row or column
+function xy2rc(xy) {
+  return (xy < 0) ? 1 : (Math.floor(xy/cspace) + 1);
+}
+
+// Convert a row or column to an X or Y coordinate
+function rc2xy(rc) {
+  return (rc <= 0) ? 0 : ((rc-1) * cspace);
+}
+
+
+// Define dashboard objects
+const dash = [
+{type: 'gauge', title: 'Power', row: 1, col: 1, val: 5, max:100, min: 0, x: 0, y: 0, alarm: 0, enabled: true},
+{type: 'gauge', title: 'Temp', row: 1, col: 2, val: 15, max:100, min: 0, x: 0, y: 0, alarm: 1, enabled: true},
+{type: 'gauge', title: 'Humidity', row: 1, col: 3, val: 30, max:100, min: 0, x: 0, y: 0, alarm: 0, enabled: true},
+{type: 'gauge', title: 'Set', row: 1, col: 4, val: 100, max:100, min: 0, x: 0, y: 0, alarm: 0, enabled: true},
+{type: 'gauge', title: 'Gauge', row: 3, col: 2, val: 50, max:100, min: 0, x: 0, y: 0, alarm: 2, enabled: true},
+{type: 'bar-v', title: 'Volume', row: 4, col: 1, val: 55, max:100, min: 0, x: 0, y: 0, enabled: true},
+{type: 'bar-v', title: 'Volume', row: 4, col: 2, val: 90, max:100, min: 80, x: 0, y: 0, enabled: true},
+{type: 'bar-h', title: 'Height', row: 4, col: 3, val: 90, max:100, min: 0, x: 0, y: 0, enabled: true},
+{type: 'bar-h', title: 'Height', row: 4, col: 4, val: 4, max:10, min: 0, x: 0, y: 0, enabled: true}
+];
+
+// Initialise x,y values based on their row & column
+dash.forEach(obj => {
+  obj.x = (obj.col-1) * cspace;
+  obj.y = (obj.row-1) * cspace;
+});
+
+// Change values randomly
+let animTimer = null;
+
+function changeVals() {
+    // Pick a random control
+    const ctrlNum = Math.floor(Math.random() * dash.length);
+    const ctrlVal = Math.floor((Math.random() * (dash[ctrlNum].max - dash[ctrlNum].min) + dash[ctrlNum].min) );
+    dash[ctrlNum].val = ctrlVal;
+    drawDash();
+}
+
+function startAnim() {
+    animTimer = setInterval(changeVals, 2000);
+}
+function stopAnim() {
+    clearInterval(animTimer);
+}
+
+startAnim();
+
+
+// Helper functions
+// ----------------------------------------------------------------------
+// Draw grid
+function drawGrid() {
+    if (showGrid) {
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.shadowBlur = 0;
+
+        ctx.strokeStyle = colGrid;
+        ctx.lineWidth = 1;
+        ctx.beginPath()
+
+        // Draw vertical lines
+        for (let i=1; i < cols; i++) {
+            ctx.moveTo(cspace*i,0);
+            ctx.lineTo(cspace*i,canvas.height);
+        }
+
+        // Draw horizontal lines
+        for (let j=1; j < rows; j++) {
+            ctx.moveTo(0, cspace*j);
+            ctx.lineTo(canvas.width, cspace*j);
+        }
+        ctx.stroke();
+
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+        ctx.shadowBlur = 10;
+
+
+    }
+}
+
+function drawDash() {
+  setBackgroundColor(colBackground);
+
+  drawGrid();
+
+  dash.forEach(obj => {
+    if (obj.enabled) drawDashObj(obj);
+  })
+}
+
+// Need to add MAX/MIN to the settings for gauges
+function drawDashObj(dashObj, overrides = {}) {
+    if (!dashObj.enabled) return;
+
+    const drawFunctions = {
+        'gauge': drawGauge,
+        'bar-v': drawBarV,
+        'bar-h': drawBarH
+    }    
+    const drawFunction = drawFunctions[dashObj.type];
+    if (drawFunction) {
+
+        if (overrides.shadow) {
+            ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 10;
+            ctx.shadowOffsetY = 10;
+        } else {
+            ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+        }
+        drawFunction(dashObj, overrides);
+    }
+}
+
+// DRAW GAUGE
+function drawGauge(g, opts) {
+    const thickness = 14; // Bigger numbers make it thinner
+
+    // See if x/y coords are included and if so, respect those, otherwise x/y will be based on col/row as normal
+    let cx = 0;
+    let cy = 0;
+
+    if (opts != {}) { drawGrid(); }
+
+    cx = (opts['x']) ? (opts['x']) : margin + (g.col-1) * cspace;
+    cy = (opts['y']) ? (opts['y']) : margin + (g.row-1) * cspace;
+
+    // Draw orange/red background if in alarm states 1 or 2 (0 is no alarm)
+    if (g.alarm == 1) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, canvas.width / (cols*2.8), 0, PI2);
+        ctx.fillStyle = "darkorange";
+        ctx.fill();
+    }
+    else if (g.alarm == 2) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, canvas.width / (cols*2.8), 0, PI2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+    }
+    else {
+        ctx.beginPath();
+        ctx.arc(cx, cy, canvas.width / (cols*2.8), 0, PI2);
+        ctx.fillStyle = "darkgreen";
+        ctx.fill();
+    }
+
+    // Draw gauge background
+    ctx.beginPath();
+    ctx.arc(cx, cy, canvas.width / (cols*2.6), 0, PI2);
+    ctx.strokeStyle = colGaugeBkgnd;
+    ctx.lineWidth = canvas.width/(thickness * cols);
+    ctx.stroke();
+
+    // Draw gauge value
+    const angle = 2 * (g.val - g.min) / (g.max - g.min) * PI;
+    ctx.beginPath();
+    ctx.arc(cx, cy, canvas.width / (cols*2.6), -PI / 2, -PI / 2 + angle);
+    ctx.strokeStyle = colGaugeColor;
+    ctx.lineWidth = canvas.width/(thickness * cols);
+    ctx.stroke();
+
+    // Draw labels
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+
+    ctx.font = canvas.width/(11*cols) + 'px Arial';
+    ctx.fillText(g.title, cx, cy - margin * 0.2);
+
+    ctx.font = canvas.width/(5*cols) + 'px Arial';
+    ctx.fillText(g.val+'%', cx, cy + margin * 0.3);
+
+}
+
+function drawBarV(b, opts) {
+    // See if x/y coords are included and if so, respect those, otherwise x/y will be based on col/row as normal
+    let bx = 0;
+    let by = 0;
+
+    if (opts != {}) { drawGrid(); }
+
+    bx = (opts['x']) ? (opts['x']) : margin + (b.col-1) * cspace;
+    by = (opts['y']) ? (opts['y']) : margin + (b.row-1) * cspace;
+
+    // Draw bar background
+    ctx.beginPath();
+    ctx.moveTo(bx, by - (0.8 * margin));
+    ctx.lineTo(bx, by + (0.8 * margin));
+    ctx.strokeStyle = colGaugeBkgnd;
+    ctx.lineWidth = canvas.width/(8*cols);
+    ctx.stroke();
+
+    // Draw bar value
+    ctx.beginPath();
+    ctx.moveTo(bx, by + (0.8 * margin) );
+    ctx.lineTo(bx, by + (0.8 * margin) - (0.8 * cspace * (b.val-b.min)/(b.max-b.min)));
+    ctx.strokeStyle = colGaugeColor;
+    ctx.lineWidth = canvas.width/(8*cols);
+    ctx.stroke();
+
+    // Draw labels - value, max and min
+    ctx.font = canvas.width/(6*cols) + 'px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'right';
+
+    // Draw value
+    ctx.fillText(b.val, bx - 15, by + 8); 
+
+    // Draw min/max
+    ctx.font = canvas.width/(12*cols) + 'px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(b.max, bx + 15, by - (0.8 * margin)+10); 
+    ctx.fillText(b.min, bx + 15, by + (0.8 * margin) -2 ); 
+}
+
+
+function drawBarH(b, opts) {
+    // See if x/y coords are included and if so, respect those, otherwise x/y will be based on col/row as normal
+    let bx = 0;
+    let by = 0;
+
+    if (opts != {}) { drawGrid(); }
+
+    bx = (opts['x']) ? (opts['x']) : margin + (b.col-1) * cspace;
+    by = (opts['y']) ? (opts['y']) : margin + (b.row-1) * cspace;
+
+    // Draw bar background
+    ctx.beginPath();
+    ctx.moveTo(bx - (0.8 * margin), by);
+    ctx.lineTo(bx + (0.8 * margin), by);
+    ctx.strokeStyle = colGaugeBkgnd;
+    ctx.lineWidth = canvas.width/(8*cols);
+    ctx.stroke();
+
+    // Draw bar value
+    ctx.beginPath();
+    ctx.moveTo(bx - (0.8 * margin), by);
+    ctx.lineTo(bx - (0.8 * margin) + (0.8 * cspace * (b.val-b.min)/(b.max-b.min)), by);
+
+    ctx.strokeStyle = colGaugeColor;
+    ctx.lineWidth = canvas.width/(8*cols);
+    ctx.stroke();
+
+    // Draw label
+    ctx.font = canvas.width/(6*cols) + 'px Arial';  // 30 px
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText(b.val, bx, by -18); 
+
+    // Draw min/max
+    ctx.font = canvas.width/(12*cols) + 'px Arial';
+
+    ctx.textAlign = 'left';
+    ctx.fillText(b.min, bx - (0.8 * margin), by +22); 
+
+    ctx.textAlign = 'right';
+    ctx.fillText(b.max, bx + (0.8 * margin), by +22); 
+
+}
+
+
+// Change the canvas background color
+function setBackgroundColor(color) {
+    // Save the current transformation matrix
+    ctx.save();
+
+    // Reset the canvas transformation matrix
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Restore the saved transformation matrix
+    ctx.restore();
+
+    // Set the new background color
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// Toggle menu item visibility
+function toggleMenuItem(itemId) {
+    var item = document.getElementById(itemId);
+    if (item) {
+      item.style.display = (item.style.display == 'none') ? 'block' : 'none';
+    }
+}
+
+// Set menu item visibility
+function set(itemId, show) {
+    var item = document.getElementById(itemId);
+    if (item) {
+        item.style.display = show ? 'block' : 'none';
+    }
+}
+
+
+// Let's do some stuff ...
+// setBackgroundColor(colBackground);
+
+// and draw everything
+drawDash();
+
+
+window.addEventListener('resize', () => {
+
+    canvas.height = window.innerHeight - menuObj.offsetHeight-10;
+    canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth  ;
+    margin = canvas.width /(cols*2);   // margin is half the column width
+
+    cspace = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
+    canvas.style.width = window.innerWidth;
+    canvas.style.height = window.innerHeight;
+
+    // Optionally, redraw your canvas content here
+    setBackgroundColor(colBackground);
+    drawDash();
+});
+
+// ---------------------------------------------------------------------------
+let selectedObject = null;
+let offsetX, offsetY;
+let clickX, clickY;
+
+canvas.addEventListener('mousedown', function(e) {
+    stopAnim();
+    if (e.button !== 2) {
+      const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+      const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+
+      const mcol = Math.floor(mouseX / cspace)+1;
+      const mrow = Math.floor(mouseY / cspace)+1;
+
+      selectedObject = dash.find(obj => {
+        return ( mcol == obj.col && mrow == obj.row );
+        })
+      
+      if (selectedObject) {
+          offsetX = mouseX - selectedObject.x;
+          offsetY = mouseY - selectedObject.y;
+          // console.log('Picking up: Col ' + selectedObject.col + ', Row ' + selectedObject.row);
+          console.log(`Picking up: Col ${selectedObject.col}, Row ${selectedObject.row}`);
+        }
+    }
+});
+
+canvas.addEventListener('mousemove', function(e) {
+  if (selectedObject) {
+    const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+    const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+    
+    // Update object position
+    selectedObject.x = mouseX - offsetX;
+    selectedObject.y = mouseY - offsetY;
+
+    // Blank the canvas while moving
+    setBackgroundColor(colBackground);
+    //drawGrid(); // new
+    drawDashObj(selectedObject,{x: mouseX - offsetX + margin, y: mouseY - offsetY + margin, shadow: true});
+}
+});
+
+canvas.addEventListener('mouseup', function(e) {
+    startAnim();
+    if (selectedObject) {
+      // Start with assuming it's ok to drop
+      let alreadyExists = false;
+
+      // Has it actually moved?? Compare to original location.
+      if ((selectedObject.row == xy2rc(selectedObject.y)) && (selectedObject.col == xy2rc(selectedObject.x))) {
+        alreadyExists = true;
+      } else {
+        // Or is something already at the destination? i.e. there is an entry in dash[]
+        let existing = dash.find(obj => {
+          return ((obj.col == xy2rc(selectedObject.x)) && (obj.row == xy2rc(selectedObject.y)) );
+        });
+        if (existing) {
+          alreadyExists = true;
+          // x,y have been changing as it drags so set back to original position based on row/col
+          selectedObject.x = rc2xy(selectedObject.col);
+          selectedObject.y = rc2xy(selectedObject.row);
+        }
+      }
+
+      // Destination is good so change the location
+      if (!alreadyExists) {
+        // Snaps location to the correct grid square
+        selectedObject.col = xy2rc(selectedObject.x);
+        selectedObject.row = xy2rc(selectedObject.y);
+
+        selectedObject.x = rc2xy(selectedObject.col);
+        selectedObject.y = rc2xy(selectedObject.row);
+
+        console.log(`Drop xy (${selectedObject.x},${selectedObject.y} to rc (${selectedObject.row},${selectedObject.col})`);
+
+      }
+      // Now refresh the screen
+      drawDash();
+    }
+    selectedObject = null;
+    offsetX = 0;
+    offsetY = 0;
+});
+
+
+// Function to handle right-click context menu
+canvas.addEventListener('contextmenu', function(e) {
+    e.preventDefault(); // Prevent default context menu from showing up
+    const mouseX = e.clientX - canvas.getBoundingClientRect().left;
+    const mouseY = e.clientY - canvas.getBoundingClientRect().top;
+
+    clickX = mouseX;
+    clickY = mouseY;
+
+    // Position the context menu and make visible
+    contextMenu.style.left = mouseX + 'px';
+    contextMenu.style.top = mouseY + 'px';
+    contextMenu.style.display = 'block';
+});
+
+// Function to handle context menu item clicks
+function handleContextMenuClick(option) {
+    console.log(`Clicked on: ${option}`);
+    contextMenu.style.display = 'none'; // Hide the context menu after clicking
+
+    switch (option) {
+      case 'Hide':
+        // Hide the item by working out which cell was clicked
+        const mcol = xy2rc(clickX);
+        const mrow = xy2rc(clickY);
+
+        let myObject = dash.find(obj => {
+            return ( mcol == obj.col && mrow == obj.row );
+            });
+        if (myObject) {
+          myObject.enabled = !myObject.enabled;
+          drawDash();
+        }
+        break;
+      case 'Something':
+        break;
+      case 'Else':
+        break;
+    }
+}
+
+// Close the context menu if clicked outside
+document.addEventListener('click', function(e) {
+    if (!contextMenu.contains(e.target)) {
+        contextMenu.style.display = 'none';
+    }
+
+});
+
+canvas.addEventListener('touchstart', (e) => {
+    // Start the timer
+    touchTimer = setTimeout(() => {
+        // Trigger the touch and hold action
+        if (!contextMenu.contains(e.target)) {
+            contextMenu.style.display = 'block';
+        }
+
+    }, 600); // 1000 milliseconds = 1 second
+    // The next 2 steps stop Chrome on mobile jumping in with a context search
+    e.preventDefault();
+    e.stopPropagation();
+});
+
+canvas.addEventListener('touchend', (e) => {
+    // Clear the timer if touch ends before the threshold
+    clearTimeout(touchTimer);
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    // Clear the timer if the touch moves (i.e., if it's not a hold)
+    clearTimeout(touchTimer);
+});
+
+
+
+// --------------------------------------------------
+function handleItemClick(item) {
+  switch(item) {
+    case 'Web':
+      // Do web stuff
+      window.alert("You doing the Web");
+      break;
+
+    case 'Home':
+      // Show/hide "Contact" menu item
+      toggleMenuItem('Contact');
+      break;
+
+    case 'Show All Items':
+      dash.forEach(obj => {
+        obj.enabled = true;
+        drawDash();
+      });
+      break;
+
+    case 'Toggle Grid':
+      // Show/hide grid lines
+      showGrid = !showGrid;
+      drawDash();
+      break;
+
+    case 'Grid Code':
+      // Show grid code in dialog box and copy to clipboard
+      let gridTxt = "";
+
+      dash.forEach(obj => {
+        gridTxt += "{type: '" + obj.type + "', title: '" + obj.title +
+          "', row: " + obj.row + ", col: " + obj.col + ", val: " + obj.val +
+          ", x: " + obj.x + ", y: " + obj.y + ", enabled: " + obj.enabled + "},\n";
+      })
+      navigator.clipboard.writeText(gridTxt);
+      alert(`Code copied into clipboard.\n\n${gridTxt}`);
+
+      break;
+
+    default:
+  }
+}
+</script>
+
+
+
+</body></html>
