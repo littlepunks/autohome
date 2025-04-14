@@ -1,0 +1,1 @@
+rrdtool.exe update temps.rrd N:10:11:12:13:14

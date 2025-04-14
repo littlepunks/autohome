@@ -1,0 +1,1 @@
+rrdtool.exe create temps.rrd --step 300 DS:temp1:GAUGE:600:0:40  DS:temp2:GAUGE:600:0:40  DS:temp3:GAUGE:600:0:40  DS:temp4:GAUGE:600:0:40  DS:temp5:GAUGE:600:0:40  RRA:AVERAGE:0.5:1:105120

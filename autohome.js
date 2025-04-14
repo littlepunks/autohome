@@ -1,5 +1,5 @@
 // ----------------------------------------------------
-// © 2017-2020 David Jacobsen / dave.jacobsen@gmail.com
+// © 2017-2025 David Jacobsen / dave.jacobsen@gmail.com
 // See README.md
 // ----------------------------------------------------
 /*jshint esversion: 6 */
@@ -17,131 +17,239 @@ var colors     = require('colors');
 const fs 	   = require('fs');
 const geoip    = require('geoip-lite');
 
+// Load environment variables from .env file
+require('dotenv').config()
+
+
+
+const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+
+const ses = new SESClient({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
+});
+
+async function sendEmail(mailRecipients='dave.jacobsen@gmail.com', mailSubject='Alert from Autohome', MailMessage='') {
+  const params = {
+    Source: 'dave@littlepunk.co.nz',
+    Destination: {
+      ToAddresses: [mailRecipients]
+    },
+    Message: {
+      Subject: {
+        Data: mailSubject,
+        Charset: 'UTF-8'
+      },
+      Body: {
+        Text: {
+          Data: MailMessage,
+          Charset: 'UTF-8'
+        },
+        // Optional: add HTML
+        // Html: {
+        //   Data: '<h1>Hello</h1><p>This is an HTML email</p>',
+        //   Charset: 'UTF-8'
+        // }
+      }
+    }
+  };
+
+  try {
+    const command = new SendEmailCommand(params);
+    const result = await ses.send(command);
+    logMsg('D', `Email sent! Message ID: ${result.MessageId}`);
+  } catch (error) {
+    logMsg('E', `Error sending email: ${error}`);
+  }
+}
+
+if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome started");}
+
+//import { styleText } from 'node:util';
+const { styleText } = require('node:util');
+
+const MS = require('./modules/constants.js'); // MySensors API constants
+
+const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
+
+const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
+const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
+const autohomeLogFile = './autohome.log'; // Log file for console messages
+const enableRRD = true; // Set to true to enable RRDTool graphing
+
+const spawn = require('child_process').spawn;
+
+// Create RRD if it doesn't exist
+function createRRD() {
+	if (fs.existsSync(TempsRRDFile)) {
+	  logMsg('I','RRD file already exists.');
+	  return;
+	}
+	// 	['Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'].forEach(s => {
+
+  
+	const args = [
+	  'create', TempsRRDFile,
+	  '--step', '300',
+	  'DS:Outside:GAUGE:600:-50:100',
+	  'DS:Tom:GAUGE:600:-50:100',
+	  'DS:Bedroom:GAUGE:600:-50:100',
+	  'DS:Sophie:GAUGE:600:-50:100',
+	  'DS:Michael:GAUGE:600:-50:100',
+	  'DS:Laundry:GAUGE:600:-50:100',
+	  'DS:Freezer:GAUGE:600:-50:100',
+	  'DS:Balcony:GAUGE:600:-50:100',
+	  'DS:Humidity:GAUGE:600:0:100',
+	  'DS:Pressure:GAUGE:600:900:1100',
+	  'DS:Speed:GAUGE:600:0:300',
+
+	  'RRA:AVERAGE:0.5:1:288',
+	  'RRA:AVERAGE:0.5:12:168',
+	  'RRA:AVERAGE:0.5:288:52',
+	  'RRA:MAX:0.5:1:288',
+	  'RRA:MAX:0.5:12:168',
+	  'RRA:MAX:0.5:288:52',
+	  'RRA:MIN:0.5:1:288',
+	  'RRA:MIN:0.5:12:168',
+	  'RRA:MIN:0.5:288:52'
+	];
+  
+	const child = spawn(rrdtool, args);
+	child.on('close', code => {
+	  if (code === 0) logMsg('I', 'RRD created successfully.');
+	  else logMsg('E', 'RRD creation failed.');
+	});
+  }
+
+createRRD();
+
+const enableWEMO = false; // Set to true to enable Wemo smart switches
+
+const enableTPLINK = false; // Set to true to enable TP-Link smart switches
+const enableTUYA = false; // Set to true to enable TP-Link smart switches
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// Common list for smart plugs/switches
-var plugs = [];
+// Start of TP-Link smart switch code
+if (enableTPLINK) {
+	
+	// Common list for smart plugs/switches
+	var plugs = [];
 
-// TP-Link Smart Switch setup ---------------------------------------------------------------
-const { Client } = require('tplink-smarthome-api');
-const client = new Client();
+	// TP-Link Smart Switch setup ---------------------------------------------------------------
+	const { Client } = require('tplink-smarthome-api');
+	const client = new Client();
 
-client.on('plug-new', device => {
+	client.on('plug-new', device => {
 
-	logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
+		logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
 
-	// Assumes plug will be found
-	var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-	decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
-
-	plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
-
-	device.startPolling(SENSORCHECKINTERVAL);
-  
-	device.on('power-on', () => {
-		logMsg('I', `TP-Link device ${device.alias} is on`);
-		// Need to check if it exists otherwise the decode will error
+		// Assumes plug will be found
 		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';1');
+		decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
 
+		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
+
+		device.startPolling(SENSORCHECKINTERVAL);
+	
+		device.on('power-on', () => {
+			logMsg('I', `TP-Link device ${device.alias} is on`);
+			// Need to check if it exists otherwise the decode will error
+			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
+
+		});
+		device.on('power-off', () => {
+			logMsg('I', `TP-Link device ${device.alias} is off`);
+			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
+
+		});
+		device.on('in-use-update', inUse => {
+			//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
+			//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
+		});  
 	});
-	device.on('power-off', () => {
-		logMsg('I', `TP-Link device ${device.alias} is off`);
-		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';0');
-
+	client.on('plug-online', device => {
+		//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
+		// Could mark sensor as uncontactable
 	});
-	device.on('in-use-update', inUse => {
-		//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
-		//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		//decode(tpSensor.id + ';0;'+ C_SET + ';0;' + V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
-	});  
-  });
-  client.on('plug-online', device => {
-	//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
-	// Could mark sensor as uncontactable
-  });
-  client.on('plug-offline', device => {
-	logMsg('DI', `TP-Link device ${device.alias} is uncontactable`);
-  });
+	client.on('plug-offline', device => {
+		logMsg('DI', `TP-Link device ${device.alias} is uncontactable`);
+	});
 
-logMsg('I', 'Starting TP-Link Device Discovery');
-client.startDiscovery();
-
+	logMsg('I', 'Starting TP-Link Device Discovery');
+	client.startDiscovery();
+}
 
 // Tuya Switch setup ---------------------------------------------------------------------
-//const TuyAPI = require('tuyapi');
-//const util = require('util');
-//const tuyaDev = new TuyAPI({
-//	id: '550705303c71bf20a967',
-//	key: '6590d93429b1034a'});
-//
-// Find device on network
-//tuyaDev.find().then(() => {
- //	// Connect to device
-// 	tuyaDev.connect();
-//	});
-  
-// Add event listeners
-//tuyaDev.on('connected', () => {
-//	logMsg('I','Connected to Tuya device');
-//	// Hard coded name. Really need to get name from the switch and match.
-//	plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
-
-//});
-
-//tuyaDev.on('disconnected', () => {
-//	logMsg('I','Disconnected from Tuya device.');
-//});
-
-//tuyaDev.on('error', error => {
-//	logMsg('E','Tuya general error!' + error);
-//});
-
-//tuyaDev.on('data', data => {
-//	try {
-//		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
-//		logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
-// 	}
-//		logMsg('I','Tuya data: ' + util.inspect(data));
-//	}
-//	catch (error) {
-//		logMsg('E', 'Tuya data error: ' + error);
-//	}
+if (enableTUYA) {
+	const TuyAPI = require('tuyapi');
+	const util = require('util');
+	const tuyaDev = new TuyAPI({
+		id: process.env.TUYA_ID,
+		key: process.env.TUYA_KEY});
+		// const tuyaDev = new TuyAPI({
+		// 	id: '550705303c71bf20a967',
+		// 	key: '6590d93429b1034a'});
+		
+	//Find device on network
+	tuyaDev.find().then(() => {
+		// Connect to device
+		tuyaDev.connect();
+		});
 	
-	// Can set Tuya switch via:
-	//tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
-	//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
+	//Add event listeners
+	tuyaDev.on('connected', () => {
+		logMsg('I','Connected to Tuya device');
+		// Hard coded name. Really need to get name from the switch and match.
+		plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
 
-//});
+	});
 
-// Disconnect after 10 seconds
-//setTimeout(() => { tuyaDev.disconnect(); }, 10000);
+	tuyaDev.on('disconnected', () => {
+		logMsg('I','Disconnected from Tuya device.');
+	});
 
+	tuyaDev.on('error', error => {
+		logMsg('E',`Tuya general error! ${$error}`);
+	});
+
+	tuyaDev.on('data', data => {
+		try {
+			logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
+			logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
+		
+			logMsg('I','Tuya data: ' + util.inspect(data));
+		}
+		catch (error) {
+			logMsg('E', 'Tuya data error: ' + error);
+		}
+		
+		//Can set Tuya switch via:
+		tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
+		tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
+
+	});
+
+	//Disconnect after 10 seconds
+	setTimeout(() => { tuyaDev.disconnect(); }, 10000);
+}
 // =============================================================================
 // CONFIGURATION:
 
 // Set to false to turn off debugging
-var DEBUG = false;
+var DEBUG = true;
 
 // settings.json will be loaded in here later
 var conf = {};
 
-// Console messages are saved in this string and written to autohome.log when the app shutsdown normally.
-// Is a risk that something useful may be missed.
-
-// const colDkBlue   = "#152934";
-// const colLtBlue   = "#6596C4";
-// const colNavBack  = "#01649D"; // Nav button background blue
-// const colText     = "#E1F4F4";
-// const colRed      = "#B00000";
-// const colAmber    = "#F0A946";
-// const colGreen    = "#00A000";
-// const colLtGrn    = "#20F020";
-// const colYellow   = "#F0F000"; 
-// const colBrtBlue  = "#00A0F0";
 
 const SENSORCHECKINTERVAL = 300000;  // 5 mins
 
@@ -178,12 +286,19 @@ function stopTimer () {
 
 // -------------------
 // Regularly check sensor update times and highlight any missing by changing the colour
+
+
+// BUG:
+// Improve these timers by using setInterval and clearInterval instead of setTimeout
+// setTimeout is a bit of a hack and not as efficient as setInterval
+// setInterval is a bit more efficient and easier to read.
+
 function startSensorCheckTimer() {
 	setTimeout(stopSensorCheckTimer, SENSORCHECKINTERVAL); // 5 mins
 }
 
 function stopSensorCheckTimer() {
-	logMsg('I', 'Checking for sensor timeouts');
+	logMsg('DI', 'Checking for sensor timeouts');
 	// Check that the COM port (MySensors gateway) is still open and hasn't had an error
 	if (!gw.isOpen) { gwErrFlag = true; }
 	if (gwErrFlag) { logMsg('E', 'Error with the COM port connecting to the gateway. Please restart.'); }
@@ -193,8 +308,8 @@ function stopSensorCheckTimer() {
 	// if timeouts have expired.
 	var tnow = new Date().getTime();
 	conf.mysensors.sensornodes.forEach(s => {
-		var oldStatus = s.contact_status;
-		var delta = tnow - s.updated;
+		let oldStatus = s.contact_status;
+		let delta = tnow - s.updated;
 
 		if (delta > (s.freq * 1000 * 2)) { // convert secs to milis and 2 periods
 			// Very late
@@ -223,47 +338,95 @@ startSensorCheckTimer();
 // -------------------
 // Regular gathering temperature data that is passed to RRDTool
 
+
+// **** NEW POTENTIAL CODE DO BATCH DRAW GRAPHS WITHOUT CMD FILE using graphRRD.js file
+// const graphRRD = require('./graphRRD');
+
+// const defs = [
+//   'DEF:s1=temps.rrd:Outside:AVERAGE',
+//   'DEF:s2=temps.rrd:Bedroom:AVERAGE',
+//   'DEF:s3=temps.rrd:sensor3:AVERAGE'
+// ];
+
+// const lines = [
+//   'LINE2:s1#FF0000:Outside',
+//   'LINE2:s2#00FF00:Bedroom',
+//   'LINE2:s3#0000FF:Sensor3'
+// ];
+
+// graphRRD([
+//   {
+//     output: 'last_hour.png',
+//     title: 'Temperature - Last Hour',
+//     start: 'end-1h',
+//     end: 'now',
+//     defs,
+//     lines
+//   },
+//   {
+//     output: 'last_24h.png',
+//     title: 'Temperature - Last 24 Hours',
+//     start: 'end-24h',
+//     end: 'now',
+//     defs,
+//     lines
+//   },
+//   {
+//     output: 'last_week.png',
+//     title: 'Temperature - Last Week',
+//     start: 'end-1w',
+//     end: 'now',
+//     defs,
+//     lines
+//   }
+// ]);
+// ******************************************************************************
+
+
+
+
+
+
+
 function startTempTimer () {
     setTimeout(stopTempTimer, RRDUPDATEINTERVAL);  // 5 mins
 }
+
 
 function stopTempTimer () {
 	// Write out current temperatures readings to RRDTool and generate new graphs
 	// Sensors MUST be in the order shown
 	// "U" is the value for UNKNOWN and is handled by RRDTOOL more gracefully than an empty string
-	var updStr = "N";
+	var args = "N";
 	var getSensor;
 
 	// Build up RRD update string from each sensor in order
-	['Outside','Tom','Bedroom','Laundry','Balcony','Humidity','Pressure','Speed'].forEach(s => {
+	['Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'].forEach(s => {
+//	['Outside','Tom','Bedroom','Laundry','Balcony','Humidity','Pressure','Speed'].forEach(s => {
 		getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == s);
-		updStr += ":" + ((getSensor !== undefined) ? getSensor.value : "U");
+		args += ":" + ((getSensor !== undefined) ? getSensor.value : "U");
 	})
 
-	logMsg('DI', 'RRD data update: ' + updStr);
+	logMsg('DI', `RRD data update: ${args}`);
 
-	const spawn = require('child_process').spawn;
-	// BUG
-	// Hard coded path!!!
-//	const bat = spawn('rrdtool', ['update', '/home/pi/autohome/temps.rrd', updStr]);
-	const bat = spawn('rrdtool', ['update', '/home/littlepunk/autohome/temps.rrd', updStr]);
+//	const bat = spawn('rrdtool', ['update', TempsRRDFile, args]);
+	const bat = spawn(rrdtool, ['update', TempsRRDFile, args]);
 
-	bat.stdout.on('data', (data) => { logMsg('DI', 'RRD data updating: ' + data.toString());});
-	bat.stderr.on('data', (data) => { logMsg('E', 'RRD data update error: ' + data.toString());	});
+	bat.stdout.on('data', (data) => { logMsg('DI', `RRD data updating: ${data.toString()}`);});
+	bat.stderr.on('data', (data) => { logMsg('E', `RRD data update error: ${data.toString()}`);	});
 
 	bat.on('exit', (code) => {
-		if (code != 0) { logMsg('E', 'RRD data update error code: ' + code);}
-	// BUG
-	// Hard coded path!!!
-//		const bat2 = spawn('/home/pi/autohome/make-graph.sh');
-		const bat2 = spawn('/home/littlepunk/autohome/make-graph.sh');
+		if (code != 0) { logMsg('E', `RRD data update error code: ${code}`);}
+		logMsg('DI', `About to create RRD graphs`);
+		//const bat2 = spawn(makeGraphCmdFile);
+		const bat2 = spawn('cmd.exe', ['/c', makeGraphCmdFile]);
 
-		bat2.stdout.on('data', (data) => { logMsg('DI', 'RRD graph being created: ' + data.toString().trim()); });
-		bat2.stderr.on('data', (data) => { logMsg('DE', 'RRD graph creation error: ' + data.toString()); });
+		bat2.stdout.on('data', (data) => { logMsg('DI', `RRD graph being created: ${data.toString().trim()}`); });
+		bat2.stderr.on('data', (data) => { logMsg('DE', `RRD graph creation error: ${data.toString()}`); });
 
 		bat2.on('exit', (code) => {
 			if (code != 0) {
-				logMsg('DE', 'RRD graph creation error code: ' + code);	}
+				logMsg('DE', `RRD graph creation error code: ${code}`);	}
 		});
 	});
 
@@ -275,7 +438,9 @@ function stopTempTimer () {
 
 // Start the timer to update RRD data and graphs regularly
 // !!!! Re-enable once there is an RRD file in place
-startTempTimer();
+if (enableRRD) {
+	startTempTimer();
+}
 
 // --------------------------------------
 
@@ -284,9 +449,9 @@ startTimer();
 
 function readSettings() {
 	logMsg('I', 'Reading settings');
-	var fs = require('fs');
+	const fs = require('fs');
 	try {
-		var fileContents = fs.readFileSync('settings.json', 'utf-8');
+		var fileContents = fs.readFileSync('./settings.json', 'utf-8');
 	} catch (err) {
 		if (err.code === 'ENOENT') {
 			logMsg('E','Settings file not found: settings.json');
@@ -300,7 +465,6 @@ function readSettings() {
 		logMsg('E', 'Error parsing settings file: ' + err.message);
 		throw err;
 	}
-
 	logMsg('I', 'Settings loaded');
 }
 
@@ -309,7 +473,7 @@ function writeSettings() {
 	var fs = require('fs');
 	logMsg('I', 'Writing settings...');
 
-	fs.writeFile("settings.json", JSON.stringify(conf, null, 2), 'utf-8',
+	fs.writeFile("./settings.json", JSON.stringify(conf, null, 2), 'utf-8',
 		function(error) {
 			if (error) { logMsg('E', 'Problem writing settings: ' + error); }
 			else { logMsg('I', 'Settings written'); }
@@ -322,18 +486,27 @@ function writeSettingsSync() {
 	logMsg('I', 'Writing settings at shutdown');
 
 	try {
-		fs.writeFileSync("settings.json", JSON.stringify(conf, null, 2), 'utf-8'); 
+		fs.writeFileSync("./settings.json", JSON.stringify(conf, null, 2), 'utf-8'); 
 	} catch(err) {
 		logMsg('E', 'Tried to write settings but failed: ' + err);
 	}
 }
 
+process.on('SIGINT', () => {
+    logMsg('I', 'Local shut down requested. Saving settings and exiting.');
+    writeSettingsSync();
+    process.exit(0);
+});
+
+
 
 // Open serial port to connect to MySensor Gateway
 logMsg('I', 'Commence opening serial port');
-var SerialPort = require('serialport');
+const { SerialPort} = require('serialport');
 
-var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
+//Errors here
+// var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
+const gw = new SerialPort({path: conf.mysensors.comport, baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
 var gwErrFlag = true;  // We're in an error state until the port is officially open
 
 gw.open();
@@ -407,23 +580,23 @@ function getOutsideWeather() {
 				// Does assume that obj.* contains values, should really check
 
 				// Send values of to decode for processing
-				decode('100;0;'+ C_SET + ';0;' + V_TEMP + ';' + Math.round((obj.main.temp-273.15)*10)/10);
-				decode('50;0;' + C_SET + ';0;' + V_TEMP + ';' + obj.main.humidity);
-				decode('51;0;' + C_SET + ';0;' + V_TEMP + ';' + Math.round(obj.main.pressure));
-				decode('202;0;'+ C_SET + ';0;' + V_TEMP + ';' + obj.wind.deg);
-				decode('203;0;'+ C_SET + ';0;' + V_TEMP + ';' + Math.round(3.6 * obj.wind.speed));
-				decode('204;0;'+ C_SET + ';0;' + V_TEMP + ';' + convertTimestampToTime(obj.sys.sunrise));
-				decode('205;0;'+ C_SET + ';0;' + V_TEMP + ';' + convertTimestampToTime(obj.sys.sunset));
-				decode('209;0;'+ C_SET + ';0;' + V_TEMP + ';' + obj.weather[0].description);
-				decode('210;0;'+ C_SET + ';0;' + V_TEMP + ';' + obj.weather[0].main);
-				decode('211;0;'+ C_SET + ';0;' + V_TEMP + ';' + Math.round((obj.main.feels_like-273.15)*10)/10);
-				decode('200;0;'+ C_SET + ';0;' + V_IMAGE + ';' + 'http://openweathermap.org/img/w/' + obj.weather[0].icon + '.png');
+				decode('100;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.temp-273.15)*10)/10);
+				decode('50;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.main.humidity);
+				decode('51;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(obj.main.pressure));
+				decode('202;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.wind.deg);
+				decode('203;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(3.6 * obj.wind.speed));
+				decode('204;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunrise));
+				decode('205;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunset));
+				decode('209;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].description);
+				decode('210;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].main);
+				decode('211;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.feels_like-273.15)*10)/10);
+				decode('200;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'http://openweathermap.org/img/w/' + obj.weather[0].icon + '.png');
 
 				// Refresh graphs
-				decode('99;0;' + C_SET + ';0;' + V_IMAGE + ';' + 'temp_graph_1w.png');
-				decode('206;0;'+ C_SET + ';0;' + V_IMAGE + ';' + 'humidity_1w.png');
-				decode('207;0;'+ C_SET + ';0;' + V_IMAGE + ';' + 'pressure_1w.png');
-				decode('208;0;'+ C_SET + ';0;' + V_IMAGE + ';' + 'speed_1w.png');
+				decode('99;0;' + MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'temp_graph_1w.png');
+				decode('206;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'humidity_1w.png');
+				decode('207;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'pressure_1w.png');
+				decode('208;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'speed_1w.png');
 			}
 			writeSettings();
 		}
@@ -464,6 +637,8 @@ function dateTimeString() {
 
 // Writes a log message to the console.
 // If the type start with a D then it will only be displayed if the global DEBUG is true
+// If the type is DE then it will log an error only of DEBUG is true
+// If the type is DI then it will log a informational message only if DEBUG is true
 function logMsg(type, txt) {
 	var msgTxt = "";
 	// If DEBUG is not true then don't print debug messages
@@ -479,7 +654,7 @@ function logMsg(type, txt) {
 
 	switch (type) {
 		case 'E':
-			console.log(msgTxt.red);
+			console.log(styleText('cyan', msgTxt));
 			break;
 		case 'C':
 			console.log(msgTxt.yellow);
@@ -490,7 +665,7 @@ function logMsg(type, txt) {
 		default:
 			console.log(msgTxt);
 	}
-	fs.appendFile('autohome.log', msgTxt + '\r\n', (err) => {  
+	fs.appendFile(autohomeLogFile, msgTxt + '\r\n', (err) => {  
     	if (err) {
     		console.log("ERROR Writing to log file!");
     		throw err;
@@ -506,7 +681,7 @@ function decode(msg) {
 	// Should really check that all these parameters are available
 	if (msgs.length < 6) {
 		// logMsg("DE", "Incomplete message from gateway: " + msg);
-		logMsg("E", "Incomplete message from gateway: " + msg);
+		logMsg("DE", `Incomplete message from gateway: ${msg}`);
 		return 1;
 	}
 
@@ -521,16 +696,16 @@ function decode(msg) {
 	}
 
 	switch (rMsgtype) {
-		case C_PRESENTATION:  // = 0
-		case C_REQ:  // = 2 = A sensor is asking for data
+		case MS.C_PRESENTATION:  // = 0
+		case MS.C_REQ:  // = 2 = A sensor is asking for data
 			break;
-		case C_SET:  //SET message = 1
+		case MS.C_SET:  //SET message = 1
 			switch (rSubtype) {
-				case V_TRIPPED:
-				case V_LOCK_STATUS:
-				case V_SWITCH:
-				case V_TEMP:
-				case V_IMAGE:
+				case MS.V_TRIPPED:
+				case MS.V_LOCK_STATUS:
+				case MS.V_SWITCH:
+				case MS.V_TEMP:
+				case MS.V_IMAGE:
 					var getSensor = conf.mysensors.sensornodes.find(sensor => sensor.id == rNode);
 					if (getSensor !== undefined) {
 						var oldVal = getSensor.value;
@@ -539,37 +714,42 @@ function decode(msg) {
 						getSensor.contact_status = '0';
 						// Send JSON of sensor
 						io.emit('SMv2', JSON.stringify(getSensor));
-						logMsg('I', "Got: " + getSensor.name + " : " + getSensor.value);
+						logMsg('I', `Got: ${getSensor.name} (${rNode}): ${getSensor.value}`);
 						logMsg('DI', "Sending JSON: " + JSON.stringify(getSensor));
 
 						// If from FanSwitch(25) then send of to fan switch (105)
 						// Check to see if the value has changed at all
 						if ((rNode == '25') && (rPayload != oldVal)) {
 							logMsg('I', 'Received message from Fan Switch. Sending to fan: ' + '105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
-							decode('105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
+							decode('105;0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + rPayload);
 							processButton('105');
 						}
 					} else {
-						logMsg('E', "Working with: " + msg + " but wasn't found");
+						logMsg('E', `Working with: ${msg} but wasn't found`);
+					}
+					// Special handling of Freezer Temp and alerting:
+					if ((rNode == '14') && (rPayload > -12)) {
+						sendEmail('dave.jacobsen@gmail.com', 'Freezer Alert', 'Freezer temperature is above -12 degrees!'); 
+						logMsg('E', 'Freezer temperature is greater than -12 degrees! Sending email alert.');
 					}
 					break;
-				case V_STATUS:
+				case MS.V_STATUS:
 					break;
 				default:
 					logMsg ('E', 'Unknown Sensor message: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + String(rPayload));
 			}
 			break;
 
-		case C_INTERNAL:  //INTERNAL messages = 3
+		case MS.C_INTERNAL:  //INTERNAL messages = 3
 			switch (rSubtype) {
-				case I_BATTERY_LEVEL:
+				case MS.I_BATTERY_LEVEL:
 					logMsg('I', "Internal battery level is " + rPayload + "%");
 					break;
-				case I_LOG_MESSAGE:
+				case MS.I_LOG_MESSAGE:
 					logMsg('DI', 'MySensors Internal Log Message: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
 					break;
 
-				case I_GATEWAY_READY:
+				case MS.I_GATEWAY_READY:
 					logMsg('I', 'MySensors Gateway startup is complete.');
 					break;
 
@@ -577,7 +757,7 @@ function decode(msg) {
 					logMsg('DI', 'MySensors Int Msg: ' + rNode + ';' + rSensor + ';' + rMsgtype + ';' + rAck + ';' + rSubtype + ';' + rPayload);
 			}
 			break;
-		case C_BROADCAST:   // Usually at sensor startup
+		case MS.C_BROADCAST:   // Usually at sensor startup
 			logMsg ('DI', 'Sensor Broadcast: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + rPayload);
 			break;
 
@@ -615,8 +795,8 @@ app.get('/test', function(req, res){
 });
 
 // Used for testing
-app.get('/constants.js', function(req, res){
-	res.sendFile(__dirname + '/constants.js');
+app.get('/constants-client.js', function(req, res){
+	res.sendFile(__dirname + '/constants-client.js');
 });
 
 // Returns JSON version of the current sensor values
@@ -638,7 +818,7 @@ app.use(express.static('css'));
 logMsg('I', 'Starting io handler');
 // When a connection is made, setup the handler function
 io.on('connection', function(socket){
-  logMsg('C', 'Web client connected');
+  logMsg('DC', 'Web client connected');
   socket.on('ClientMsg', function(msg){
 
     // This only fires when message received from an IP Socket NOT sensors 
@@ -673,13 +853,10 @@ logMsg('I', 'Starting http listen');
 
 // Start Web Service listening on TCP specified in the settings
 //http.listen(conf.sockets.port, function(){
+//BUG: Why hard coded here?
 http.listen(8080, function(){
 	logMsg('C', 'Listening on *:' + conf.sockets.port);
 });
-  
-// https.listen(443, () => {
-// 	logMsg('C', 'Listening on 443');
-// });
   
 // Process button or checkbox switch presses from the client
 function processButton(butID) {
@@ -716,13 +893,13 @@ function processButton(butID) {
 		// ***********************************************
 		// Special button to shutdown the application hard
 		else if (butID == '999') {
-			logMsg('I', '***** SHUTTING DOWN *****');
+			logMsg('I', '**** Client initiated shutdown ****');
 			writeSettingsSync();
 			process.exit(0);
 		}
 		else if (butID == '998') {
 			writeSettings();
-			decode('998;0;'+ C_SET + ';0;' + V_SWITCH + ';0');
+			decode('998;0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
 		}
 
 		//Handle smart plugs/switches
@@ -773,101 +950,6 @@ function processButton(butID) {
 }
 
 
-// These are MySensors API constants
-const C_PRESENTATION = 0;
-const C_SET			= 1;
-const C_REQ			= 2;
-const C_INTERNAL	= 3;
-const C_STREAM		= 4;
-const C_BROADCAST	= 255;
-
-const V_TEMP		= '0';
-const V_HUM			= '1';
-const V_STATUS		= '2';
-const V_DIMMER		= '3';
-const V_PRESSURE	= '4';
-const V_FORECAST	= '5';
-const V_RAIN		= '6';
-const V_RAINRATE	= '7';
-const V_WIND		= '8';
-const V_GUST		= '9';
-const V_DIRECTION	= '10';
-const V_UV			= '11';
-const V_WEIGHT		= '12';
-const V_DISTANCE	= '13';
-const V_IMPEDANCE	= '14';
-const V_SWITCH		= '15';
-const V_TRIPPED		= '16';
-const V_WATT		= '17';
-const V_KWH			= '18';
-const V_SCENE_ON	= '19';
-const V_SCENE_OFF	= '20';
-const V_HEATER		= '21';
-const V_HEATER_SW	= '22';
-const V_LIGHT_LEVEL	= '23';
-const V_VAR1		= '24';
-const V_VAR2		= '25';
-const V_VAR3		= '26';
-const V_VAR4		= '27';
-const V_VAR5		= '28';
-const V_UP			= '29';
-const V_DOWN		= '30';
-const V_STOP		= '31';
-const V_IR_SEND		= '32';
-const V_IR_RECEIVE	= '33';
-const V_FLOW		= '34';
-const V_VOLUME		= '35';
-const V_LOCK_STATUS	= '36';
-const V_LEVEL		= '37';
-const V_VOLTAGE		= '38';
-const V_IMAGE		= '39';
-				
-
-const I_BATTERY_LEVEL	= 0;
-const I_TIME			= 1; // Sensors can request the current time from the Controller using this message. The time will be reported as the seconds since 1970
-const I_VERSION			= 2; // Used to request gateway version from controller.
-const I_ID_REQUEST		= 3; // Use this to request a unique node id from the controller
-const I_ID_RESPONSE		= 4; // Id response back to node. Payload contains node id.
-const I_INCLUSION_MODE	= 5; // Start/stop inclusion mode of the Controller (1=start, 0=stop).
-const I_CONFIG			= 6; // Config request from node. Reply with (M)etric or (I)mperal back to sensor.
-const I_PING			= 7; // AKA I_FIND_PARENT - When a sensor starts up, it broadcast a search request to all neighbor nodes. They reply with a I_FIND_PARENT_RESPONSE.
-const I_PING_ACK		= 8; //  AKA I_FIND_PARENT_RESPONSE - Reply message type to I_FIND_PARENT request.
-const I_LOG_MESSAGE		= 9; // Sent by the gateway to the Controller to trace-log a message
-const I_CHILDREN		= 10; // A message that can be used to transfer child sensors (from EEPROM routing table) of a repeating node.
-const I_SKETCH_NAME		= 11; // Optional sketch name that can be used to identify sensor in the Controller GUI
-const I_SKETCH_VERSION	= 12; // Optional sketch version that can be reported to keep track of the version of sensor in the Controller GUI.
-const I_REBOOT			= 13; // Used by OTA firmware updates. Request for node to reboot.
-const I_GATEWAY_READY 	= 14;
-const I_REQUEST_SIGNING	= 15; // Used between sensors when initialting signing.
-const I_GET_NONCE 		= 16; // Used between sensors when requesting nonce.
-const I_GET_NONCE_RESPONSE = 17; // Used between sensors for nonce response.
-
-const S_DOOR		= 0;
-const S_MOTION		= 1;
-const S_SMOKE		= 2;
-
-const S_LIGHT		= 3;
-const S_BINARY		= 3;
-
-const S_DIMMER		= 4;
-const S_COVER		= 5;
-const S_TEMP		= 6;
-const S_HUM			= 7;
-const S_BARO		= 8;
-const S_WIND		= 9;
-const S_RAIN		= 10;
-const S_UV			= 11;
-const S_WEIGHT		= 12;
-const S_POWER		= 13;
-const S_HEATER		= 14;
-const S_DISTANCE	= 15;
-const S_LIGHT_LEVEL	= 16;
-const S_ARDUINO_NODE	= 17;
-const S_REPEATER_NODE	= 18;
-const S_LOCK		= 19;
-const S_IR			= 20;
-const S_WATER		= 21;
-const S_AIR_QUALITY	= 22;
 
 // const privateKey = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem', 'utf8');
 // const certificate = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/cert.pem', 'utf8');
