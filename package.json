@@ -5,22 +5,25 @@
   "description": "AutoHome",
   "main": "autohome.js",
   "scripts": {
-    "start": "nodemon --delay 3 --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js",
+    "start": "nodemon --delay 3 --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' --ignore '*.log' --ignore 'images/*' autohome.js",
     "test": "nodemon --ignore '*.html' --ignore '*.json' --ignore 'node_modules/*' autohome.js -- -t -d"
   },
   "author": "David Jacobsen",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "@aws-sdk/client-ses": "^3.787.0",
+    "body-parser": "^2.2.0",
     "chartjs": "^0.3.24",
     "colors": "^1.4.0",
-    "express": "^4.17.1",
-    "geoip-lite": "^1.4.2",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "geoip-lite": "^1.4.10",
     "request": "^2.88.2",
-    "serialport": "^9.0.0",
-    "socket.io": "^2.3.0",
-    "tplink-smarthome-api": "^2.0.0",
-    "tuyapi": "^5.3.1",
-    "util": "^0.12.3"
+    "serialport": "^13.0.0",
+    "socket.io": "^4.8.1",
+    "terser": "^5.39.0",
+    "tplink-smarthome-api": "^5.0.0",
+    "tuyapi": "^7.7.0",
+    "util": "^0.12.5"
   }
 }

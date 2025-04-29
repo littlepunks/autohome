@@ -1,4 +1,4 @@
-© 2017-2021 David Jacobsen / dave.jacobsen@gmail.com
+© 2017-2025 David Jacobsen / dave.jacobsen@gmail.com
 
 # Description
 
@@ -57,8 +57,8 @@ Tested Working:
 
 **Windows**
 
-Node Version 4.5.0
-NPM Version 2.15.9
+Node Version 22.14.0
+NPM Version 11.2.0
 
 **Raspbian**
 
@@ -85,7 +85,7 @@ The app requires the following node modules:
 - geoip-lite
 
 # Other Dependencies
-- RRDTool (in Windows needs Cygwin installed with defaults as well)
+- RRDTool (in Windows needs Cygwin installed with defaults as well). Some install downloads include the needed DLL's without a Cygwin install.
 
 # Arduino Settings
 
@@ -125,6 +125,10 @@ npm start (or npm test)
 Run:
 cd ~/ && git clone https://github.com/littlepunks/autohome.git && cd ./autohome && chmod +x autohome-build-ubuntu.sh && ./autohome-build-ubuntu.sh
 
+## Windows
+
+Edit and use autohome-build-windows.ps1 file that automates most of the build. It has not been tested.
+
 # Sensor Details
 
 Refer to sensor_mappings.xlsx for sensor details
@@ -160,8 +164,9 @@ At startup:
 - Regular WeatherAPI calls are started
 
 # Bugs/Known Errors
-- TCP port must be >1024 otherwise root access is required to run the core process
-- [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle
+- When developing using the Cloud version of the Arduino IDE the COM port may be held by that and not be available to Autohome.
+- The TCP port must be >1024 otherwise root access is required to run the core process
+- [All] After a restart the controller doesn't always appear as a COM port or ttyUSB device straight away. May require continuous power to gateway or g/w power cycle. Worse on Linux.
 - [All] Tuya support is patchy. Sometimes can't discover in time, doesn't report external changes. Currently disabled in code.
 
 - If Tuya devices offline will sometimes get:
@@ -179,8 +184,43 @@ At startup:
 
 # To Do
 
+## General
+- For each control have optional and default settings, especially related to visuals and alerting.
+() = optional
+{} = default
+CAPS = User defined
+e.g. 
+Temp Gauge --
+	id: UNIQUE_NUM;
+	name: NAME_STR;
+	value: VALUE_STR;
+	control: CONTROL_TYPE_STR;
+	contact_status: STATUS_NUM_STR;
+	(prefix: {""} | STRING);
+	(suffix: {""} | STRING);
+	(type: {""} | SENSOR_TYPE);
+	(min: MINIMUM_EXPECTED_NUM)
+	(maz: MAXIMUM_EXPECTED_NUM)
+	updated: TIMESTRING;
+	freq: TIME_IN_SECONDS_NUM;
+	(warningThreshold: "['<'|'>']'NUM");
+	(alarmThreshold: "['<'|'>']'NUM");
+	(alarmState: [{0}|1|2]);
+
+
+LEVELS of values that are critical, also need to know if higher or lower than matters
+
 ## Security
-- Use helmet module for greater security
+- Use helmet module for greater security. Possible helmet options:
+		app.use(
+			helmet({
+				contentSecurityPolicy: false, // Disables CSP (allowing locally served pages)
+				hsts: false, // Disables HTTP Strict Transport Security (not enforcing HTTPS)
+				crossOriginEmbedderPolicy: false, // Disables Cross-Origin Embedder Policy
+				crossOriginResourcePolicy: false, // Disables Cross-Origin Resource Policy
+			})
+		);
+
 - Run npm audit
 - Consider using snyk: npm install -g snyk; cd myapp; snyk test; snyk wizard
 - Use certbot and Lets Encrypt or https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-16-04
@@ -225,14 +265,16 @@ At startup:
 - Rebuild Alexa skill
 
 ## Gateway
-- replace "colors" npm module with "chalk"
 - more granular control of when to send emails, e.g. priority
 - Move to database for all data
 - Have schedules and structure, e.g. alert on motion when no-one home, or heater on when after 5pm and someone home
 - Maybe add a "source" field to controls. e.g. "url:http://weatheraddress" or "sensor,sensorid" or "file:filename"
 - Gather all the functions that execute at startup in one place. Maybe wrap with a main()
-- Upgrade socket.io to the latest version
 - Maybe combine nodemon and forever to cover all eventualities
-- Use 'winston-daily-rotate-file' module to manage log files
+- Use 'winston-daily-rotate-file' or 'pino' module to manage log files
+- Improve timers - use setinterval
+- Move things like Tuya id and keys to environment variables, maybe using dotenv
+- Implement rate limiting on http requests
+
 
 

@@ -38,7 +38,7 @@
 
 </head>
 <body>
-<script type="text/javascript" src="constants.js"></script>
+<script type="application/javascript" src="constants-client.js"></script>
 <script>
 
   // Setup socket for comms back to the server
@@ -92,7 +92,7 @@
       // Check to see if the sensor already exists and update the values
       // if not, add to the 
       //
-      // msg should have: id,name,value,control,units,type,updated,freq,contact_status
+      // msg should have: id,name,value,control,suffix,type,updated,freq,contact_status
 
       // Should check that id exists first
       ctrl = document.getElementById(msg.id);  //returns null if not found
@@ -106,7 +106,7 @@
 
           ctrl.innerHTML = "<canvas id='" + msg.control + msg.id + "' width='" + cSize
             + "' height='" + cSize + "' title='Sensor " + msg.id + "'></canvas><br>" + msg.name;
-          //alert(msg.control + "," + msg.id + "," + msg.value + "," + msg.name + "," + msg.units + ',' + msg.type);
+          //alert(msg.control + "," + msg.id + "," + msg.value + "," + msg.name + "," + msg.suffix + ',' + msg.type);
           //alert(ctrl.innerHTML);
 
           c = document.getElementById(msg.control + msg.id);  // Find right canvas
@@ -136,7 +136,7 @@
               break;
 
             case V_TEMP:
-              drawGauge(ctx, c.width/2, c.height/2, c.width/2.5, msg.value + msg.units, statusColour(msg.contact_status));
+              drawGauge(ctx, c.width/2, c.height/2, c.width/2.5, msg.value + msg.suffix, statusColour(msg.contact_status));
               break;
               
             case V_DIRECTION:
@@ -578,7 +578,7 @@
       <tbody>
         <tr>
           <td><div id="103"><font color=grey>...</font></div></td>
-          <td><div id="997"><font color=grey>...</font></div></td>
+          <td><div id="997"><font color=grey>...</font></div></td> <!-- Shutdown -->
           <td><div id="996"><font color=grey>...</font></div></td>
           <td><div id="995"><font color=grey>...</font></div></td>
         </tr>

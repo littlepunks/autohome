@@ -8,20 +8,75 @@
 
 "use strict";
 
-var express    = require('express');
-var app        = express();
-var http       = require('http').Server(app);
-var io         = require('socket.io')(http);
-var request    = require('request');
-var colors     = require('colors');
-const fs 	   = require('fs');
-const geoip    = require('geoip-lite');
+// const express    = require('express');
+// const app        = express();
+// const http       = require('http').Server(app);
+// const io         = require('socket.io')(http);
+// const request    = require('request');
+// const colors     = require('colors');
+// const fs 	   = require('fs');
+// const geoip    = require('geoip-lite');
+// const spawn = require('child_process').spawn;
+// const { SerialPort} = require('serialport');
+// const { styleText } = require('node:util');  // Allows for use of colors in console messages
+// const MS = require('./modules/constants.js'); // MySensors API constants
+// require('dotenv').config(); // Load environment variables from .env file
 
-// Load environment variables from .env file
-require('dotenv').config()
 
+// Import dependencies
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const request = require("request");
+const colors = require("colors");             // To use of colors in console messages
+const fs = require("fs");
+const geoip = require("geoip-lite");
+const { spawn } = require("child_process");
+const { SerialPort } = require("serialport");
+const { styleText } = require("util");        // For colored console messages
+const MS = require("./modules/constants.js"); // MySensors API constants
 
+// Smart Switches
+const enableWEMO   = false;   // Set to true to enable Wemo smart switches
+const enableTPLINK = false;   // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
+const enableTUYA   = false;   // Set to true to enable TUYA smart switches - WILL NEED TO UNCOMMENT RELATED CODE
+let plugs = [];   // List of smart plugs/switches
 
+// Load environment variables
+require("dotenv").config();
+
+// Initialize Express app and HTTP server
+const app = express();
+const server = http.Server(app);
+const io = socketIo(server);
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// RRDTool setup
+const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
+const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
+const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
+const autohomeLogFile = './autohome.log'; // Log file for console messages
+const enableRRD = true; // Set to true to enable RRDTool graphing
+
+let DEBUG = false;    // Set to false to turn off debugging
+
+let conf = {}; // settings.json will be loaded in here later
+const settingsFile = './settings.json'; // Settings file to load
+
+const SENSORCHECKINTERVAL = 300000;  // 5 mins
+const RRDUPDATEINTERVAL = 300000;  // This should ALWAYS be 5 mins. That's what RRDTOOL expects.
+
+// Used by the decode function
+var rNode 		= "";
+var rSensor 	= "";
+var rMsgtype 	= "";
+var rAck 		= "";
+var rSubtype 	= "";
+var rPayload 	= "";
+
+// AWS SES (Email) setup
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
 const ses = new SESClient({
@@ -32,6 +87,7 @@ const ses = new SESClient({
   }
 });
 
+// Send an email using AWS SES. Send to dave.jacobsen@gmail.com by default
 async function sendEmail(mailRecipients='dave.jacobsen@gmail.com', mailSubject='Alert from Autohome', MailMessage='') {
   const params = {
     Source: 'dave@littlepunk.co.nz',
@@ -68,330 +124,212 @@ async function sendEmail(mailRecipients='dave.jacobsen@gmail.com', mailSubject='
 
 if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome started");}
 
-//import { styleText } from 'node:util';
-const { styleText } = require('node:util');
-
-const MS = require('./modules/constants.js'); // MySensors API constants
-
-const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
-
-const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
-const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
-const autohomeLogFile = './autohome.log'; // Log file for console messages
-const enableRRD = true; // Set to true to enable RRDTool graphing
-
-const spawn = require('child_process').spawn;
-
 // Create RRD if it doesn't exist
-function createRRD() {
-	if (fs.existsSync(TempsRRDFile)) {
-	  logMsg('I','RRD file already exists.');
-	  return;
-	}
-	// 	['Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'].forEach(s => {
+// **** NEEDS TO BE CHECKED AGAINST THE LATEST CONFIG
+// // function createRRD() {
+// 	if (fs.existsSync(TempsRRDFile)) {
+// 	  logMsg('I','RRD file already exists.');
+// 	  return;
+// 	}
 
+// 	// 	List of datasources'Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'
+
+// 	// Notes:
+// 	// Rename datasource:
+// 	//   rrdtool tune TempsRRDFile -r oldname:newname
+// 	// Add datasource:
+// 	//   rrdtool tune DS:SensorName:GAUGE:600:min:max
+
+// 	const args = [
+// 	  'create', TempsRRDFile,
+// 	  '--step', '300',
+// 	  'DS:Outside:GAUGE:600:-50:100',
+// 	  'DS:Tom:GAUGE:600:-50:100',
+// 	  'DS:Bedroom:GAUGE:600:-50:100',
+// 	  'DS:Sophie:GAUGE:600:-50:100',
+// 	  'DS:Michael:GAUGE:600:-50:100',
+// 	  'DS:Laundry:GAUGE:600:-50:100',
+// 	  'DS:Freezer:GAUGE:600:-50:100',
+// 	  'DS:Balcony:GAUGE:600:-50:100',
+// 	  'DS:Humidity:GAUGE:600:0:100',
+// 	  'DS:Pressure:GAUGE:600:900:1100',
+// 	  'DS:WindSpeed:GAUGE:600:0:300',
+
+// 	  'RRA:AVERAGE:0.5:1:288',
+// 	  'RRA:AVERAGE:0.5:12:168',
+// 	  'RRA:AVERAGE:0.5:288:52',
+// 	  'RRA:MAX:0.5:1:288',
+// 	  'RRA:MAX:0.5:12:168',
+// 	  'RRA:MAX:0.5:288:52',
+// 	  'RRA:MIN:0.5:1:288',
+// 	  'RRA:MIN:0.5:12:168',
+// 	  'RRA:MIN:0.5:288:52'
+// 	];
   
-	const args = [
-	  'create', TempsRRDFile,
-	  '--step', '300',
-	  'DS:Outside:GAUGE:600:-50:100',
-	  'DS:Tom:GAUGE:600:-50:100',
-	  'DS:Bedroom:GAUGE:600:-50:100',
-	  'DS:Sophie:GAUGE:600:-50:100',
-	  'DS:Michael:GAUGE:600:-50:100',
-	  'DS:Laundry:GAUGE:600:-50:100',
-	  'DS:Freezer:GAUGE:600:-50:100',
-	  'DS:Balcony:GAUGE:600:-50:100',
-	  'DS:Humidity:GAUGE:600:0:100',
-	  'DS:Pressure:GAUGE:600:900:1100',
-	  'DS:Speed:GAUGE:600:0:300',
+// 	const child = spawn(rrdtool, args);
+// 	child.on('close', code => {
+// 	  if (code === 0) logMsg('I', 'RRD created successfully.');
+// 	  else logMsg('E', 'RRD creation failed.');
+// 	});
+//   }
 
-	  'RRA:AVERAGE:0.5:1:288',
-	  'RRA:AVERAGE:0.5:12:168',
-	  'RRA:AVERAGE:0.5:288:52',
-	  'RRA:MAX:0.5:1:288',
-	  'RRA:MAX:0.5:12:168',
-	  'RRA:MAX:0.5:288:52',
-	  'RRA:MIN:0.5:1:288',
-	  'RRA:MIN:0.5:12:168',
-	  'RRA:MIN:0.5:288:52'
-	];
-  
-	const child = spawn(rrdtool, args);
-	child.on('close', code => {
-	  if (code === 0) logMsg('I', 'RRD created successfully.');
-	  else logMsg('E', 'RRD creation failed.');
-	});
-  }
+// createRRD();
 
-createRRD();
-
-const enableWEMO = false; // Set to true to enable Wemo smart switches
-
-const enableTPLINK = false; // Set to true to enable TP-Link smart switches
-const enableTUYA = false; // Set to true to enable TP-Link smart switches
-
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-
-// Start of TP-Link smart switch code
-if (enableTPLINK) {
+// if (enableTPLINK) {
 	
-	// Common list for smart plugs/switches
-	var plugs = [];
+// 	// Common list for smart plugs/switches
+// 	//var plugs = [];
 
-	// TP-Link Smart Switch setup ---------------------------------------------------------------
-	const { Client } = require('tplink-smarthome-api');
-	const client = new Client();
+// 	// TP-Link Smart Switch setup ---------------------------------------------------------------
+// 	const { Client } = require('tplink-smarthome-api');
+// 	const client = new Client();
 
-	client.on('plug-new', device => {
+// 	client.on('plug-new', device => {
 
-		logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
+// 		logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
 
-		// Assumes plug will be found
-		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
+// 		// Assumes plug will be found
+// 		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 		decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
 
-		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
+// 		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
 
-		device.startPolling(SENSORCHECKINTERVAL);
+// 		device.startPolling(SENSORCHECKINTERVAL);
 	
-		device.on('power-on', () => {
-			logMsg('I', `TP-Link device ${device.alias} is on`);
-			// Need to check if it exists otherwise the decode will error
-			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
+// 		device.on('power-on', () => {
+// 			logMsg('I', `TP-Link device ${device.alias} is on`);
+// 			// Need to check if it exists otherwise the decode will error
+// 			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
 
-		});
-		device.on('power-off', () => {
-			logMsg('I', `TP-Link device ${device.alias} is off`);
-			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
+// 		});
+// 		device.on('power-off', () => {
+// 			logMsg('I', `TP-Link device ${device.alias} is off`);
+// 			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
 
-		});
-		device.on('in-use-update', inUse => {
-			//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
-			//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
-		});  
-	});
-	client.on('plug-online', device => {
-		//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
-		// Could mark sensor as uncontactable
-	});
-	client.on('plug-offline', device => {
-		logMsg('DI', `TP-Link device ${device.alias} is uncontactable`);
-	});
+// 		});
+// 		device.on('in-use-update', inUse => {
+// 			//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
+// 			//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
+// 		});  
+// 	});
+// 	client.on('plug-online', device => {
+// 		//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
+// 		// Could mark sensor as uncontactable
+// 	});
+// 	client.on('plug-offline', device => {
+// 		logMsg('DI', `TP-Link device ${device.alias} is uncontactable`);
+// 	});
 
-	logMsg('I', 'Starting TP-Link Device Discovery');
-	client.startDiscovery();
-}
+// 	logMsg('I', 'Starting TP-Link Device Discovery');
+// 	client.startDiscovery();
+// }
 
-// Tuya Switch setup ---------------------------------------------------------------------
-if (enableTUYA) {
-	const TuyAPI = require('tuyapi');
-	const util = require('util');
-	const tuyaDev = new TuyAPI({
-		id: process.env.TUYA_ID,
-		key: process.env.TUYA_KEY});
-		// const tuyaDev = new TuyAPI({
-		// 	id: '550705303c71bf20a967',
-		// 	key: '6590d93429b1034a'});
+// // Tuya Switch setup ---------------------------------------------------------------------
+// if (enableTUYA) {
+// 	const TuyAPI = require('tuyapi');
+// 	const util = require('util');
+// 	const tuyaDev = new TuyAPI({
+// 		id: process.env.TUYA_ID,
+// 		key: process.env.TUYA_KEY});
+// 		// const tuyaDev = new TuyAPI({
+// 		// 	id: '550705303c71bf20a967',
+// 		// 	key: '6590d93429b1034a'});
 		
-	//Find device on network
-	tuyaDev.find().then(() => {
-		// Connect to device
-		tuyaDev.connect();
-		});
+// 	//Find device on network
+// 	tuyaDev.find().then(() => {
+// 		// Connect to device
+// 		tuyaDev.connect();
+// 		});
 	
-	//Add event listeners
-	tuyaDev.on('connected', () => {
-		logMsg('I','Connected to Tuya device');
-		// Hard coded name. Really need to get name from the switch and match.
-		plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
+// 	//Add event listeners
+// 	tuyaDev.on('connected', () => {
+// 		logMsg('I','Connected to Tuya device');
+// 		// Hard coded name. Really need to get name from the switch and match.
+// 		plugs.push({id:  conf.mysensors.sensornodes.find(n => n.name == 'Michael').id, type: "tuya"});
 
-	});
+// 	});
 
-	tuyaDev.on('disconnected', () => {
-		logMsg('I','Disconnected from Tuya device.');
-	});
+// 	tuyaDev.on('disconnected', () => {
+// 		logMsg('I','Disconnected from Tuya device.');
+// 	});
 
-	tuyaDev.on('error', error => {
-		logMsg('E',`Tuya general error! ${$error}`);
-	});
+// 	tuyaDev.on('error', error => {
+// 		logMsg('E',`Tuya general error! ${$error}`);
+// 	});
 
-	tuyaDev.on('data', data => {
-		try {
-			logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
-			logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
+// 	tuyaDev.on('data', data => {
+// 		try {
+// 			logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
+// 			logMsg('I',`Tuya switch status is: ${tuyaDev.get().then(status => logMsg('I', 'Tuya status: ' + status))}.`);
 		
-			logMsg('I','Tuya data: ' + util.inspect(data));
-		}
-		catch (error) {
-			logMsg('E', 'Tuya data error: ' + error);
-		}
+// 			logMsg('I','Tuya data: ' + util.inspect(data));
+// 		}
+// 		catch (error) {
+// 			logMsg('E', 'Tuya data error: ' + error);
+// 		}
 		
-		//Can set Tuya switch via:
-		tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
-		tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
+// 		//Can set Tuya switch via:
+// 		tuyaDev.set({set: true}).then(() => logMsg('I', 'Tuya device was turned on'));
+// 		tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
 
-	});
+// 	});
 
-	//Disconnect after 10 seconds
-	setTimeout(() => { tuyaDev.disconnect(); }, 10000);
-}
-// =============================================================================
-// CONFIGURATION:
+// 	//Disconnect after 10 seconds
+// 	setTimeout(() => { tuyaDev.disconnect(); }, 10000);
+// }
 
-// Set to false to turn off debugging
-var DEBUG = true;
-
-// settings.json will be loaded in here later
-var conf = {};
-
-
-const SENSORCHECKINTERVAL = 300000;  // 5 mins
-
-// This should ALWAYS be 5 mins. That's what RRDTOOL expects.
-const RRDUPDATEINTERVAL = 300000;  // 5 mins
-
+// ===================================================================
 // Load settings at startup
 readSettings();
 
-// Used by the decode function
-var rNode 		= "";
-var rSensor 	= "";
-var rMsgtype 	= "";
-var rAck 		= "";
-var rSubtype 	= "";
-var rPayload 	= "";
+// Set up timers for regular tasks
+function startPolling() {
+    setTimeout(() => {
+        updateStatuses();
+        startPolling();
+    }, conf.polling.interval * 1000);
+}
 
-// Loop to do any regular activities ============================================
+function startSensorCheck() {
+    setTimeout(() => {
+        runSensorCheck();
+        startSensorCheck();
+    }, SENSORCHECKINTERVAL);
+}
+
+function runSensorCheck() {
+    const now = Date.now();
+
+    conf.mysensors.sensornodes.forEach(sensor => {
+        let oldStatus = sensor.contact_status;
+        let timeDiff = now - sensor.updated;
+
+        sensor.contact_status = timeDiff > sensor.freq * 2000 ? "2" : 
+                                timeDiff > sensor.freq * 1000 ? "1" : "0";
+
+        if (oldStatus !== sensor.contact_status) {
+            io.emit("SMv2", JSON.stringify(sensor));
+        }
+    });
+}
+startSensorCheck();
+startPolling();
+
+// Loop to do any regular activities 
 function updateStatuses() {
-	// Update external temp/humidity/pressure
-	getOutsideWeather();
+ 	// Update external temp/humidity/pressure
+ 	getOutsideWeather();
 }
 
-// Start the timer by defining setTimeout with a function to run after so many msecs.
-function startTimer () {
-    setTimeout(stopTimer, conf.polling.interval*1000);
-}
-
-// This runs when the timer fires. It sends a message and starts the timer again
-function stopTimer () {
-    updateStatuses();
-    startTimer();
-}
-
-// -------------------
 // Regularly check sensor update times and highlight any missing by changing the colour
-
-
-// BUG:
-// Improve these timers by using setInterval and clearInterval instead of setTimeout
-// setTimeout is a bit of a hack and not as efficient as setInterval
-// setInterval is a bit more efficient and easier to read.
-
-function startSensorCheckTimer() {
-	setTimeout(stopSensorCheckTimer, SENSORCHECKINTERVAL); // 5 mins
-}
-
-function stopSensorCheckTimer() {
-	logMsg('DI', 'Checking for sensor timeouts');
-	// Check that the COM port (MySensors gateway) is still open and hasn't had an error
-	if (!gw.isOpen) { gwErrFlag = true; }
-	if (gwErrFlag) { logMsg('E', 'Error with the COM port connecting to the gateway. Please restart.'); }
-
-	// Iterate through all the sensors and
-	// update {sensor}.contact_status with 0,1,2 (green, amber, red)
-	// if timeouts have expired.
-	var tnow = new Date().getTime();
-	conf.mysensors.sensornodes.forEach(s => {
-		let oldStatus = s.contact_status;
-		let delta = tnow - s.updated;
-
-		if (delta > (s.freq * 1000 * 2)) { // convert secs to milis and 2 periods
-			// Very late
-			s.contact_status = '2';
-		}
-		else if (delta > (s.freq * 1000)) {
-			// Missed one check
-			s.contact_status = '1';
-		}
-		else {
-			// All good
-			s.contact_status = '0';
-		}
-		// Send updates for those that have changed only, saves network traffic
-		if (oldStatus != s.contact_status) {
-			io.emit('SMv2', JSON.stringify(s));
-		}
-	});
-
-	startSensorCheckTimer();
-}
-
-startSensorCheckTimer();
-
-
-// -------------------
 // Regular gathering temperature data that is passed to RRDTool
-
-
-// **** NEW POTENTIAL CODE DO BATCH DRAW GRAPHS WITHOUT CMD FILE using graphRRD.js file
-// const graphRRD = require('./graphRRD');
-
-// const defs = [
-//   'DEF:s1=temps.rrd:Outside:AVERAGE',
-//   'DEF:s2=temps.rrd:Bedroom:AVERAGE',
-//   'DEF:s3=temps.rrd:sensor3:AVERAGE'
-// ];
-
-// const lines = [
-//   'LINE2:s1#FF0000:Outside',
-//   'LINE2:s2#00FF00:Bedroom',
-//   'LINE2:s3#0000FF:Sensor3'
-// ];
-
-// graphRRD([
-//   {
-//     output: 'last_hour.png',
-//     title: 'Temperature - Last Hour',
-//     start: 'end-1h',
-//     end: 'now',
-//     defs,
-//     lines
-//   },
-//   {
-//     output: 'last_24h.png',
-//     title: 'Temperature - Last 24 Hours',
-//     start: 'end-24h',
-//     end: 'now',
-//     defs,
-//     lines
-//   },
-//   {
-//     output: 'last_week.png',
-//     title: 'Temperature - Last Week',
-//     start: 'end-1w',
-//     end: 'now',
-//     defs,
-//     lines
-//   }
-// ]);
-// ******************************************************************************
-
-
-
-
-
-
 
 function startTempTimer () {
     setTimeout(stopTempTimer, RRDUPDATEINTERVAL);  // 5 mins
 }
-
 
 function stopTempTimer () {
 	// Write out current temperatures readings to RRDTool and generate new graphs
@@ -402,14 +340,12 @@ function stopTempTimer () {
 
 	// Build up RRD update string from each sensor in order
 	['Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'].forEach(s => {
-//	['Outside','Tom','Bedroom','Laundry','Balcony','Humidity','Pressure','Speed'].forEach(s => {
 		getSensor = conf.mysensors.sensornodes.find(sensor => sensor.name == s);
 		args += ":" + ((getSensor !== undefined) ? getSensor.value : "U");
 	})
 
 	logMsg('DI', `RRD data update: ${args}`);
 
-//	const bat = spawn('rrdtool', ['update', TempsRRDFile, args]);
 	const bat = spawn(rrdtool, ['update', TempsRRDFile, args]);
 
 	bat.stdout.on('data', (data) => { logMsg('DI', `RRD data updating: ${data.toString()}`);});
@@ -444,54 +380,35 @@ if (enableRRD) {
 
 // --------------------------------------
 
-// Update statuses at startup and then start timer to repeat regularly
-startTimer();
-
 function readSettings() {
 	logMsg('I', 'Reading settings');
-	const fs = require('fs');
-	try {
-		var fileContents = fs.readFileSync('./settings.json', 'utf-8');
-	} catch (err) {
-		if (err.code === 'ENOENT') {
-			logMsg('E','Settings file not found: settings.json');
-		}
-		throw err;
-	}
-	
-	try {
-		conf = JSON.parse(fileContents);
-	} catch (err) {
-		logMsg('E', 'Error parsing settings file: ' + err.message);
-		throw err;
-	}
+    try {
+        const fileContents = fs.readFileSync(settingsFile, "utf-8");
+        conf = JSON.parse(fileContents);
+    } catch (err) {
+        console.error("Error reading settings:", err);
+    }
+
 	logMsg('I', 'Settings loaded');
 }
 
 // Asynchronous version (preferred)
 function writeSettings() {
-	var fs = require('fs');
-	logMsg('I', 'Writing settings...');
-
-	fs.writeFile("./settings.json", JSON.stringify(conf, null, 2), 'utf-8',
-		function(error) {
-			if (error) { logMsg('E', 'Problem writing settings: ' + error); }
-			else { logMsg('I', 'Settings written'); }
-		}); 
+    fs.writeFile(settingsFile, JSON.stringify(conf, null, 2), "utf-8", err => {
+        if (err) logMsg('E', `Error saving settings: ${err}`);
+    });
 }
 
-// Synchronous write - only used at shutdown
+// Synchronous version (not preferred, but used for shutdown)
 function writeSettingsSync() {
-	var fs = require('fs');
-	logMsg('I', 'Writing settings at shutdown');
-
-	try {
-		fs.writeFileSync("./settings.json", JSON.stringify(conf, null, 2), 'utf-8'); 
-	} catch(err) {
+    try {
+        fs.writeFileSync(settingsFile, JSON.stringify(conf, null, 2), "utf-8");
+    } catch (err) {
 		logMsg('E', 'Tried to write settings but failed: ' + err);
-	}
+    }
 }
 
+// Gracefully handle shutdown signals
 process.on('SIGINT', () => {
     logMsg('I', 'Local shut down requested. Saving settings and exiting.');
     writeSettingsSync();
@@ -499,13 +416,9 @@ process.on('SIGINT', () => {
 });
 
 
-
 // Open serial port to connect to MySensor Gateway
 logMsg('I', 'Commence opening serial port');
-const { SerialPort} = require('serialport');
 
-//Errors here
-// var gw = new SerialPort(conf.mysensors.comport, {baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
 const gw = new SerialPort({path: conf.mysensors.comport, baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
 var gwErrFlag = true;  // We're in an error state until the port is officially open
 
@@ -513,8 +426,8 @@ gw.open();
 gw.on('open', function() {
 	logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
 	gwErrFlag = false;
-	}).on('data', function(rd) {
-		appendData(rd.toString());
+	}).on('data', function(data) {
+		processIncomingData(data.toString());
 		gwErrFlag = false;
 	}).on('end', function() {
 	 	logMsg('I', 'Disconnected from gateway');
@@ -524,16 +437,22 @@ gw.on('open', function() {
 		gwErrFlag = true;
 	});
 
-
-// Send a text message off to the gateway
-function gwWrite(msg, logtxt) {
-	gw.write(msg + '\n', function(err) {
-		if (err) {
-	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
-	  	}
-	  	logMsg('DI', logtxt);
+function processIncomingData(str) {
+	str.split("\n").forEach(line => {
+		if (line.trim()) decode(line.trim());
 	});
 }
+	
+// IS THIS NEEDED??? Used where? Surely to update a display or change a sensor setting
+// Send a text message off to the gateway
+// function gwWrite(msg, logtxt) {
+// 	gw.write(msg + '\n', function(err) {
+// 		if (err) {
+// 	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
+// 	  	}
+// 	  	logMsg('DI', logtxt);
+// 	});
+// }
 
 // Helper function to build up a message string from a sensor
 function appendData(str) {
@@ -545,8 +464,7 @@ function appendData(str) {
         pos++;
     }
     if (str.charAt(pos) == '\n') {
-		// Process the message contained in appendedString as it's a full line
-		// Decode will decode and perform actions
+		// Process the message contained in appendedString as it's a full line with decode function
         decode(appendedString.trim());
         logMsg('DR', "Sensor message: NodeID:" + rNode + ",SensorID:" + rSensor + ",MsgType:" + rMsgtype + ",Ack:" + rAck + ",SubType:" + rSubtype + ",PLoad:" + rPayload);
     }
@@ -562,120 +480,169 @@ function appendData(str) {
 // The new API gets way more info and also a forecast, but the JSON structure is slightly different:
 // https://api.openweathermap.org/data/2.5/onecall?lat=-41.29&lon=174.78&exclude=minutely&appid=cce91f7f0d86e2f338101f1ca24dd37f
 
-function getOutsideWeather() {
-	logMsg('I', 'Requesting updated external weather.');
-	request(conf.weather.externalTempURL, function (error, response, body) {
-		if (error) {
-			logMsg('E', 'Error getting external weather.');
-		}
-		else {
-			logMsg('I', 'External weather data collected.');
-			var obj = JSON.parse(body);
+// function getOutsideWeather() {
+// 	logMsg('I', 'Requesting updated external weather.');
+// 	request(conf.weather.externalTempURL, function (error, response, body) {
+// 		if (error) {
+// 			logMsg('E', 'Error getting external weather.');
+// 		}
+// 		else {
+// 			logMsg('I', 'External weather data collected.');
+// 			var obj = JSON.parse(body);
 
-			// Check that there was neither an error nor an undefined object returned
-			if ((obj instanceof Error) || (! obj.main)) {
-				logMsg('E', 'Error parsing returned weather data.');
-			}
-			else {
-				// Does assume that obj.* contains values, should really check
+// 			// Check that there was neither an error nor an undefined object returned
+// 			if ((obj instanceof Error) || (! obj.main)) {
+// 				logMsg('E', 'Error parsing returned weather data.');
+// 			}
+// 			else {
+// 				// Does assume that obj.* contains values, should really check
 
-				// Send values of to decode for processing
-				decode('100;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.temp-273.15)*10)/10);
-				decode('50;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.main.humidity);
-				decode('51;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(obj.main.pressure));
-				decode('202;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.wind.deg);
-				decode('203;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(3.6 * obj.wind.speed));
-				decode('204;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunrise));
-				decode('205;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunset));
-				decode('209;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].description);
-				decode('210;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].main);
-				decode('211;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.feels_like-273.15)*10)/10);
-				decode('200;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'http://openweathermap.org/img/w/' + obj.weather[0].icon + '.png');
+// 				// Send values of to decode for processing
+// 				decode('100;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.temp-273.15)*10)/10);
+// 				decode('50;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.main.humidity);
+// 				decode('51;0;' + MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(obj.main.pressure));
+// 				decode('202;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.wind.deg);
+// 				decode('203;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round(3.6 * obj.wind.speed));
+// 				decode('204;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunrise));
+// 				decode('205;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + convertTimestampToTime(obj.sys.sunset));
+// 				decode('209;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].description);
+// 				decode('210;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + obj.weather[0].main);
+// 				decode('211;0;'+ MS.C_SET + ';0;' + MS.V_TEMP + ';' + Math.round((obj.main.feels_like-273.15)*10)/10);
+// 				decode('200;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'http://openweathermap.org/img/w/' + obj.weather[0].icon + '.png');
 
-				// Refresh graphs
-				decode('99;0;' + MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'temp_graph_1w.png');
-				decode('206;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'humidity_1w.png');
-				decode('207;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'pressure_1w.png');
-				decode('208;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'speed_1w.png');
-			}
-			writeSettings();
-		}
-	 });
+// 				// Refresh graphs
+// 				decode('99;0;' + MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'temp_graph_1w.png');
+// 				decode('206;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'humidity_1w.png');
+// 				decode('207;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'pressure_1w.png');
+// 				decode('208;0;'+ MS.C_SET + ';0;' + MS.V_IMAGE + ';' + 'speed_1w.png');
+// 			}
+// 			writeSettings();
+// 		}
+// 	 });
+// }
+
+async function getOutsideWeather() {
+    logMsg("I", "Requesting updated external weather.");
+
+    try {
+        const response = await fetch(conf.weather.externalTempURL);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const obj = await response.json();
+
+        if (!obj.main || !obj.weather) {
+            logMsg("E", "Error parsing returned weather data.");
+            return;
+        }
+
+        // Parse and send weather data
+        updateWeatherData(obj);
+        writeSettings();
+
+    } catch (error) {
+        logMsg("E", `Error getting external weather: ${error.message}`);
+    }
 }
 
-// Returns a string of the form "01-12-2017 12:34:56" from the current time
+// Helper function to update weather data
+function updateWeatherData(obj) {
+    const weatherData = [
+        { id: 100, value: Math.round((obj.main.temp - 273.15) * 10) / 10 },
+        { id: 50, value: obj.main.humidity },
+        { id: 51, value: Math.round(obj.main.pressure) },
+        { id: 202, value: obj.wind.deg },
+        { id: 203, value: Math.round(3.6 * obj.wind.speed) },
+        { id: 204, value: convertTimestampToTime(obj.sys.sunrise) },
+        { id: 205, value: convertTimestampToTime(obj.sys.sunset) },
+        { id: 209, value: obj.weather[0].description },
+        { id: 210, value: obj.weather[0].main },
+        { id: 211, value: Math.round((obj.main.feels_like - 273.15) * 10) / 10 },
+        { id: 200, value: `http://openweathermap.org/img/w/${obj.weather[0].icon}.png`, type: MS.V_IMAGE }
+    ];
+
+    const graphData = [
+        { id: 99, value: "temp_graph_1w.png", type: MS.V_IMAGE },
+        { id: 206, value: "humidity_1w.png", type: MS.V_IMAGE },
+        { id: 207, value: "pressure_1w.png", type: MS.V_IMAGE },
+        { id: 208, value: "speed_1w.png", type: MS.V_IMAGE }
+    ];
+
+    // Process weather data
+    weatherData.forEach(({ id, value, type = MS.V_TEMP }) => {
+        decode(`${id};0;${MS.C_SET};0;${type};${value}`);
+    });
+
+    // Process graphs
+    graphData.forEach(({ id, value }) => {
+        decode(`${id};0;${MS.C_SET};0;${MS.V_IMAGE};${value}`);
+    });
+}
+
+
 function dateTimeString() {
-	var   d = new Date()
-	return (('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear() +
-		 ' ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2));
-  }
+	const now = new Date(); // Get current date and time
+	const withLead0 = (value) => String(value).padStart(2, '0'); // Ensure leading zeros
+
+	// Construct the date and time string
+	return `${withLead0(now.getDate())}-${withLead0(now.getMonth() + 1)}-${now.getFullYear()} ` +
+			`${withLead0(now.getHours())}:${withLead0(now.getMinutes())}:${withLead0(now.getSeconds())}`;
+}
   
-  function convertTimestampToTime(timestamp) {
-	var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
-		  hh = d.getHours(),
-		  h = hh,
-		  min = ('0' + d.getMinutes()).slice(-2),		// Add leading 0.
-		  ampm = 'AM',
-		  time;
-			  
-	  if (hh > 12) {
-		  h = hh - 12;
-		  ampm = 'PM';
-	  } else if (hh === 12) {
-		  h = 12;
-		  ampm = 'PM';
-	  } else if (hh == 0) {
-		  h = 12;
-	  }
-	  
-	  // ie: 8:35 AM	
-	  time = h + ':' + min + ' ' + ampm;
-		  
-	  return time;
-  }
-  
+function convertTimestampToTime(timestamp) {
+    const date = new Date(timestamp * 1000); // Convert the timestamp to milliseconds
+    const hours = date.getHours(); // Get hours
+    const minutes = date.getMinutes(); // Get minutes
+    const formattedMinutes = String(minutes).padStart(2, '0'); // Add leading 0 to minutes
+    const isPM = hours >= 12; // Check if the time is PM
+    const adjustedHours = hours % 12 || 12; // Adjust hours to 12-hour format
+    const ampm = isPM ? 'PM' : 'AM'; // Determine AM or PM
+    
+    // Format the time string
+    return `${adjustedHours}:${formattedMinutes} ${ampm}`;
+}
+
 
 // Writes a log message to the console.
 // If the type start with a D then it will only be displayed if the global DEBUG is true
 // If the type is DE then it will log an error only of DEBUG is true
 // If the type is DI then it will log a informational message only if DEBUG is true
 function logMsg(type, txt) {
-	var msgTxt = "";
-	// If DEBUG is not true then don't print debug messages
-	if (type[0] == 'D') {
-		if (DEBUG) {
-			msgTxt = ((type.length == 2) ? type[1] : 'D') + ' ' + dateTimeString() + ' ' + txt;
-		} else {
-			return 0;
-		}
-	} else {
-		msgTxt = type + ' ' + dateTimeString() + ' ' + txt;
-	}
+    // Exit early if DEBUG is false and the type is debug ('D')
+    if (type.startsWith('D') && !DEBUG) return 0;
 
-	switch (type) {
-		case 'E':
-			console.log(styleText('cyan', msgTxt));
-			break;
-		case 'C':
-			console.log(msgTxt.yellow);
-			break;
-		case 'R':
-			console.log(msgTxt.green);
-			break;
-		default:
-			console.log(msgTxt);
-	}
-	fs.appendFile(autohomeLogFile, msgTxt + '\r\n', (err) => {  
-    	if (err) {
-    		console.log("ERROR Writing to log file!");
-    		throw err;
-    	}
-	});
+    // Construct the message text
+    const debugLevel = type.length === 2 ? type[1] : 'D';
+    const msgTxt = `${type.startsWith('D') ? debugLevel : type} ${dateTimeString()} ${txt}`;
+
+    // Log the message with the appropriate style
+    switch (type) {
+        case 'E': // Error messages
+            console.log(styleText('cyan', msgTxt));
+            break;
+        case 'C': // Critical messages
+            console.log(msgTxt.yellow);
+            break;
+        case 'R': // Recovery messages
+            console.log(msgTxt.green);
+            break;
+        default: // Generic messages
+            console.log(msgTxt);
+            break;
+    }
+
+    // Append the message to the log file
+    fs.appendFile(autohomeLogFile, `${msgTxt}\r\n`, (err) => {
+        if (err) {
+            console.error("ERROR Writing to log file!");
+            throw err;
+        }
+    });
 }
+
 
 // Decode a message received from a sensor
 function decode(msg) {
-	var msgs = msg.toString().split(";");
+	const msgs = msg.toString().split(";");
 
 	//	logMsg('I', 'Decoding: ' + msg);
 	// Should really check that all these parameters are available
@@ -685,17 +652,12 @@ function decode(msg) {
 		return 1;
 	}
 
-	rNode    = msgs[0];
-	rSensor  = +msgs[1];
-	rMsgtype = +msgs[2];
-	rAck     = +msgs[3];
-	rSubtype = msgs[4];   // Had plus
-	rPayload = +msgs[5].trim();
-	if (isNaN(rPayload)) {
-		rPayload = msgs[5].trim();
-	}
+	//Split out the valid message into its components
+	const [rNode, rSensor, rMsgtype, rAck, rSubtype, payload] = msgs;
+	const trimmed = payload.trim();
+    let rPayload = isNaN(+trimmed) ? trimmed : +trimmed;
 
-	switch (rMsgtype) {
+	switch (+rMsgtype) {
 		case MS.C_PRESENTATION:  // = 0
 		case MS.C_REQ:  // = 2 = A sensor is asking for data
 			break;
@@ -727,10 +689,9 @@ function decode(msg) {
 					} else {
 						logMsg('E', `Working with: ${msg} but wasn't found`);
 					}
-					// Special handling of Freezer Temp and alerting:
-					if ((rNode == '14') && (rPayload > -12)) {
-						sendEmail('dave.jacobsen@gmail.com', 'Freezer Alert', 'Freezer temperature is above -12 degrees!'); 
-						logMsg('E', 'Freezer temperature is greater than -12 degrees! Sending email alert.');
+					// Special handling of Freezer (14) Temp and alerting:
+					if (rNode == '14') {
+						checkSensor(getSensor);
 					}
 					break;
 				case MS.V_STATUS:
@@ -767,6 +728,51 @@ function decode(msg) {
 	}
 }
 
+function checkSensor(sensor) {
+
+	// Check if the sensor has a valid value and thresholds
+    function parseThreshold(threshold) {
+        if (typeof threshold === 'number') {
+            return { operator: '=', number: threshold };
+        }
+		// Check if the threshold is a string and matches the expected format
+		const match = threshold.match(/^([<>])(-?\d+)$/); 
+        return match ? { operator: match[1], number: parseFloat(match[2]) } : null;
+    }
+
+    const warning = parseThreshold(sensor.warningThreshold);
+    const alarm = parseThreshold(sensor.alarmThreshold);
+
+    function shouldRaiseAlert(threshold) {
+        const { operator, number } = threshold;
+        return operator === '=' ? sensor.value === number :
+               operator === '<' ? sensor.value < number :
+               operator === '>' ? sensor.value > number :
+               false;
+    }
+
+	// Check if the sensor is now normal but alarmState was true and email things are ok
+	if (!(shouldRaiseAlert(alarm) || shouldRaiseAlert(warning)) && (sensor.alarmState !== 0)) {
+		const msgBody = `INFO: ${sensor.name} value (${sensor.value}) is back to normal!`;
+		logMsg('I', msgBody);
+		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Normal`, msgBody); 
+		sensor.alarmState = 0; // No threshold set, no alert
+	}
+
+	// Check if the sensor value exceeds the warning or alarm thresholds and email only if not in alarm state already
+	if (shouldRaiseAlert(alarm) && (sensor.alarmState !== 2)) {
+		const msgBody = `ALARM: ${sensor.name} value (${sensor.value}) exceeded threshold! (${alarm.operator}${alarm.number})`;
+		logMsg('E', msgBody);
+		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Alarm`, msgBody); 
+		sensor.alarmState = 2;
+    } else if (shouldRaiseAlert(warning) && (sensor.alarmState !== 1))  {
+		const msgBody = `WARNING: ${sensor.name} value (${sensor.value}) near critical value! (${alarm.operator}${alarm.number})`;
+        logMsg('C', msgBody);
+		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Warning`, msgBody); 
+		sensor.alarmState = 1;
+    }
+}
+
 
 //logMsg('I', 'Starting app.get');
 // What to serve from the root address. http://localhost/
@@ -791,7 +797,7 @@ app.get('/', function(req, res){
 
 // Used for testing
 app.get('/test', function(req, res){
-	res.sendFile(__dirname + '/test.html');
+	res.sendFile(__dirname + '/dash-modern.html');
 });
 
 // Used for testing
@@ -817,36 +823,58 @@ app.use(express.static('css'));
 
 logMsg('I', 'Starting io handler');
 // When a connection is made, setup the handler function
-io.on('connection', function(socket){
-  logMsg('DC', 'Web client connected');
-  socket.on('ClientMsg', function(msg){
+io.on("connection", function (socket) {
+    logMsg("DC", "Web client connected");
 
-    // This only fires when message received from an IP Socket NOT sensors 
-    // Clean up text
-	msg = msg.replace(/(\r\n|\n|\r)/gm,"");
-	var msgs = msg.toString().split(";");
+    // Listen for client messages
+    socket.on("ClientMsg", function (msg) {
+        // Clean up and process the received message
+        const cleanedMsg = msg.replace(/(\r\n|\n|\r)/gm, "");
+        const [action, param] = cleanedMsg.split(";");
 
-    // if "redraw" is received from client then redraw all controls
-	if (msgs[0] == 'redraw') {
-    	// Emit all sensors
-		conf.mysensors.sensornodes.forEach(s => {
-			io.emit('SMv2', JSON.stringify(s));
-		});
-		logMsg('DR', 'Redraw requested');
-    }
-    // Click event received
-    else if ((msgs[0] == 'BUT') || (msgs[0] == 'CHK')) {
-		logMsg('DR', 'Button/Checkbox: ' + msgs[1]);
-		processButton(msgs[1]);
-    }
-    else {
-		logMsg('I', 'Received unknown message from client: ' + msg);
-    }
-  });
+        // Handle the different actions from the client
+        switch (action) {
+            case "redraw":
+                handleRedraw();
+                break;
 
-  socket.on('disconnect', function(){
-    logMsg('DC', 'Web client disconnected');
-  });
+            case "init":
+                handleInit();
+                break;
+
+            case "BUT":
+            case "CHK":
+                handleButtonOrCheckbox(param);
+                break;
+
+            default:
+                logMsg("I", `Received unknown message from client: ${msg}`);
+        }
+    });
+
+    // Handle client disconnection
+    socket.on("disconnect", function () {
+        logMsg("DC", "Web client disconnected");
+    });
+
+    // Helper Functions
+    function handleRedraw() {
+        conf.mysensors.sensornodes.forEach(sensor => {
+            io.emit("SMv2", JSON.stringify(sensor));
+        });
+        logMsg("DR", "Redraw requested");
+        io.emit("", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
+    }
+
+    function handleInit() {
+        io.emit("sensors", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
+        logMsg("DR", "Init requested");
+    }
+
+    function handleButtonOrCheckbox(buttonId) {
+        logMsg("DR", `Button/Checkbox: ${buttonId}`);
+        processButton(buttonId); // Process the button action
+    }
 });
 
 logMsg('I', 'Starting http listen');
@@ -854,118 +882,96 @@ logMsg('I', 'Starting http listen');
 // Start Web Service listening on TCP specified in the settings
 //http.listen(conf.sockets.port, function(){
 //BUG: Why hard coded here?
-http.listen(8080, function(){
-	logMsg('C', 'Listening on *:' + conf.sockets.port);
+// http.listen(8080, function(){
+server.listen(8080, function(){
+		logMsg('C', 'Listening on *:' + conf.sockets.port);
 });
   
 // Process button or checkbox switch presses from the client
+// NEW COPILOT CODE. Old code below.
+
 function processButton(butID) {
-	logMsg('DR', 'Handling button ' + butID);
-	var sID = conf.mysensors.sensornodes.find(sensor => sensor.id == butID);
-	if (sID !== undefined) {
-		sID.updated = new Date().getTime();
+    logMsg('DR', `Handling button ${butID}`);
+    const sensor = conf.mysensors.sensornodes.find(s => s.id == butID);
 
-		// Toggle switch
-		sID.value = (sID.value == '0') ? '1' : '0';
-		sID.contact_status = '0';
-		logMsg('I', 'Changing ' + sID.name + '(' + butID + ') to ' + sID.value);
-		io.emit('SMv2', JSON.stringify(sID));
+    if (!sensor) {
+        logMsg('E', `Unknown switch/checkbox: ${butID}`);
+        return;
+    }
 
-		// Some buttons have special actions, so perform them now
-		// Sonoff switch (reflashed)
-		if (butID == '12') {
-			request('http://192.168.1.87/control?cmd=GPIO,12,' + sID.value, function (error, response, body) {
-				if (error) {
-					logMsg('E', 'Error turning on ' + butID + ' : ' + error);
-				}
-			});
-		}
-		else if (butID == '103') {
-			logMsg('DI', 'Checkbox ' + butID + ' : ' + sID.value);
-			DEBUG = (sID.value == '1');
-			logMsg('I', 'Debug is now: ' + DEBUG);
-		}
-		else if (butID == '106') {
-			logMsg('I', 'Handling Tuya switch');
-			// tuyaDev.set({set: (sID.value == '1')});
-		}
-
-		// ***********************************************
-		// Special button to shutdown the application hard
-		else if (butID == '999') {
-			logMsg('I', '**** Client initiated shutdown ****');
-			writeSettingsSync();
-			process.exit(0);
-		}
-		else if (butID == '998') {
-			writeSettings();
-			decode('998;0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
-		}
-
-		//Handle smart plugs/switches
-		else {
-			// Is it in the plugs array?
-			var plug = plugs.find(p => p.id == butID);
-			// If yes then change state
-			if (plug != undefined) {
-				switch (plug.type) {
-					case 'tplink':
-						var tPlugDev = client.getPlug({host: plug.host});
-						tPlugDev.setPowerState((sID.value =='1'));
-						break;
-					// case 'wemo':
-					// 	// Change Wemo switch
-					// 	var wClient = wemo.client(plug.deviceInfo);
-					// 	wClient.getBinaryState((err, value) => {
-					// 		// Deal with error : console.log(err);
-					// 		wClient.setBinaryState(sID.value == '1' ? '1' : '0');
-					// 	})
-					// 	break;
-					case 'tuya':
-						// Change Tuya switch
-						//		logMsg('I',`Tuya switch status is: ${data.dps['1']}.`);
-						logMsg('I','Tuya switch action underway ...');
-						
-						try {
-							tuyaDev.set({set: true}).then(() => logMsg('I', 'Turning Tuya device on'));
-						}
-						catch (error) {
-							logMsg('E', 'Tuya switching error: ' + error);
-						}
-						//tuyaDev.set({set: false}).then(() => logMsg('I', 'Tuya device was turned off'));
-					
-						break;
-					default:
-						logMsg('E', "Unexpected smart switch type: " + plug.type);
-				}
-
-			} else{
-				logMsg('E', "Thought ButtonID:" + butID + " was a smart switch but can't confirm");
-			}
-		}
-	}
-	else {
-		logMsg('E', 'Unknown switch/checkbox: ' + butID);
-	}
+    updateSensorState(sensor);
+    handleSpecialActions(butID, sensor.value);
+    // handleSmartSwitch(butID, sensor.value);  // <--- needs fixing see note in handleSpecialActions below
 }
 
+function updateSensorState(sensor) {
+    sensor.updated = Date.now();
+    sensor.value = sensor.value === '0' ? '1' : '0';
+    sensor.contact_status = '0';
 
+    logMsg('I', `Changing ${sensor.name} (${sensor.id}) to ${sensor.value}`);
+    io.emit('SMv2', JSON.stringify(sensor));
+}
 
-// const privateKey = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem', 'utf8');
-// const certificate = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/cert.pem', 'utf8');
-// const ca = fs.readFileSync('/etc/letsencrypt/live/littlepunk.duckdns.org/chain.pem', 'utf8');
+function handleSpecialActions(butID, value) {
 
-// const credentials = {
-// 	key: privateKey,
-// 	cert: certificate,
-// 	ca: ca
-// };
+	// Maybe add the Sonoff's as well that calls the handleSmartSwitch below.
+    const specialActions = {
+        '12': () => controlSonoffSwitch(value),
+        '103': () => toggleDebug(value),
+        '106': () => logMsg('I', 'Handling Tuya switch'),
+        '997': () => shutdownApplication(),
+        '998': () => triggerSettingsSave()
+    };
 
-// - Congratulations! Your certificate and chain have been saved at:
-// /etc/letsencrypt/live/littlepunk.duckdns.org/fullchain.pem
-// Your key file has been saved at:
-// /etc/letsencrypt/live/littlepunk.duckdns.org/privkey.pem
-// Your cert will expire on 2020-08-30. To obtain a new or tweaked
-// version of this certificate in the future, simply run certbot
-// again. To non-interactively renew *all* of your certificates, run
-// "certbot renew"
+    specialActions[butID]?.();
+}
+
+function handleSmartSwitch(butID, value) {
+    const plug = plugs.find(p => p.id == butID);
+    if (!plug) {
+        logMsg('E', `ButtonID: ${butID} was expected to be a smart switch but couldn't be confirmed`);
+        return;
+    }
+
+    const smartSwitchHandlers = {
+        tplink: () => client.getPlug({ host: plug.host }).setPowerState(value === '1'),
+        tuya: () => toggleTuyaSwitch(value)
+    };
+
+    smartSwitchHandlers[plug.type]?.() || logMsg('E', `Unexpected smart switch type: ${plug.type}`);
+}
+
+function controlSonoffSwitch(value) {
+    request(`http://192.168.1.87/control?cmd=GPIO,12,${value}`, (error) => {
+        if (error) {
+            logMsg('E', `Error turning on Sonoff switch (12): ${error}`);
+        }
+    });
+}
+
+function toggleDebug(value) {
+    DEBUG = (value === '1');
+    logMsg('I', `Debug is now: ${DEBUG}`);
+}
+
+function shutdownApplication() {
+    logMsg('I', '**** Client initiated shutdown ****');
+    writeSettingsSync();
+    process.exit(0);
+}
+
+function triggerSettingsSave() {
+    writeSettings();
+    decode(`998;0;${MS.C_SET};0;${MS.V_SWITCH};0`);
+}
+
+function toggleTuyaSwitch(value) {
+    logMsg('I', 'Tuya switch action underway...');
+    try {
+        tuyaDev.set({ set: value === '1' })
+            .then(() => logMsg('I', `Tuya device turned ${value === '1' ? 'on' : 'off'}`));
+    } catch (error) {
+        logMsg('E', `Tuya switching error: ${error}`);
+    }
+}
