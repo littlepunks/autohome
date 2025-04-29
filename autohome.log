@@ -10698,3 +10698,147 @@ I 30-04-2025 03:41:47 Got: Bedroom (2): 20.8
 I 30-04-2025 03:42:12 Got: Balcony (5): 18.8
 I 30-04-2025 03:43:52 Got: Tom (1): 19.4
 I 30-04-2025 03:46:48 Got: Bedroom (2): 20.7
+I 30-04-2025 03:47:13 Got: Balcony (5): 18.8
+I 30-04-2025 03:48:27 Got: Freezer (14): -20.2
+I 30-04-2025 03:49:08 Got: Tom (1): 19.3
+I 30-04-2025 03:51:48 Got: Bedroom (2): 20.7
+I 30-04-2025 03:52:14 Got: Balcony (5): 18.8
+I 30-04-2025 03:52:47 Reading settings
+I 30-04-2025 03:52:47 Settings loaded
+I 30-04-2025 03:52:47 Commence opening serial port
+I 30-04-2025 03:52:47 Starting io handler
+I 30-04-2025 03:52:47 Starting http listen
+C 30-04-2025 03:52:47 Listening on *:8080
+I 30-04-2025 03:52:47 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 03:54:24 Got: Tom (1): 19.1
+I 30-04-2025 03:56:10 Reading settings
+I 30-04-2025 03:56:10 Settings loaded
+I 30-04-2025 03:56:10 Commence opening serial port
+I 30-04-2025 03:56:10 Starting io handler
+I 30-04-2025 03:56:10 Starting http listen
+C 30-04-2025 03:56:10 Listening on *:8080
+I 30-04-2025 03:56:10 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 03:56:24 Reading settings
+I 30-04-2025 03:56:24 Settings loaded
+I 30-04-2025 03:56:24 Commence opening serial port
+I 30-04-2025 03:56:24 Starting io handler
+I 30-04-2025 03:56:24 Starting http listen
+C 30-04-2025 03:56:24 Listening on *:8080
+I 30-04-2025 03:56:24 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 03:56:49 Got: Bedroom (2): 20.7
+I 30-04-2025 03:57:14 Got: Balcony (5): 18.8
+I 30-04-2025 03:58:29 Got: Freezer (14): -19.6
+I 30-04-2025 04:01:50 Got: Bedroom (2): 20.7
+I 30-04-2025 04:02:15 Got: Balcony (5): 18.7
+I 30-04-2025 04:03:30 Got: Freezer (14): -19.3
+I 30-04-2025 04:06:51 Got: Bedroom (2): 20.7
+I 30-04-2025 04:07:16 Got: Balcony (5): 18.7
+I 30-04-2025 04:08:31 Got: Freezer (14): -20
+I 30-04-2025 04:10:13 Got: Tom (1): 19.2
+I 30-04-2025 04:11:52 Got: Bedroom (2): 20.6
+I 30-04-2025 04:12:16 Got: Balcony (5): 18.7
+I 30-04-2025 04:13:32 Got: Freezer (14): -20.3
+I 30-04-2025 04:15:30 Got: Tom (1): 19.1
+I 30-04-2025 04:16:52 Got: Bedroom (2): 20.6
+I 30-04-2025 04:17:17 Got: Balcony (5): 18.6
+I 30-04-2025 04:18:33 Got: Freezer (14): -22.2
+I 30-04-2025 04:21:53 Got: Bedroom (2): 20.6
+I 30-04-2025 04:22:18 Got: Balcony (5): 18.6
+I 30-04-2025 04:23:34 Got: Freezer (14): -22.7
+I 30-04-2025 04:26:24 Requesting updated external weather.
+I 30-04-2025 04:26:24 Got: Web Temp (100): 14.4
+I 30-04-2025 04:26:24 Got: Humidity (50): 94
+I 30-04-2025 04:26:24 Got: Speed (203): 32
+I 30-04-2025 04:26:24 Got: Sunrise (204): 7:06 AM
+I 30-04-2025 04:26:24 Got: Pressure (51): 1009
+I 30-04-2025 04:26:24 Got: W Main (210): Clouds
+I 30-04-2025 04:26:24 Got: W Desc (209): few clouds
+I 30-04-2025 04:26:24 Got: Feels Like (211): 14.3
+I 30-04-2025 04:26:24 Got: Tmp 1w (99): temp_graph_1w.png
+I 30-04-2025 04:26:24 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 30-04-2025 04:26:24 Got: Hum 1w (206): humidity_1w.png
+I 30-04-2025 04:26:24 Got: Pre 1w (207): pressure_1w.png
+I 30-04-2025 04:26:24 Got: Spd 1w (208): speed_1w.png
+I 30-04-2025 04:26:24 Got: Wind (202): 170
+I 30-04-2025 04:26:24 Got: Sunset (205): 5:29 PM
+I 30-04-2025 04:26:54 Got: Bedroom (2): 20.6
+I 30-04-2025 04:27:18 Got: Balcony (5): 18.6
+I 30-04-2025 04:31:55 Got: Bedroom (2): 20.6
+I 30-04-2025 04:32:19 Got: Balcony (5): 18.6
+I 30-04-2025 04:33:36 Got: Freezer (14): -20.7
+I 30-04-2025 04:34:39 Sorry ::ffff:213.32.32.83 from FRyou are denied
+I 30-04-2025 04:36:55 Got: Bedroom (2): 20.6
+I 30-04-2025 04:37:20 Got: Balcony (5): 18.6
+I 30-04-2025 04:38:37 Got: Freezer (14): -20.2
+I 30-04-2025 04:41:56 Got: Bedroom (2): 20.6
+I 30-04-2025 04:42:21 Got: Balcony (5): 18.5
+I 30-04-2025 04:46:57 Got: Bedroom (2): 20.6
+I 30-04-2025 04:47:08 Got: Tom (1): 19.2
+I 30-04-2025 04:47:21 Got: Balcony (5): 18.5
+I 30-04-2025 04:48:39 Got: Freezer (14): -19.6
+I 30-04-2025 04:51:58 Got: Bedroom (2): 20.6
+I 30-04-2025 04:52:22 Got: Balcony (5): 18.5
+I 30-04-2025 04:52:24 Got: Tom (1): 19.1
+I 30-04-2025 04:53:40 Got: Freezer (14): -19.4
+I 30-04-2025 04:56:24 Requesting updated external weather.
+I 30-04-2025 04:56:24 Got: Web Temp (100): 14.4
+I 30-04-2025 04:56:24 Got: Humidity (50): 94
+I 30-04-2025 04:56:24 Got: Pressure (51): 1009
+I 30-04-2025 04:56:24 Got: Wind (202): 180
+I 30-04-2025 04:56:25 Got: Speed (203): 32
+I 30-04-2025 04:56:25 Got: Sunrise (204): 7:06 AM
+I 30-04-2025 04:56:25 Got: Sunset (205): 5:29 PM
+I 30-04-2025 04:56:25 Got: W Desc (209): broken clouds
+I 30-04-2025 04:56:25 Got: W Main (210): Clouds
+I 30-04-2025 04:56:25 Got: Feels Like (211): 14.3
+I 30-04-2025 04:56:25 Got: Weather (200): http://openweathermap.org/img/w/04n.png
+I 30-04-2025 04:56:25 Got: Tmp 1w (99): temp_graph_1w.png
+I 30-04-2025 04:56:25 Got: Hum 1w (206): humidity_1w.png
+I 30-04-2025 04:56:25 Got: Pre 1w (207): pressure_1w.png
+I 30-04-2025 04:56:25 Got: Spd 1w (208): speed_1w.png
+I 30-04-2025 04:56:58 Got: Bedroom (2): 20.5
+I 30-04-2025 04:57:23 Got: Balcony (5): 18.5
+I 30-04-2025 04:58:40 Got: Freezer (14): -20.1
+I 30-04-2025 05:01:59 Got: Bedroom (2): 20.5
+I 30-04-2025 05:02:23 Got: Balcony (5): 18.5
+I 30-04-2025 05:03:41 Got: Freezer (14): -20.1
+I 30-04-2025 05:04:00 Sorry ::ffff:45.79.115.59 from USyou are denied
+I 30-04-2025 05:07:00 Got: Bedroom (2): 20.5
+I 30-04-2025 05:07:24 Got: Balcony (5): 18.4
+I 30-04-2025 05:08:13 Got: Tom (1): 18.9
+I 30-04-2025 05:08:42 Got: Freezer (14): -22.1
+I 30-04-2025 05:12:01 Got: Bedroom (2): 20.5
+I 30-04-2025 05:12:25 Got: Balcony (5): 18.4
+I 30-04-2025 05:13:43 Got: Freezer (14): -22.7
+I 30-04-2025 05:17:01 Got: Bedroom (2): 20.5
+I 30-04-2025 05:17:25 Got: Balcony (5): 18.4
+I 30-04-2025 05:18:44 Got: Freezer (14): -21.7
+I 30-04-2025 05:18:46 Got: Tom (1): 19
+I 30-04-2025 05:22:02 Got: Bedroom (2): 20.5
+I 30-04-2025 05:22:26 Got: Balcony (5): 18.4
+I 30-04-2025 05:23:45 Got: Freezer (14): -20.8
+I 30-04-2025 05:26:24 Requesting updated external weather.
+I 30-04-2025 05:26:24 Got: Web Temp (100): 14.4
+I 30-04-2025 05:26:24 Got: Humidity (50): 94
+I 30-04-2025 05:26:24 Got: Pressure (51): 1009
+I 30-04-2025 05:26:24 Got: Wind (202): 180
+I 30-04-2025 05:26:24 Got: Speed (203): 30
+I 30-04-2025 05:26:24 Got: Sunrise (204): 7:06 AM
+I 30-04-2025 05:26:24 Got: Sunset (205): 5:29 PM
+I 30-04-2025 05:26:24 Got: W Desc (209): overcast clouds
+I 30-04-2025 05:26:24 Got: W Main (210): Clouds
+I 30-04-2025 05:26:24 Got: Feels Like (211): 14.3
+I 30-04-2025 05:26:24 Got: Weather (200): http://openweathermap.org/img/w/04n.png
+I 30-04-2025 05:26:24 Got: Tmp 1w (99): temp_graph_1w.png
+I 30-04-2025 05:26:24 Got: Hum 1w (206): humidity_1w.png
+I 30-04-2025 05:26:24 Got: Pre 1w (207): pressure_1w.png
+I 30-04-2025 05:26:24 Got: Spd 1w (208): speed_1w.png
+I 30-04-2025 05:27:03 Got: Bedroom (2): 20.5
+I 30-04-2025 05:27:27 Got: Balcony (5): 18.3
+I 30-04-2025 05:27:40 Reading settings
+I 30-04-2025 05:27:40 Settings loaded
+I 30-04-2025 05:27:40 Commence opening serial port
+I 30-04-2025 05:27:40 Starting io handler
+I 30-04-2025 05:27:40 Starting http listen
+C 30-04-2025 05:27:40 Listening on *:8080
+I 30-04-2025 05:27:40 Connected to serial gateway on COM4 at 115200 baud

@@ -37,6 +37,14 @@ const { SerialPort } = require("serialport");
 const { styleText } = require("util");        // For colored console messages
 const MS = require("./modules/constants.js"); // MySensors API constants
 
+// Get command-line arguments
+const args = require('minimist')(process.argv.slice(2)); // Using `minimist` for easier flag handling
+
+// Extract arguments
+let DEBUG = args.d || false; // Debug mode defaults to false
+// Add extra command line processing commands here if needed
+// e.g. DEBUG = args.nograph || false; // Don't generate graphs
+
 // Smart Switches
 const enableWEMO   = false;   // Set to true to enable Wemo smart switches
 const enableTPLINK = false;   // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
@@ -60,8 +68,6 @@ const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
 const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
 const autohomeLogFile = './autohome.log'; // Log file for console messages
 const enableRRD = true; // Set to true to enable RRDTool graphing
-
-let DEBUG = false;    // Set to false to turn off debugging
 
 let conf = {}; // settings.json will be loaded in here later
 const settingsFile = './settings.json'; // Settings file to load

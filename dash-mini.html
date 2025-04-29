@@ -1,356 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
- <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Autohome</title>
- <link rel="stylesheet" href="styles.css"></head>
-<body>
-<ul class="menu" id="menubar">
- <li><a onclick="handleItemClick('Home')">Home</a></li>
- 
- <li class="dropdown">
- <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
- <div class="dropdown-content" style="display: none;">
- <a href="http://192.168.68.72/autohome.html#">Webb</a>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autohome</title>
+<link rel="stylesheet" href="styles.css"></head>
+<body><ul class="menu" id="menubar"><li><a onclick="handleItemClick('Home')">Home</a></li><li class="dropdown">
+<a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
+<div class="dropdown-content" style="display: none;">
+<a href="http://192.168.68.72/autohome.html#">Webb</a>
 
- </div>
- </li>
- 
- <li class="dropdown">
- <a class="dropbtn">Services</a>
- <div class="dropdown-content" style="display: none;">
- <a onclick="handleItemClick('Web')">Web</a>
+</div>
+</li><li class="dropdown">
+<a class="dropbtn">Services</a>
+<div class="dropdown-content" style="display: none;">
+<a onclick="handleItemClick('Web')">Web</a>
 
- </div>
- </li>
- 
- <li>
- <a id="Dev">Settings</a>
- <div class="dropdown-content">
- <a onclick="handleItemClick('Grid Code')">Grid Code</a>
-
- </div>
- </li>
+</div>
+</li><li>
+<a id="Dev">Settings</a>
+<div class="dropdown-content">
+<a onclick="handleItemClick('Grid Code')">Grid Code</a>
+<a onclick="handleItemClick('Toggle Grid')">Toggle Grid</a>
+<a onclick="handleItemClick('Show All Items')">Show All Items</a>
+</div></li>
 </ul>
 <div class="canvas-container">
- <canvas id="myCanvas" width="150" height="754"></canvas>
+<canvas id="mainCanvas" width="150" height="754"></canvas>
 </div>
 <div id="contextMenu" class="context-menu" style="left: 444px; top: 518px; display: block;">
- <ul>
+<ul>
 
- </ul>
-</div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
- const dropdowns = document.querySelectorAll('.dropdown');
- dropdowns.forEach(dropdown => {
- dropdown.addEventListener('mouseenter', () => {
- dropdown.querySelector('.dropdown-content').style.display = 'block';
- });
- dropdown.addEventListener('mouseleave', () => {
- dropdown.querySelector('.dropdown-content').style.display = 'none';
- });
- })
+</ul>
+</div><script>document.body.addEventListener("mouseover", (event) => {const dropdown = event.target.closest(".dropdown");if (dropdown) {
+dropdown.querySelector(".dropdown-content").style.display = "block";}
+});document.body.addEventListener("mouseout", (event) => {const dropdown = event.target.closest(".dropdown");if (dropdown) {
+dropdown.querySelector(".dropdown-content").style.display = "none";}
 });
-const canvas = document.getElementById('myCanvas');
-const ctx = as.getContext('2d');
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
 const contextMenu = document.getElementById('contextMenu');
 contextMenu.style.display = 'none'; 
 let menuObj = document.getElementById('menubar');
 canvas.height = window.innerHeight - menuObj.offsetHeight-10;
-canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth ;
-ctx.shadowColor = 'rgba(0, 0, 20, 0.5)'; 
-ctx.shadowBlur = 10; 
-ctx.shadowOffsetX = 5; 
-ctx.shadowOffsetY = 5; 
-const colGaugeBkgnd = '#907010'; 
-const colGaugeColor = '#d0b020'; 
-const colGrid = '#808080'; 
-const colBackground = '#204060'; 
-let showGrid = true;
-const PI = Math.PI;
+canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth;
+ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';
+ctx.shadowBlur = 10;
+ctx.shadowOffsetX = 5;
+ctx.shadowOffsetY = 5;const colGaugeBkgnd = '#907010';
+const colGaugeColor = '#d0b020';
+const colGrid = '#808080';
+const colBackground = '#204060';let showGrid = true;const PI= Math.PI;
 const PI2 = 2 * Math.PI;
 let touchTimer = null;
 const cols = 4;
 const rows = 6;
-let margin = canvas.width /(cols*2); 
-let cspace = canvas.width/cols; 
+let margin = canvas.width /(cols*2); let cspace = canvas.width/cols; 
 function xy2rc(xy) {
- return (xy < 0) ? 1 : (Math.floor(xy/cspace) + 1);
+return (xy < 0) ? 1 : (Math.floor(xy/cspace) + 1);
 }
 function rc2xy(rc) {
- return (rc <= 0) ? 0 : ((rc-1) * cspace);
+return (rc <= 0) ? 0 : ((rc-1) * cspace);
 }
 const socket = io();
-socket.on('SMv2', (arg) => {
- console.log(arg);
- 
- const msg = typeof arg === 'string' ? JSON.parse(arg) : arg;
- updateSensor(msg.name, msg.value);
- drawDash();
- }
+socket.on('SMv2', (arg) => {console.log(arg);const msg = typeof arg === 'string' ? JSON.parse(arg) : arg;
+updateSensor(msg.name, msg.value);drawDash();
+}
 );
 function updateSensor(name, value) {
- for (let item of dash) {
- if (item.name === name) {
- item.value = value;
- break; 
- }
- }
+for (let item of dash) {
+if (item.name === name) {
+item.value = value;
+break; 
 }
-let dash = []; 
+}
+}let dash = []; 
 socket.emit('ClientMsg', 'init');
 socket.on('sensors', (arg) => {
- dash = JSON.parse(arg);
- dash.forEach(obj => { 
- obj.x = 0;
- obj.y = 0;
- obj.col = 0
- obj.row = 0;
- obj.enabled = false;
- if (! obj.min) obj.min = 0;
- if (! obj.max) obj.max = 0;
- });
- console.log(dash);
- 
- function updSLoc(data, name, col, row, enabled) {
- for (let item of data) {
- if (item.name === name) {
- item.col = col;
- item.row = row;
- item.enabled = enabled;
- item.x = (item.col-1) * cspace;
- item.y = (item.row-1) * cspace;
- break; 
- }
- }
- }
- 
- updSLoc(dash, 'Bedroom', 1, 1, true);
-
- drawDash();
+dash = JSON.parse(arg);
+dash.forEach(obj => {//Set some initial values that are client specific
+obj.x = 0;
+obj.y = 0;
+obj.col = 0
+obj.row = 0;
+obj.enabled = false;
+obj.min ??= 0; 
+obj.max ??= 0;
+obj.suffix ??= ''; 
 });
-function drawGrid() {
- if (showGrid) {
- ctx.shadowOffsetX = 0;
- ctx.shadowOffsetY = 0;
- ctx.shadowBlur = 0;
- ctx.strokeStyle = colGrid;
- ctx.lineWidth = 1;
- ctx.beginPath();
- for (let i=1; i < cols; i++) {
- ctx.moveTo(cspace*i,0);
- ctx.lineTo(cspace*i,canvas.height);
- }
- for (let j=1; j < rows; j++) {
- ctx.moveTo(0, cspace*j);
- ctx.lineTo(canvas.width, cspace*j);
- }
- ctx.stroke();
- ctx.shadowOffsetX = 5;
- ctx.shadowOffsetY = 5;
- ctx.shadowBlur = 10;
- }
+console.log(dash);
+function updateSensorLocation(data, name, col, row, enabled) {
+for (let item of data) {
+if (item.name === name) {
+item.col = col;
+item.row = row;
+item.enabled = enabled;
+item.x = (item.col-1) * cspace;
+item.y = (item.row-1) * cspace;break; 
 }
-function drawDash() {
- setBackgroundColor(colBackground);
- drawGrid();
- dash.forEach(obj => {
- if (obj.enabled) drawDashObj(obj);
- })
+}
+}
+updateSensorLocation(dash, 'Bedroom', 1, 1, true);
+updateSensorLocation(dash, 'Door', 4, 4, true);drawDash();});function drawGrid() {
+if (showGrid) {
+ctx.shadowOffsetX = 0;
+ctx.shadowOffsetY = 0;
+ctx.shadowBlur = 0;ctx.strokeStyle = colGrid;
+ctx.lineWidth = 1;
+ctx.beginPath()
+for (let i=1; i < cols; i++) {
+ctx.moveTo(cspace*i,0);
+ctx.lineTo(cspace*i,canvas.height);
+}
+for (let j=1; j < rows; j++) {
+ctx.moveTo(0, cspace*j);
+ctx.lineTo(canvas.width, cspace*j);
+}
+ctx.stroke();ctx.shadowOffsetX = 5;
+ctx.shadowOffsetY = 5;
+ctx.shadowBlur = 10;
+}
+}function drawDash() {
+setBackgroundColor(colBackground);drawGrid();dash.forEach(obj => {
+if (obj.enabled) drawDashObj(obj);
+})
 }
 function drawDashObj(dashObj, overrides = {}) {
- if (!dashObj.enabled) return;
- const drawFunctions = {
- 'GAU': drawGauge,
- 'STA': drawStatus,
- 'bar-v': drawBarV,
- 'bar-h': drawBarH
- }
- const drawFunction = drawFunctions[dashObj.control];
- if (drawFunction) {
- if (overrides.shadow) {
- ctx.shadowColor = 'rgba(0, 0, 0, 1)';
- ctx.shadowBlur = 0;
- ctx.shadowOffsetX = 10;
- ctx.shadowOffsetY = 10;
- } else {
- ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';
- ctx.shadowBlur = 10;
- ctx.shadowOffsetX = 5;
- ctx.shadowOffsetY = 5;
- }
- drawFunction(dashObj, overrides);
- }
+if (!dashObj.enabled) return;const drawFunctions = {
+'GAU': drawGauge,
+'STA': drawStatus,
+
 }
-function drawGauge(g, opts) {
- const thickness = 14; 
- 
- let cx = opts?.x ?? margin + (g.col - 1) * cspace;
- let cy = opts?.y ?? margin + (g.row - 1) * cspace;
- if (opts && Object.keys(opts).length > 0) {
- drawGrid();
- }
- 
- const colorMap = {
- 1: "darkorange",
- 2: "red"
- };
- const fillColor = colorMap[g.contact_status] || "darkgreen";
- drawArc(cx, cy, canvas.width / (cols * 2.8), fillColor);
- 
- drawArc(cx, cy, canvas.width / (cols * 2.6), colGaugeBkgnd, true, canvas.width / (thickness * cols));
- 
- const angle = (2 * (g.value - g.min) / (g.max - g.min)) * Math.PI;
- ctx.beginPath();
- ctx.arc(cx, cy, canvas.width / (cols * 2.6), -Math.PI / 2, -Math.PI / 2 + angle);
- ctx.strokeStyle = colGaugeColor;
- ctx.lineWidth = canvas.width / (thickness * cols);
- ctx.stroke();
- 
- ctx.fillStyle = 'white';
- ctx.textAlign = 'center';
- ctx.textBaseline = 'middle';
- ctx.font = `${canvas.width / (11 * cols)}px Arial`;
- ctx.fillText(g.name, cx, cy - margin * 0.3);
- 
- const gaugeText = `${g.value}${g.suffix ?? ''}`;
- ctx.font = `${Math.max(12, canvas.width / (cols * (gaugeText.length * 5)))}px Arial`;
- 
- ctx.fillStyle = g.alarmState === 1 ? 'orange' : g.alarmState === 2 ? 'red' : 'white';
- ctx.fillText(gaugeText, cx, cy + margin * 0.25);
+const drawFunction = drawFunctions[dashObj.control];
+if (drawFunction) {if (overrides.shadow) {
+ctx.shadowColor = 'rgba(0, 0, 0, 1)';
+ctx.shadowBlur = 0;
+ctx.shadowOffsetX = 10;
+ctx.shadowOffsetY = 10;
+} else {
+ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';
+ctx.shadowBlur = 10;
+ctx.shadowOffsetX = 5;
+ctx.shadowOffsetY = 5;
+}
+drawFunction(dashObj, overrides);
+}
+}function drawGauge(g, opts) {
+const thickness = 14; 
+let cx = opts?.x ?? margin + (g.col - 1) * cspace;
+let cy = opts?.y ?? margin + (g.row - 1) * cspace;if (opts && Object.keys(opts).length > 0) {
+drawGrid();
+}
+const colorMap = {
+1: "darkorange",
+2: "red"
+};
+const fillColor = colorMap[g.contact_status] || "darkgreen";
+drawArc(cx, cy, canvas.width / (cols * 2.8), fillColor);
+drawArc(cx, cy, canvas.width / (cols * 2.6), colGaugeBkgnd, true, canvas.width / (thickness * cols));
+const angle = (2 * (g.value - g.min) / (g.max - g.min)) * Math.PI;
+ctx.beginPath();
+ctx.arc(cx, cy, canvas.width / (cols * 2.6), -Math.PI / 2, -Math.PI / 2 + angle);
+ctx.strokeStyle = colGaugeColor;
+ctx.lineWidth = canvas.width / (thickness * cols);
+ctx.stroke();
+ctx.fillStyle = 'white';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.font = `${canvas.width / (11 * cols)}px Arial`;
+ctx.fillText(g.name, cx, cy - margin * 0.3);
+const gaugeText = `${g.value}${g.suffix ?? ''}`;
+ctx.font = `${Math.max(12, canvas.width / (cols * (gaugeText.length * 5)))}px Arial`;
+ctx.fillStyle = g.alarmState === 1 ? 'orange' : g.alarmState === 2 ? 'red' : 'white';
+ctx.fillText(gaugeText, cx, cy + margin * 0.25);
 }
 function drawArc(x, y, radius, style, isStroke = false, lineWidth = 1) {
- ctx.beginPath();
- ctx.arc(x, y, radius, 0, Math.PI * 2);
- if (isStroke) {
- ctx.strokeStyle = style;
- ctx.lineWidth = lineWidth;
- ctx.stroke();
- } else {
- ctx.fillStyle = style;
- ctx.fill();
- }
+ctx.beginPath();
+ctx.arc(x, y, radius, 0, Math.PI * 2);
+if (isStroke) {
+ctx.strokeStyle = style;
+ctx.lineWidth = lineWidth;
+ctx.stroke();
+} else {
+ctx.fillStyle = style;
+ctx.fill();
+}
 }
 function drawStatus(g, opts) {
- const thickness = 14; 
- 
- let cx = 0;
- let cy = 0;
- if (opts && Object.keys(opts).length > 0) {
- drawGrid();
- }
- cx = opts?.x ?? margin + (g.col - 1) * cspace;
- cy = opts?.y ?? margin + (g.row - 1) * cspace;
- 
- 
- const colorMap = {
- 1: "darkorange",
- 2: "red"
- };
- const fillColor = colorMap[g.contact_status] || "darkgreen";
- drawArc(cx, cy, canvas.width / (cols * 2.8), fillColor);
- drawArc(cx, cy, canvas.width / (cols * 2.6), colGaugeBkgnd, true, canvas.width / (thickness * cols));
- drawArc(cx, cy + margin * 0.25, canvas.width / (cols * 6), colGaugeColor, true, canvas.width / (thickness * cols * 1.8));
- drawArc(cx, cy + margin * 0.25, canvas.width / (cols * 8), g.status == '1' ? 'green' : 'red');
- 
- ctx.fillStyle = 'white';
- ctx.textAlign = 'center';
- ctx.textBaseline = 'middle';
- ctx.font = `${canvas.width / (11 * cols)}px Arial`;
- ctx.fillText(g.name, cx, cy - margin * 0.3);
-}
+
+};
+const fillColor = colorMap[g.contact_status] || "darkgreen";drawArc(cx, cy, canvas.width / (cols * 2.8), fillColor);
+drawArc(cx, cy, canvas.width / (cols * 2.6), colGaugeBkgnd, true, canvas.width / (thickness * cols));
+drawArc(cx, cy + margin * 0.25, canvas.width / (cols * 6), colGaugeColor, true, canvas.width / (thickness * cols * 1.8));
+drawArc(cx, cy + margin * 0.25, canvas.width / (cols * 8), g.status == '1' ? 'green' : 'red');
+ctx.fillStyle = 'white';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';ctx.font = `${canvas.width / (11 * cols)}px Arial`;
+ctx.fillText(g.name, cx, cy - margin * 0.3);}
 function drawLine(x1, y1, x2, y2, style, width) {
- ctx.beginPath();
- ctx.moveTo(x1, y1);
- ctx.lineTo(x2, y2);
- ctx.strokeStyle = style;
- ctx.lineWidth = width;
- ctx.stroke();
-}
-
-
-function setBackgroundColor(color) {
- 
- ctx.save();
- 
- ctx.setTransform(1, 0, 0, 1, 0, 0);
- 
- ctx.clearRect(0, 0, canvas.width, canvas.height);
- 
- ctx.restore();
- 
- ctx.fillStyle = color;
- ctx.fillRect(0, 0, canvas.width, canvas.height);
+ctx.beginPath();
+ctx.moveTo(x1, y1);
+ctx.lineTo(x2, y2);
+ctx.strokeStyle = style;
+ctx.lineWidth = width;
+ctx.stroke();
+}function drawBarV(b, opts) {
+}function drawBarH(b, opts) {
+}function setBackgroundColor(color) {ctx.save();
+ctx.setTransform(1, 0, 0, 1, 0, 0);
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+ctx.restore();
+ctx.fillStyle = color;
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 function toggleMenuItem(itemId) {
- var item = document.getElementById(itemId);
- if (item) {
- item.style.display = (item.style.display == 'none') ? 'block' : 'none';
- }
+var item = document.getElementById(itemId);
+if (item) {
+item.style.display = (item.style.display == 'none') ? 'block' : 'none';
+}
 }
 function set(itemId, show) {
- var item = document.getElementById(itemId);
- if (item) {
- item.style.display = show ? 'block' : 'none';
- }
+var item = document.getElementById(itemId);
+if (item) {
+item.style.display = show ? 'block' : 'none';
 }
-drawDash();
+}drawDash();
+let resizeTimer = null; 
 window.addEventListener('resize', () => {
- canvas.height = window.innerHeight - menuObj.offsetHeight-10;
- canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth ;
- margin = canvas.width /(cols*2); 
- cspace = canvas.width/cols; 
- canvas.style.width = window.innerWidth;
- canvas.style.height = window.innerHeight;
- 
- setBackgroundColor(colBackground);
- drawDash();
-});
+clearTimeout(resizeTimer); 
+resizeTimer = setTimeout(() => {canvas.height = window.innerHeight - menuObj.offsetHeight-10;
+canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth;
+margin = canvas.width /(cols*2); cspace = canvas.width/cols; 
+canvas.style.width = window.innerWidth;
+canvas.style.height = window.innerHeight;
+setBackgroundColor(colBackground);
+drawDash();
+}, 100); });
 let selectedObject = null;
 let offsetX, offsetY;
-let clickX, clickY;
-
-function handleItemClick(item) {
- if (!item) return;
- switch (item) {
- case "Web":
- window.alert("You are doing the Web");
- break;
- case "Home":
- toggleMenuItem("Contact"); 
- break;
- case "Show All Items":
- updateAllDashItems(true);
- drawDash();
- break;
- case "Toggle Grid":
- showGrid = !showGrid;
- drawDash();
- break;
- case "Grid Code":
- copyGridCodeToClipboard();
- break;
- default:
- console.warn(`Unhandled item: ${item}`);
- }
+let clickX, clickY;function handleItemClick(item) {
+if (!item) return;switch (item) {
+case "Web":
+window.alert("You are doing the Web");
+break;case "Home":
+toggleMenuItem("Contact"); 
+break;case "Show All Items":
+updateAllDashItems(true);
+drawDash();
+break;case "Toggle Grid":
+showGrid = !showGrid;
+drawDash();
+break;case "Grid Code":
+copyGridCodeToClipboard();
+break;default:
+console.warn(`Unhandled item: ${item}`);
+}
 }
 function updateAllDashItems(enabled) {
- dash.forEach(obj => obj.enabled = enabled);
+dash.forEach(obj => obj.enabled = enabled);
 }
 function copyGridCodeToClipboard() {
- const gridTxt = dash.map(obj => 
- `updSLoc(dash, '${obj.name}', ${obj.col}, ${obj.row}, ${obj.enabled});`
- ).join("\n");
- if (navigator.clipboard?.writeText) {
- navigator.clipboard.writeText(gridTxt)
- .then(() => alert(`Grid code copied to clipboard:\n${gridTxt}`))
- .catch(err => console.error("Error copying text:", err));
- } else {
- console.error("Clipboard API not supported");
- alert(`Grid code (could not copy to clipboard):\n${gridTxt}`);
- }
 }
 </script>
 </body></html>

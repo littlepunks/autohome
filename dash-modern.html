@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autohome</title>
   <link rel="stylesheet" href="styles.css"></head>
-
 <body>
 
 <ul class="menu" id="menubar">
@@ -21,7 +20,6 @@
     </div>
   </li>
   
-
   <li class="dropdown">
     <a class="dropbtn">Services</a>
     <div class="dropdown-content" style="display: none;">
@@ -42,7 +40,7 @@
   </li>
 </ul>
 <div class="canvas-container">
-  <canvas id="myCanvas" width="150" height="754"></canvas>
+  <canvas id="mainCanvas" width="150" height="754"></canvas>
 </div>
 <div id="contextMenu" class="context-menu" style="left: 444px; top: 518px; display: block;">
   <ul>
@@ -71,19 +69,7 @@
 
 
 
-// Menu event handler
-// document.addEventListener('DOMContentLoaded', function() {
-
-//     const dropdowns = document.querySelectorAll('.dropdown');
-//     dropdowns.forEach(dropdown => {
-//         dropdown.addEventListener('mouseenter', () => {
-//             dropdown.querySelector('.dropdown-content').style.display = 'block';
-//             });
-//         dropdown.addEventListener('mouseleave', () => {
-//             dropdown.querySelector('.dropdown-content').style.display = 'none';
-//             });
-//         })
-// });
+// Menu event handlers
 
 document.body.addEventListener("mouseover", (event) => {
    const dropdown = event.target.closest(".dropdown");
@@ -100,7 +86,7 @@ document.body.addEventListener("mouseout", (event) => {
 });
 
 // Get the canvas element and its 2D context, and the context menu
-const canvas = document.getElementById('myCanvas');
+const canvas = document.getElementById('mainCanvas');
 const ctx = canvas.getContext('2d');
 const contextMenu = document.getElementById('contextMenu');
 contextMenu.style.display = 'none'; // Hide the context menu after clicking
@@ -131,24 +117,23 @@ let touchTimer = null;
 
 // Grid settings
 const cols = 4;
-const rows = 6;
+const rows = 5;
 let margin = canvas.width /(cols*2);   // margin is half the column width
+let colWidth = canvas.width / cols;
+const rowHeight = canvas.height / rows; // Will this need adjusting on resize?
 
-let cspace = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
 // Top left item is at 0,0
-// cspace = 125 
+// colWidth = 125 
 
 // Convert an X or Y coordinate to a row or column
 function xy2rc(xy) {
-  return (xy < 0) ? 1 : (Math.floor(xy/cspace) + 1);
+  return (xy < 0) ? 1 : (Math.floor(xy/colWidth) + 1);
 }
 
 // Convert a row or column to an X or Y coordinate
 function rc2xy(rc) {
-  return (rc <= 0) ? 0 : ((rc-1) * cspace);
+  return (rc <= 0) ? 0 : ((rc-1) * colWidth);
 }
-
-
 
 // Connect to the Socket.io server
 const socket = io();
@@ -174,8 +159,6 @@ function updateSensor(name, value) {
   }
 }
 
-
-
 let dash = []; // Initialize the dash array
 
 // Request an initial sensor list from the server
@@ -190,9 +173,7 @@ socket.on('sensors', (arg) => {
     obj.col = 0
     obj.row = 0;
     obj.enabled = false;
-    // if (! obj.min) obj.min = 0;
-    // if (! obj.max) obj.max = 0;
-    obj.min ??= 0;
+    obj.min ??= 0; // Default min to 0 if not provided
     obj.max ??= 0;
     obj.suffix ??= ''; // Default suffix to empty string if not provided    
   });
@@ -205,8 +186,8 @@ socket.on('sensors', (arg) => {
           item.col = col;
           item.row = row;
           item.enabled = enabled;
-          item.x = (item.col-1) * cspace;
-          item.y = (item.row-1) * cspace;
+          item.x = (item.col-1) * colWidth;
+          item.y = (item.row-1) * colWidth;
 
           break; // Stop the loop once the name is found
         }
@@ -253,14 +234,14 @@ function drawGrid() {
 
         // Draw vertical lines
         for (let i=1; i < cols; i++) {
-            ctx.moveTo(cspace*i,0);
-            ctx.lineTo(cspace*i,canvas.height);
+            ctx.moveTo(colWidth*i,0);
+            ctx.lineTo(colWidth*i,canvas.height);
         }
 
         // Draw horizontal lines
         for (let j=1; j < rows; j++) {
-            ctx.moveTo(0, cspace*j);
-            ctx.lineTo(canvas.width, cspace*j);
+            ctx.moveTo(0, colWidth*j);
+            ctx.lineTo(canvas.width, colWidth*j);
         }
         ctx.stroke();
 
@@ -316,8 +297,8 @@ function drawGauge(g, opts) {
   const thickness = 14; // Bigger numbers make it thinner
 
   // Determine X/Y coordinates
-  let cx = opts?.x ?? margin + (g.col - 1) * cspace;
-  let cy = opts?.y ?? margin + (g.row - 1) * cspace;
+  let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
+  let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
 
   if (opts && Object.keys(opts).length > 0) {
       drawGrid();
@@ -383,8 +364,8 @@ function drawStatus(g, opts) {
     if (opts && Object.keys(opts).length > 0) {
         drawGrid();
     }
-    cx = opts?.x ?? margin + (g.col - 1) * cspace;
-    cy = opts?.y ?? margin + (g.row - 1) * cspace;
+    cx = opts?.x ?? margin + (g.col - 1) * colWidth;
+    cy = opts?.y ?? margin + (g.row - 1) * colWidth;
 
     // Determine the fill color based on contact_status
     // Draw orange/red background if in alarm states 1 or 2 (0 is no alarm)
@@ -421,8 +402,8 @@ function drawLine(x1, y1, x2, y2, style, width) {
 
 function drawBarV(b, opts) {
     // Determine X/Y coordinates
-    let bx = opts?.x ?? margin + (b.col - 1) * cspace;
-    let by = opts?.y ?? margin + (b.row - 1) * cspace;
+    let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
+    let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
     if (opts && Object.keys(opts).length > 0) {
         drawGrid();
@@ -433,7 +414,7 @@ function drawBarV(b, opts) {
     drawLine(bx, by - (0.8 * margin), bx, by + (0.8 * margin), colGaugeBkgnd, lineWidth);
 
     // Draw bar value
-    const valueHeight = (0.8 * cspace * (b.value - b.min) / (b.max - b.min));
+    const valueHeight = (0.8 * colWidth * (b.value - b.min) / (b.max - b.min));
     drawLine(bx, by + (0.8 * margin), bx, by + (0.8 * margin) - valueHeight, colGaugeColor, lineWidth);
 
     // Draw labels - value, max, and min
@@ -450,8 +431,8 @@ function drawBarV(b, opts) {
 
 function drawBarH(b, opts) {
     // Determine X/Y coordinates
-    let bx = opts?.x ?? margin + (b.col - 1) * cspace;
-    let by = opts?.y ?? margin + (b.row - 1) * cspace;
+    let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
+    let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
     if (opts && Object.keys(opts).length > 0) {
         drawGrid();
@@ -462,7 +443,7 @@ function drawBarH(b, opts) {
     drawLine(bx - (0.8 * margin), by, bx + (0.8 * margin), by, colGaugeBkgnd, lineWidth);
 
     // Draw bar value
-    const valueWidth = (0.8 * cspace * (b.value - b.min) / (b.max - b.min));
+    const valueWidth = (0.8 * colWidth * (b.value - b.min) / (b.max - b.min));
     drawLine(bx - (0.8 * margin), by, bx - (0.8 * margin) + valueWidth, by, colGaugeColor, lineWidth);
 
     // Draw labels - value, min, and max
@@ -526,7 +507,7 @@ window.addEventListener('resize', () => {
         canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth  ;
         margin = canvas.width /(cols*2);   // margin is half the column width
 
-        cspace = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
+        colWidth = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
         canvas.style.width = window.innerWidth;
         canvas.style.height = window.innerHeight;
 
@@ -535,228 +516,71 @@ window.addEventListener('resize', () => {
         drawDash();
     }, 100); // Adjust the delay as needed (e.g., 100ms)
 
-    // canvas.height = window.innerHeight - menuObj.offsetHeight-10;
-    // canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth  ;
-    // margin = canvas.width /(cols*2);   // margin is half the column width
+});
 
-    // cspace = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
-    // canvas.style.width = window.innerWidth;
-    // canvas.style.height = window.innerHeight;
+canvas.addEventListener("click", (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
-    // // Optionally, redraw your canvas content here
-    // setBackgroundColor(colBackground);
-    // drawDash();
+    const col = Math.floor(x / colWidth) + 1;
+    const row = Math.floor(y / rowHeight) + 1;
+    //console.log(`Clicked at Row: ${row}, Column: ${col}`);
+
+    // Check if a sensor exists at the clicked location
+    const ctrl = dash.find(obj => obj.col === col && obj.row === row);
+
+    if (ctrl) {
+
+      function formattimeStamp(timeStamp) {
+        const date = new Date(timeStamp); //
+        return date.toLocaleString('en-NZ'); // Returns a formatted date/time
+      }
+
+      // console.log(`Clicked on sensor: ${ctrl.name} (Row: ${row}, Column: ${col})`);
+      // Show popup
+      const popup = document.createElement("div");
+      popup.innerText =
+       `ID: ${ctrl.id}
+        Name: ${ctrl.name}
+        Value: ${ctrl.value}${ctrl.suffix ?? ''}
+        Contact Status: ${ctrl.contact_status === '0' ? 'OK (0)' : ctrl.contact_status === '1' ? 'Late (1)' :  ctrl.contact_status === '2' ? 'Missing (2)' : 'Undefined'}
+        Last Contact: ${formattimeStamp(ctrl.updated)}
+        AlarmState: ${ctrl.alarmState}
+        Min: ${ctrl.min}
+        Max: ${ctrl.max}
+        Warning Threshold: ${ctrl.warningThreshold}
+        Alarm Threshold: ${ctrl.alarmThreshold}
+        Col: ${ctrl.col}
+        Row: ${ctrl.row}
+        Enabled: ${ctrl.enabled}
+        Control Type: ${ctrl.control}`;
+      popup.style.position = "absolute";
+      popup.style.backgroundColor = "rgba(0,0,10,0.9)";
+      popup.style.color = "white";
+      popup.style.border = "1px solid white";
+      popup.style.padding = "10px";
+      popup.style.zIndex = "1000";
+      popup.style.top = `${event.clientY}px`;
+      popup.style.left = `${event.clientX}px`;
+      popup.style.fontSize = "12px";
+      document.body.appendChild(popup);
+
+      // Remove popup after a delay
+      setTimeout(() => {
+          popup.remove();
+      }, 10000);
+    } else {
+      //console.log(`Clicked on blank space (Row: ${row}, Column: ${col})`);
+    }
+
+
 });
 
 // ---------------------------------------------------------------------------
-let selectedObject = null;
+//let selectedObject = null;
 let offsetX, offsetY;
-let clickX, clickY;
-
-// let hoverTimer; // Store the timeout reference
-
-// document.addEventListener("mouseover", function (e) {
-  // if (e.button !== 2) {
-  //     const mouseX = e.clientX - canvas.getBoundingClientRect().left;
-  //     const mouseY = e.clientY - canvas.getBoundingClientRect().top;
-
-  //     const mcol = Math.floor(mouseX / cspace)+1;
-  //     const mrow = Math.floor(mouseY / cspace)+1;
-
-  //     selectedObject = dash.find(obj => {
-  //       return ( mcol == obj.col && mrow == obj.row );
-  //       })
-      
-  //     if (selectedObject) {
-  //       console.log(`Hovering: ${JSON.stringify(selectedObject)}`);
-  //       offsetX = mouseX - selectedObject.x;
-  //       offsetY = mouseY - selectedObject.y;
-        //console.log(`Hovering at: Col ${selectedObject.col}, Row ${selectedObject.row}`);
-        // hoverTimer = setTimeout(() => {
-        //     // Create popup
-        //     const popup = document.createElement("div");
-        //     popup.innerText = `Control: ${selectedObject.name}`;
-        //     popup.style.position = "absolute";
-        //     popup.style.backgroundColor = "rgba(0,0,0,0.7)";
-        //     popup.style.color = "white";
-        //     popup.style.border = "1px solid white";
-        //     popup.style.padding = "10px";
-        //     popup.style.zIndex = "1000";
-        //     popup.style.top = `${e.clientY}px`;
-        //     popup.style.left = `${e.clientX}px`;
-        //     popup.setAttribute("id", "control-popup"); // Assign an ID for easy removal
-
-        //     document.body.appendChild(popup);
-        //     selectedObject = null; // Clear the selected object after showing the popup
-        // }, 1000); // 2-second delay
-  //     }
-  //   }
-  //   e.stopPropagation(); // Prevent the event from bubbling up to parent elements
-//   }
-// );
-
-// Remove popup when the mouse leaves the element
-// document.addEventListener("mouseout", function (event) {
-//     if (event.target.classList.contains("control")) {
-//         console.log("Mouse out of control element, removing popup.");
-//         clearTimeout(hoverTimer); // Cancel the popup if hover stops before 2 seconds
-//         const popup = document.getElementById("control-popup");
-//         if (popup) popup.remove(); // Remove the popup if it exists
-//     }
-// });
-
-//---------------------------------------------------------------------------
-// WORKING
-// canvas.addEventListener('mousedown', function(e) {
-//     if (e.button !== 2) {
-//       const mouseX = e.clientX - canvas.getBoundingClientRect().left;
-//       const mouseY = e.clientY - canvas.getBoundingClientRect().top;
-
-//       const mcol = Math.floor(mouseX / cspace)+1;
-//       const mrow = Math.floor(mouseY / cspace)+1;
-
-//       selectedObject = dash.find(obj => {
-//         return ( mcol == obj.col && mrow == obj.row );
-//         })
-      
-//       if (selectedObject) {
-//         offsetX = mouseX - selectedObject.x;
-//         offsetY = mouseY - selectedObject.y;
-//         console.log(`Picking up: Col ${selectedObject.col}, Row ${selectedObject.row}`);
-
-        // Show popup
-        // const popup = document.createElement("div");
-        // popup.innerText = `Control: ${selectedObject.name}`;
-        // popup.style.position = "absolute";
-        // popup.style.backgroundColor = "rgba(0,0,0,0.7)";
-        // popup.style.color = "white";
-        // popup.style.border = "1px solid white";
-        // popup.style.padding = "10px";
-        // popup.style.zIndex = "1000";
-        // popup.style.top = `${event.clientY}px`;
-        // popup.style.left = `${event.clientX}px`;
-        // document.body.appendChild(popup);
-
-        // // Remove popup after a delay
-        // setTimeout(() => {
-        //     popup.remove();
-        // }, 2000);
-//       }
-//     }
-// });
-
-// Working
-// canvas.addEventListener('mousemove', function(e) {
-//   if (selectedObject) {
-//     const mouseX = e.clientX - canvas.getBoundingClientRect().left;
-//     const mouseY = e.clientY - canvas.getBoundingClientRect().top;
-    
-//     // Update object position
-//     selectedObject.x = mouseX - offsetX;
-//     selectedObject.y = mouseY - offsetY;
-
-//     // Blank the canvas while moving
-//     setBackgroundColor(colBackground);
-//     drawDashObj(selectedObject,{x: mouseX - offsetX + margin, y: mouseY - offsetY + margin, shadow: true});
-// }
-// });
-
-// WORKING
-// canvas.addEventListener("mouseup", function (e) {
-//   if (!selectedObject) return;
-
-//   function objectAlreadyExists(obj) {
-//       // Check if the object hasn't moved OR if the destination already contains another object.
-//       return (
-//           obj.row === xy2rc(obj.y) && obj.col === xy2rc(obj.x) ||
-//           dash.some(existing => existing.col === xy2rc(obj.x) && existing.row === xy2rc(obj.y))
-//       );
-//   }
-
-//   if (objectAlreadyExists(selectedObject)) {
-//       // Reset position if another object already exists in the destination
-//       selectedObject.x = rc2xy(selectedObject.col);
-//       selectedObject.y = rc2xy(selectedObject.row);
-//   } else {
-//       // Snap location to the correct grid square
-//       selectedObject.col = xy2rc(selectedObject.x);
-//       selectedObject.row = xy2rc(selectedObject.y);
-
-//       selectedObject.x = rc2xy(selectedObject.col);
-//       selectedObject.y = rc2xy(selectedObject.row);
-
-//       console.log(`Drop xy (${selectedObject.x}, ${selectedObject.y}) to rc (${selectedObject.row}, ${selectedObject.col})`);
-//   }
-
-//   //Refresh the screen
-//   drawDash();
-
-//   // Cleanup selection
-//   selectedObject = null;
-//   offsetX = 0;
-//   offsetY = 0;
-
-
-// });
-
-
-// Function to handle right-click context menu
-// canvas.addEventListener('contextmenu', function(e) {
-//     e.preventDefault(); // Prevent default context menu from showing up
-//     const mouseX = e.clientX - canvas.getBoundingClientRect().left;
-//     const mouseY = e.clientY - canvas.getBoundingClientRect().top;
-
-//     clickX = mouseX;
-//     clickY = mouseY;
-
-//     // Position the context menu and make visible
-//     contextMenu.style.left = mouseX + 'px';
-//     contextMenu.style.top = mouseY + 'px';
-//     contextMenu.style.display = 'block';
-// });
-
-// Function to handle context menu item clicks
-// function handleContextMenuClick(option) {
-//     console.log(`Clicked on: ${option}`);
-//     contextMenu.style.display = 'none'; // Hide the context menu after clicking
-
-//     switch (option) {
-//       case 'Hide':
-//         // Hide the item by working out which cell was clicked
-//         const mcol = xy2rc(clickX);
-//         const mrow = xy2rc(clickY);
-
-//         let myObject = dash.find(obj => {
-//             return ( mcol == obj.col && mrow == obj.row );
-//             });
-//         if (myObject) {
-//           myObject.enabled = !myObject.enabled;
-//           drawDash();
-//         }
-//         break;
-//       case 'Something':
-//         break;
-//       case 'Else':
-//         break;
-//     }
-// }
-
-// Close the context menu if clicked outside
-// document.addEventListener('click', function(e) {
-//     if (!contextMenu.contains(e.target)) {
-//         contextMenu.style.display = 'none';
-//         return
-//     }
-//     alert("Clicked on something");
-// });
-
-// vvvvvvvv NEW CODE FOR ONE CLICK POPUP
-
-// Adding client-side functionality for left-click popup
-// document.addEventListener("mousedown", function (event) {
-//     const isLeftClick = event.button === 0; // Button code 0 indicates left-click
-//     if (isLeftClick && event.target.classList.contains("control")) {
-//         const controlNameOrNumber = event.target.getAttribute("data-name") || event.target.id;
+//let clickX, clickY;
 
 //         // Show popup
 //         const popup = document.createElement("div");
@@ -777,43 +601,6 @@ let clickX, clickY;
 //         }, 2000);
 //     }
 // });
-
-// Ensuring drag-and-drop functionality is unaffected
-// document.addEventListener("mousemove", function (event) {
-//     // Drag logic can go here...
-// });
-
-// document.addEventListener("mouseup", function (event) {
-//     // Drag release logic...
-// });
-
-// ^^^^^^^^^^^^^^^^^^^^
-
-// canvas.addEventListener('touchstart', (e) => {
-//     // Start the timer
-//     touchTimer = setTimeout(() => {
-//         // Trigger the touch and hold action
-//         if (!contextMenu.contains(e.target)) {
-//             contextMenu.style.display = 'block';
-//         }
-
-//     }, 600); // 1000 milliseconds = 1 second
-//     // The next 2 steps stop Chrome on mobile jumping in with a context search
-//     e.preventDefault();
-//     e.stopPropagation();
-// });
-
-// canvas.addEventListener('touchend', (e) => {
-//     // Clear the timer if touch ends before the threshold
-//     clearTimeout(touchTimer);
-// });
-
-// canvas.addEventListener('touchmove', (e) => {
-//     // Clear the timer if the touch moves (i.e., if it's not a hold)
-//     clearTimeout(touchTimer);
-// });
-
-//=========================================================================================================
 
 // Menu item click handler
 // This function is called when a menu item is clicked
