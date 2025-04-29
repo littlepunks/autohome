@@ -10687,3 +10687,14 @@ I 14-04-2025 21:55:39 RRD graph being created: C:\Users\littlepunk\Documents\aut
 I 14-04-2025 21:55:39 RRD graph being created: 491x311
 I 14-04-2025 21:55:39 RRD graph being created: C:\Users\littlepunk\Documents\autohome>rrdtool\rrdtool.exe graph images/temp_graph_1y.png -s -1y  -e now -w 410 -h 240 -T 10 -a PNG --font DEFAULT:8:'C:\Windows\Fonts\Arial.ttf' -c FONT#E1F4F4 -c SHADEA#6596C4 -c SHADEB#6596C4 -c ARROW#152934 -c CANVAS#152934 -c BACK#152934 -E DEF:s1=temps.rrd:Outside:AVERAGE  LINE1:s1#ff3030:"Outside" DEF:s2=temps.rrd:Bedroom:AVERAGE  LINE1:s2#30ff30:"Bedroom"
 I 14-04-2025 21:55:40 RRD graph being created: 491x311
+I 30-04-2025 03:38:41 Reading settings
+I 30-04-2025 03:38:41 Commence opening serial port
+I 30-04-2025 03:38:41 Settings loaded
+I 30-04-2025 03:38:41 Starting io handler
+I 30-04-2025 03:38:41 Starting http listen
+C 30-04-2025 03:38:41 Listening on *:8080
+I 30-04-2025 03:38:41 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 03:41:47 Got: Bedroom (2): 20.8
+I 30-04-2025 03:42:12 Got: Balcony (5): 18.8
+I 30-04-2025 03:43:52 Got: Tom (1): 19.4
+I 30-04-2025 03:46:48 Got: Bedroom (2): 20.7

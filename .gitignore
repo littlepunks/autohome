@@ -1,7 +1,7 @@
 duck.sh
 duck.log
 node_modules/
-images/*
+images/
 node_rrd/
 autohome.log
 test.py
@@ -14,3 +14,6 @@ package-lock.json
 settings.json
 notes.txt
 test.sh
+.env
+backups/
+rrdtool/

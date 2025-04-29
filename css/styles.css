@@ -1,0 +1,79 @@
+body,html {
+    font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    background-color: #153555;
+}
+.menu {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #333;
+    overflow: hidden;
+    font-size: 16px;
+}
+.menu li {
+    float: left;
+}
+.menu li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.menu li a:hover {
+    background-color: #e06000;
+}
+
+ 
+.dropdown-content { 
+    display: none;
+    position: absolute;
+    background-color: #a0a0a0;
+    min-width: 160px;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: #303030;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+.menu li:hover .dropdown-content {
+    display: block;
+}
+.canvas-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+#myCanvas {
+    background-color: lightblue;
+}
+.context-menu {
+    position: absolute;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 5px;
+    display: none; /* Initially hidden */
+}
+.context-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.context-menu ul li {
+    cursor: pointer;
+    padding: 5px;
+}
+.context-menu ul li:hover {
+    background-color: #ccc;
+}
