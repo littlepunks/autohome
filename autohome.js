@@ -5,24 +5,7 @@
 // ----------------------------------------------------
 /*jshint esversion: 6 */
 
-// Load third party modules
-
 "use strict";
-
-// const express    = require('express');
-// const app        = express();
-// const http       = require('http').Server(app);
-// const io         = require('socket.io')(http);
-// const request    = require('request');
-// const colors     = require('colors');
-// const fs 	   = require('fs');
-// const geoip    = require('geoip-lite');
-// const spawn = require('child_process').spawn;
-// const { SerialPort} = require('serialport');
-// const { styleText } = require('node:util');  // Allows for use of colors in console messages
-// const MS = require('./modules/constants.js'); // MySensors API constants
-// require('dotenv').config(); // Load environment variables from .env file
-
 
 // Import dependencies
 const express = require("express");
@@ -43,7 +26,7 @@ const args = require('minimist')(process.argv.slice(2)); // Using `minimist` for
 // Extract arguments
 let DEBUG = args.d || false; // Debug mode defaults to false
 // Add extra command line processing commands here if needed
-// e.g. DEBUG = args.nograph || false; // Don't generate graphs
+const enableRRD = !args.nograph || true; // Generate graphs unless app started with --nograph
 
 // Smart Switches
 const enableWEMO   = false;   // Set to true to enable Wemo smart switches
@@ -59,15 +42,15 @@ const app = express();
 const server = http.Server(app);
 const io = socketIo(server);
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false })); 
 app.use(express.json());
 
 // RRDTool setup
-const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
+//const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
 const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
 const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
 const autohomeLogFile = './autohome.log'; // Log file for console messages
-const enableRRD = true; // Set to true to enable RRDTool graphing
+//const enableRRD = true; // Set to true to enable RRDTool graphing
 
 let conf = {}; // settings.json will be loaded in here later
 const settingsFile = './settings.json'; // Settings file to load
@@ -173,7 +156,7 @@ if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome sta
 // 	  'RRA:MIN:0.5:288:52'
 // 	];
   
-// 	const child = spawn(rrdtool, args);
+// 	const child = spawn(process.env.RRDTOOL_PATH, args);
 // 	child.on('close', code => {
 // 	  if (code === 0) logMsg('I', 'RRD created successfully.');
 // 	  else logMsg('E', 'RRD creation failed.');
@@ -353,7 +336,7 @@ function stopTempTimer () {
 
 	logMsg('DI', `RRD data update: ${args}`);
 
-	const bat = spawn(rrdtool, ['update', TempsRRDFile, args]);
+	const bat = spawn(process.env.RRDTOOL_PATH, ['update', TempsRRDFile, args]);
 
 	bat.stdout.on('data', (data) => { logMsg('DI', `RRD data updating: ${data.toString()}`);});
 	bat.stderr.on('data', (data) => { logMsg('E', `RRD data update error: ${data.toString()}`);	});

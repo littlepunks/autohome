@@ -10842,3 +10842,36 @@ I 30-04-2025 05:27:40 Starting io handler
 I 30-04-2025 05:27:40 Starting http listen
 C 30-04-2025 05:27:40 Listening on *:8080
 I 30-04-2025 05:27:40 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 05:28:46 Got: Freezer (14): -20.3
+I 30-04-2025 05:32:04 Got: Bedroom (2): 20.5
+I 30-04-2025 05:32:27 Got: Balcony (5): 18.3
+I 30-04-2025 05:34:35 Got: Tom (1): 19.3
+I 30-04-2025 05:36:40 Reading settings
+I 30-04-2025 05:36:40 Settings loaded
+I 30-04-2025 05:36:40 Commence opening serial port
+I 30-04-2025 05:36:40 Starting io handler
+I 30-04-2025 05:36:40 Starting http listen
+C 30-04-2025 05:36:40 Listening on *:8080
+I 30-04-2025 05:36:40 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 05:37:05 Got: Bedroom (2): 20.5
+I 30-04-2025 05:37:28 Got: Balcony (5): 18.3
+I 30-04-2025 05:38:31 Reading settings
+I 30-04-2025 05:38:31 Settings loaded
+I 30-04-2025 05:38:31 Commence opening serial port
+I 30-04-2025 05:38:31 Starting io handler
+I 30-04-2025 05:38:31 Starting http listen
+C 30-04-2025 05:38:31 Listening on *:8080
+I 30-04-2025 05:38:31 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 05:38:48 Got: Freezer (14): -19.6
+I 30-04-2025 05:39:28 Reading settings
+I 30-04-2025 05:39:28 Settings loaded
+I 30-04-2025 05:39:28 Commence opening serial port
+I 30-04-2025 05:39:28 Starting io handler
+I 30-04-2025 05:39:28 Starting http listen
+C 30-04-2025 05:39:28 Listening on *:8080
+I 30-04-2025 05:39:28 Connected to serial gateway on COM4 at 115200 baud
+I 30-04-2025 05:39:51 Got: Tom (1): 19.1
+I 30-04-2025 05:42:05 Got: Bedroom (2): 20.5
+I 30-04-2025 05:42:29 Got: Balcony (5): 18.3
+I 30-04-2025 05:43:49 Got: Freezer (14): -19.4
+I 30-04-2025 05:45:08 Got: Tom (1): 19

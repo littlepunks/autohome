@@ -17,3 +17,4 @@ test.sh
 .env
 backups/
 rrdtool/
+autohome.log
