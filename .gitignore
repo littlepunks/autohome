@@ -1,7 +1,6 @@
 duck.sh
 duck.log
 node_modules/
-images/
 node_rrd/
 autohome.log
 test.py

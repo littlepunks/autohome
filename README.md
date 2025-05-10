@@ -3,17 +3,18 @@
 # Description
 
 AutoHome is a node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based (NRF24L01+ 2.4 Ghz) sensor network for sensor data.
-The controller is connected to a USB/Serially attached MySensors gateway than in turn connects to the sensors via radio.
+The controller module is connected to a USB/Serially attached MySensors gateway (Arduino Nano) that in turn connects to the sensors via radio.
 It supports TP-Link, Tuya and Wemo smart switches.
-The software is currently design to connect to MySensors API 1.5
+The software is currently designed to connect to MySensors API 1.5
 
 # Files
 
 All files must reside in the same folder:
-- index.js -         The main node server component
+- autohome.js -         The main node server component
 - settings.json -     A local settings file read at startup
 - dash.html -        The main html based dashboard
-- make-graph.cmd -   Calls rrdtool to generate graphs
+- contants-client.js - predefined constants
+- make-graph.(cmd|sh) -   Calls rrdtool to generate graphs
 - temps.rrd -        (In rrdtool directory) temperature log data
 - README.md  -       This file
 - sorry.html -       Message for geo-blocked users
@@ -21,7 +22,6 @@ All files must reside in the same folder:
 - sensor_mappings.xlsx
 - graphs.html
 - constants.js -     Useful constants for autohome.js
-
 
 # Execution (New)
 
@@ -185,6 +185,7 @@ At startup:
 # To Do
 
 ## General
+- Look at test.html for new way to do graohs. Need to save data in memory and send to client when asked.
 - For each control have optional and default settings, especially related to visuals and alerting.
 () = optional
 {} = default
