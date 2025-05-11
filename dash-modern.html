@@ -2,10 +2,11 @@
 <html lang="en">
   <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autohome</title>
-  <link rel="stylesheet" href="styles.css"></head>
+  <link rel="stylesheet" href="css/styles.css"></head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
 <body>
 
 <ul class="menu" id="menubar">
@@ -14,7 +15,7 @@
   <li class="dropdown">
     <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
     <div class="dropdown-content" style="display: none;">
-      <a href="http://192.168.68.72/autohome.html#">Webb</a>
+      <a onclick="handleItemClick('Graphs')">Graphs</a>
       <a href="http://192.168.68.72/autohome.html#">Mobile</a>
       <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
     </div>
@@ -218,6 +219,116 @@ socket.on('sensors', (arg) => {
 
 });
 
+function drawWeatherGraphs ()  {
+  // const weatherCanvas = document.createElement('canvas');
+  // weatherCanvas.id = 'weatherCanvas';
+  // weatherCanvas.width = canvas.width;
+  // weatherCanvas.height = canvas.height;
+  // document.body.appendChild(weatherCanvas);
+
+  // const ctx = weatherCanvas.getContext('2d');
+
+  var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
+  // const ctx2 = ctx.getContext('2d');
+  // ctx2.fillStyle = 'rgb(0, 0, 30)';
+  // ctx2.fillRect(0, 0, ctx.width, ctx.height);
+  
+
+  // Build labels (x-axis)
+  const labels = [];
+  for (let index = 1; index < 8; index++) {
+      let hr = '12'; //(num).toString.padStart(2,0) for leading zero
+      let min = (index*5).toString().padStart(2,0);
+      labels.push(hr + ':' + min);   
+  }
+
+  // Start with two datasets
+  const data = {
+      labels: labels,
+      datasets: [{
+          label: 'Lounge',
+          data: [15, 19, 20, 21, 26, 25, 20],
+          tension: 0.4
+      },
+      {
+          label: 'Kitchen',
+          data: [24,23,20.5,19,21,17,17.5],
+          tension: 0.4
+      }
+      ]
+  };
+
+  // Add more datasets
+  data.datasets.push({
+      label: 'Bedroom',
+      data: [14,13,18,11,16,19,18],
+      tension: 0.4
+  });
+  data.datasets.push({
+      label: 'Laundry',
+      data: [15,21,20,18.2,16.9,15.5,14.5],
+      tension: 0.4
+  });
+  data.datasets.push({
+      label: 'Tommy',
+      data: [14,22,19,19.2,15.2,15.8,14.7],
+      tension: 0.4
+  });
+
+
+  let config = { 
+      type: 'line',
+      data: data,
+      options: {
+          responsive: true,
+          layout: {
+              padding: {
+                  left: 10,
+                  right: 10
+              }
+          },
+          plugins: {
+              legend: {
+                  position: 'bottom',
+                  labels: {
+                      boxWidth: 10
+                  }
+              },
+              title: {
+                  display: true,
+                  text: 'Temperatures',
+                  font: {
+                      size: 30
+                  }
+              }
+          },
+          scales: {
+              x: {
+                  grid: {
+                      color: '#303030'
+                  }
+              },
+              y: {
+                  grid: {
+                      color: '#505050'
+                  }
+              }
+          }
+      }
+  };
+
+  Chart.defaults.color = 'lightgray'; // Default color for all text
+  Chart.defaults.font.size = 18; // Default font size for all text
+
+  // Check if a chart instance already exists on the canvas
+  // If it doesn't, create a new one
+  var myChart1 = Chart.getChart(ctx);
+  if (!myChart1) {
+      myChart1 = new Chart(ctx, config);
+  } else {
+    myChart1.update();
+  }
+};
 
 // Helper functions
 // ----------------------------------------------------------------------
@@ -613,14 +724,16 @@ function handleItemClick(item) {
             break;
 
         case "Home":
-            toggleMenuItem("Contact"); // Show/hide "Contact" menu item
+            drawDash(); //toggleMenuItem("Contact"); // Show/hide "Contact" menu item
             break;
 
         case "Show All Items":
             updateAllDashItems(true);
             drawDash();
             break;
-
+        case "Graphs":
+            drawWeatherGraphs();
+            break;
         case "Toggle Grid":
             showGrid = !showGrid;
             drawDash();
