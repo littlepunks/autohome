@@ -185,7 +185,7 @@ At startup:
 # To Do
 
 ## General
-- Look at test.html for new way to do graohs. Need to save data in memory and send to client when asked.
+- Look at test.html for new way to do graphs. Need to save data in memory and send to client when asked.
 - For each control have optional and default settings, especially related to visuals and alerting.
 () = optional
 {} = default

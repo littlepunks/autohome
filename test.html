@@ -2,49 +2,113 @@
 <html lang="en">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    body {
+        background: black;
+    }
+    </style>
 </head>
 <body>
-    Temperature
-    <canvas id="myChart1" width="200" height="80"></canvas>
-    <canvas id="myChart2" width="200" height="80"></canvas>
+    <canvas id="myChart1" width="1" height="1"></canvas>
+    <canvas id="myChart2" width="2" height="1"></canvas>
     <script>
         var ctx1 = document.getElementById('myChart1');
+        var ctx2 = document.getElementById('myChart2');
+
+        // Canvas dimensions only define the x:y ratio and they are responsive
     
         //const labels = ['Mon', 'Tue','Wed','Thu','Fri','Sat','Sun'];
 
-        // Build data array
+        // Build labels (x-axis)
         const labels = [];
-        for (let index = 1; index < 10; index++) {
-            let hr = (1).toString().padStart(2,0)
-            let min = (index*5).toString().padStart(2,0)
+        for (let index = 1; index < 8; index++) {
+            let hr = '12'; //(num).toString.padStart(2,0) for leading zero
+            let min = (index*5).toString().padStart(2,0);
             labels.push(hr + ':' + min);   
         }
 
+        // Start with two datasets
         const data = {
             labels: labels,
             datasets: [{
                 label: 'Lounge',
                 data: [15, 19, 20, 21, 26, 25, 20],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                tension: 0.5
-            }]
+                tension: 0.4
+            },
+            {
+                label: 'Kitchen',
+                data: [24,23,20.5,19,21,17,17.5],
+                tension: 0.4
+            }
+            ]
         };
     
-        const config = {
+        // Add more datasets
+        data.datasets.push({
+            label: 'Bedroom',
+            data: [14,13,18,11,16,19,18],
+            tension: 0.4
+        });
+        data.datasets.push({
+            label: 'Laundry',
+            data: [15,21,20,18.2,16.9,15.5,14.5],
+            tension: 0.4
+        });
+        data.datasets.push({
+            label: 'Tommy',
+            data: [14,22,19,19.2,15.2,15.8,14.7],
+            tension: 0.4
+        });
+
+
+        let config = { 
             type: 'line',
             data: data,
             options: {
+                responsive: true,
                 layout: {
                     padding: {
                         left: 10,
                         right: 10
                     }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 10
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Temperatures',
+                        font: {
+                            size: 30
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: '#303030'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: '#505050'
+                        }
+                    }
                 }
             }
         };
     
+        Chart.defaults.color = 'lightgray'; // Default color for all text
+        Chart.defaults.font.size = 18; // Default font size for all text
         var myChart1 = new Chart(ctx1, config);
+
+        // Tweak title and draw second chart
+        config.options.plugins.title.text = 'Humidity';
+        var myChart2 = new Chart(ctx2, config);
     </script>
 
     </body>
