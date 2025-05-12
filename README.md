@@ -185,7 +185,7 @@ At startup:
 # To Do
 
 ## General
-- Look at test.html for new way to do graphs. Need to save data in memory and send to client when asked.
+- [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/) or use SSD
 - For each control have optional and default settings, especially related to visuals and alerting.
 () = optional
 {} = default
@@ -230,9 +230,14 @@ LEVELS of values that are critical, also need to know if higher or lower than ma
 - consider using express-limit or express-rate-limit or NGINX rate limiting to stop DDoS
 
 ## Graphing
-- Move to Highcharts or chart.js and storing the data a different way (JSON, CSV)
-- [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/)
 - RRDTOOL to capture motion events
+- dashmodern.html has the latest charts/graphs with dummy data only
+- Charts:
+	- Change to timeseries graphs and epoch timestamp data
+	- change addChartData to include timestamp
+	- Get controller to build up dataset, not dashboard
+	- Have client request (sockets) the data set to graph, then draw
+	- Maybe have client do an initial pull of all data and then just receive updates which are added to the client dataset. Maybe periodic full pull?
 
 ## Sensors
 - TPLINK - plug online/offline events should change sensor status to red
