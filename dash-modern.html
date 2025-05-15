@@ -2,10 +2,11 @@
 <html lang="en">
   <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autohome</title>
-  <link rel="stylesheet" href="styles.css"></head>
+  <link rel="stylesheet" href="css/styles.css"></head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
 <body>
 
 <ul class="menu" id="menubar">
@@ -14,7 +15,7 @@
   <li class="dropdown">
     <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
     <div class="dropdown-content" style="display: none;">
-      <a href="http://192.168.68.72/autohome.html#">Webb</a>
+      <a onclick="handleItemClick('Graphs')">Graphs</a>
       <a href="http://192.168.68.72/autohome.html#">Mobile</a>
       <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
     </div>
@@ -218,45 +219,152 @@ socket.on('sensors', (arg) => {
 
 });
 
+function drawGraphs ()  {
+  var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
+
+  // Build labels (x-axis)
+  const labels = [];
+  for (let index = 1; index < 8; index++) {
+      let hr = '12'; //(num).toString.padStart(2,0) for leading zero
+      let min = (index*5).toString().padStart(2,0);
+      labels.push(hr + ':' + min);   
+  }
+
+  // Add new data to the chart dataset
+  // Assumes you are entering enough data for all the labels (x-axis)
+  // e.g. addChartDataset(chartData, 'Room3', [1,2,3,4,5,6,7]);
+  function addChartDataset(chart, label, data) {
+      chart.datasets.push({label: label, data: data, tension: 0.4});
+      // chart.update();
+  }
+
+  // Add individual data as it is received
+  // e.g. addChartDataPoint(chartData, labels, 'Room3', 1234567890, 25);
+  function addChartDataPoint(chart, labels, sensorLabel, timeStamp, sensorData) {
+
+    //labels.push(timeStamp); // y-axis labels
+
+    // Check if the dataset with the given sensor name already exists
+    const dataset = chart.datasets.find(ds => ds.label === sensorLabel);
+
+    if (dataset) {
+      // If found, add the new value to the existing values array
+      dataset.data.push(sensorData);
+    } else {
+      // If not found, create a new dataset with the new name and value
+      chart.datasets.push({ label: sensorLabel, data: [sensorData], tension: 0.4 });
+    }
+
+  //  chart.update();
+    // console.log(chart);
+  }
+
+  // Start with two datasets
+  const chartData = {
+      labels: labels,
+      datasets: []
+  };
+  addChartDataset(chartData, 'Lounge',  [15, 19, 20, 21, 26, 25, 20]);
+  addChartDataset(chartData, 'Kitchen', [24,23,20.5,19,21,17,17.5]);
+  addChartDataset(chartData, 'Bedroom', [20,19]);
+  addChartDataset(chartData, 'Laundry', [15,21,20,18.2,16.9,15.5,14.5]);
+  // addChartDataset(chartData, 'Tommy',   [14,22,19,19.2,15.2,15.8,14.7]);
+  // addChartDataset(chartData, 'Freezer', [24,12,29,29.2,25.2,25.8,24.7]);
+
+  addChartDataPoint(chartData, labels, 'Bedroom', '12:15', 25);
+  
+
+  // Set charting options
+  let config = { 
+      type: 'line',
+      data: chartData,
+      options: {
+          responsive: true,
+          layout: {
+              padding: {
+                  left: 10,
+                  right: 10
+              }
+          },
+          plugins: {
+              legend: {
+                  position: 'bottom',
+                  labels: {
+                      boxWidth: 10
+                  }
+              },
+              title: {
+                  display: true,
+                  text: 'Temperatures',
+                  font: {
+                      size: 30
+                  }
+              }
+          },
+          scales: {
+              x: {
+                  grid: {
+                      color: '#303030'
+                  }
+              },
+              y: {
+                  grid: {
+                      color: '#505050'
+                  }
+              }
+          }
+      }
+  };
+
+  // Set default text colour and size
+  Chart.defaults.color = 'lightgray';
+  Chart.defaults.font.size = 18;
+
+  // Check if a chart instance already exists on the canvas
+  // If it doesn't, create a new one
+  var myChart1 = Chart.getChart(ctx);
+  if (!myChart1) {
+      myChart1 = new Chart(ctx, config);
+  } else {
+    myChart1.update();
+  }
+};
 
 // Helper functions
 // ----------------------------------------------------------------------
 // Draw grid
 function drawGrid() {
-    if (showGrid) {
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-        ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.shadowBlur = 0;
 
-        ctx.strokeStyle = colGrid;
-        ctx.lineWidth = 1;
-        ctx.beginPath()
+    ctx.strokeStyle = colGrid;
+    ctx.lineWidth = 1;
+    ctx.beginPath()
 
-        // Draw vertical lines
-        for (let i=1; i < cols; i++) {
-            ctx.moveTo(colWidth*i,0);
-            ctx.lineTo(colWidth*i,canvas.height);
-        }
-
-        // Draw horizontal lines
-        for (let j=1; j < rows; j++) {
-            ctx.moveTo(0, colWidth*j);
-            ctx.lineTo(canvas.width, colWidth*j);
-        }
-        ctx.stroke();
-
-        ctx.shadowOffsetX = 5;
-        ctx.shadowOffsetY = 5;
-        ctx.shadowBlur = 10;
-
-
+    // Draw vertical lines
+    for (let i=1; i < cols; i++) {
+        ctx.moveTo(colWidth*i,0);
+        ctx.lineTo(colWidth*i,canvas.height);
     }
+
+    // Draw horizontal lines
+    for (let j=1; j < rows; j++) {
+        ctx.moveTo(0, colWidth*j);
+        ctx.lineTo(canvas.width, colWidth*j);
+    }
+    ctx.stroke();
+
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+    ctx.shadowBlur = 10;
 }
 
+// Draw all dash controls and the grid
 function drawDash() {
   setBackgroundColor(colBackground);
 
-  drawGrid();
+  if (showGrid) drawGrid;
 
   dash.forEach(obj => {
     if (obj.enabled) drawDashObj(obj);
@@ -300,7 +408,7 @@ function drawGauge(g, opts) {
   let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
   let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
 
-  if (opts && Object.keys(opts).length > 0) {
+  if (opts && Object.keys(opts).length > 0 && showGrid) {
       drawGrid();
   }
 
@@ -361,7 +469,7 @@ function drawStatus(g, opts) {
     let cx = 0;
     let cy = 0;
 
-    if (opts && Object.keys(opts).length > 0) {
+    if (opts && Object.keys(opts).length > 0 && showGrid) {
         drawGrid();
     }
     cx = opts?.x ?? margin + (g.col - 1) * colWidth;
@@ -405,7 +513,7 @@ function drawBarV(b, opts) {
     let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
     let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
-    if (opts && Object.keys(opts).length > 0) {
+    if (opts && Object.keys(opts).length > 0 && showGrid) {
         drawGrid();
     }
 
@@ -434,7 +542,7 @@ function drawBarH(b, opts) {
     let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
     let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
-    if (opts && Object.keys(opts).length > 0) {
+    if (opts && Object.keys(opts).length > 0 && showGrid) {
         drawGrid();
     }
 
@@ -613,14 +721,16 @@ function handleItemClick(item) {
             break;
 
         case "Home":
-            toggleMenuItem("Contact"); // Show/hide "Contact" menu item
+            drawDash(); //toggleMenuItem("Contact"); // Show/hide "Contact" menu item
             break;
 
         case "Show All Items":
             updateAllDashItems(true);
             drawDash();
             break;
-
+        case "Graphs":
+            drawGraphs();
+            break;
         case "Toggle Grid":
             showGrid = !showGrid;
             drawDash();
