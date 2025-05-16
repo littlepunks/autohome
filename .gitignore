@@ -1,5 +1,4 @@
-duck.sh
-duck.log
+duck.*
 node_modules/
 node_rrd/
 autohome.log
@@ -17,5 +16,3 @@ test.sh
 backups/
 rrdtool/
 autohome.log
-sensor_chart.png
-images/*.png

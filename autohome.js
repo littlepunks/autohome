@@ -1,7 +1,7 @@
 // ----------------------------------------------------
 // © 2017-2025 David Jacobsen / dave.jacobsen@gmail.com
 // See README.md
-// AUTOHOME - MySensors Gateway and Web Interface
+// AUTOHOME - MySensors Gateway with a modern Web Interface
 // ----------------------------------------------------
 /*jshint esversion: 6 */
 
