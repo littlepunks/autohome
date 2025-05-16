@@ -3,7 +3,8 @@
   <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autohome</title>
   <link rel="stylesheet" href="styles.css"></head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
@@ -219,6 +220,61 @@ socket.on('sensors', (arg) => {
 
 });
 
+// Draw Graphs ****************
+
+  // Functon below should be able to parse rrdtool extract data into a graphable format
+  //---------------
+function parseLabeledData(input) {
+  // Split the input text into individual lines, removing any leading/trailing whitespace
+  const lines = input.trim().split('\n');
+
+  // Extract the first line which contains the column headers
+  // We skip the first column (timestamp) and keep the rest as data column names
+  const headers = lines[0].trim().split(/\s+/).slice(1);
+
+  // Initialize the result object with:
+  // - 'labels': an array to store formatted time strings (hh:mm)
+  // - 'datasets': an array of objects, each representing a data column with a label and data array
+  const result = {
+    labels: [],
+    datasets: headers.map(header => ({
+      label: header, // Name of the data column
+      data: []       // Array to store the values for this column
+    }))
+  };
+
+  // Loop through each line of data, starting from the second line (index 1)
+  for (let i = 1; i < lines.length; i++) {
+    // Remove the colon after the timestamp and split the line into parts
+    const parts = lines[i].replace(':', '').trim().split(/\s+/);
+
+    // Parse the first part as a Unix timestamp (in seconds)
+    const timestamp = parseInt(parts[0], 10);
+
+    // Convert the Unix timestamp to a JavaScript Date object
+    const date = new Date(timestamp * 1000); // Multiply by 1000 to convert to milliseconds
+
+    // Format the time as "hh:mm" using ISO string slicing
+    const hhmm = date.toISOString().substr(11, 5);
+
+    // Add the formatted time to the 'labels' array
+    result.labels.push(hhmm);
+
+    // Loop through the remaining parts (data values)
+    parts.slice(1).forEach((val, index) => {
+      // Convert the string to a floating-point number
+      const num = parseFloat(val);
+
+      // Add the number to the corresponding dataset's data array
+      result.datasets[index].data.push(num);
+    });
+  }
+
+  // Return the fully constructed result object
+  return result;
+}
+
+  
 function drawGraphs ()  {
   var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
 
@@ -303,16 +359,30 @@ function drawGraphs ()  {
           },
           scales: {
               x: {
-                  grid: {
+                type: 'time',
+                time: {
+                  parser: 'YYYY-MM-DDTHH:mm:ss',
+                  tooltipFormat: 'HH:mm',
+                  displayFormats: {
+                    minute: 'HH:mm'
+                  }
+                }
+/*                  grid: {
                       color: '#303030'
-                  }
+                  }*/
               },
               y: {
                   grid: {
                       color: '#505050'
                   }
               }
-          }
+          },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Irregular Time Series Data (with Moment.js)'
+          }
+        }
       }
   };
 
