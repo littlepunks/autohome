@@ -16,3 +16,6 @@ test.sh
 backups/
 rrdtool/
 autohome.log
+*.png
+sensor_chart.png
+images/*.png
