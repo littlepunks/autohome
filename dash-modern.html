@@ -279,13 +279,25 @@ function drawGraphs ()  {
   var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
 
   // Build labels (x-axis)
-  const labels = [];
-  for (let index = 1; index < 8; index++) {
-      let hr = '12'; //(num).toString.padStart(2,0) for leading zero
-      let min = (index*5).toString().padStart(2,0);
-      labels.push(hr + ':' + min);   
-  }
+  // const labels = [];
+  // for (let index = 1; index < 8; index++) {
+  //     let hr = '12'; //(num).toString.padStart(2,0) for leading zero
+  //     let min = (index*5).toString().padStart(2,0);
+  //     labels.push(hr + ':' + min);   
+  // }
 
+  labels = 
+[
+  "2025-05-16T01:56:46.804484",
+  "2025-05-16T02:05:46.804484",
+  "2025-05-16T02:16:46.804484",
+  "2025-05-16T02:26:46.804484",
+  "2025-05-16T02:38:46.804484",
+  "2025-05-16T02:46:46.804484",
+  "2025-05-16T03:08:46.804484"
+];
+
+  
   // Add new data to the chart dataset
   // Assumes you are entering enough data for all the labels (x-axis)
   // e.g. addChartDataset(chartData, 'Room3', [1,2,3,4,5,6,7]);
