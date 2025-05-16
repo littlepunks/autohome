@@ -296,6 +296,17 @@ function drawGraphs ()  {
   "2025-05-16T02:46:46.804484",
   "2025-05-16T03:08:46.804484"
 ];
+  
+// If needed here's a function to convert epoch to ISO string:
+function epochToISO(epochSeconds) {
+  // Multiply by 1000 to convert from seconds to milliseconds
+  const date = new Date(epochSeconds * 1000);
+  return date.toISOString();
+}
+// e.g.
+// const epoch = 1498656600;
+// const isoString = epochToISO(epoch);
+// console.log(isoString); // Outputs: "2017-06-28T00:30:00.000Z"
 
   
   // Add new data to the chart dataset
