@@ -384,7 +384,17 @@ function drawInitialChart() {
   Chart.defaults.color = 'lightgray';
   Chart.defaults.font.size = 18;
 
-  myChart1 = new Chart(ctx, config);
+  // Check if a chart instance already exists on the canvas
+  // If it doesn't, create a new one
+  myChart1 = Chart.getChart(ctx);
+  if (!myChart1) {
+      myChart1 = new Chart(ctx, config);
+  } else {
+    myChart1.update();
+  }
+
+
+  // myChart1 = new Chart(ctx, config);
 }
 
 
@@ -417,7 +427,7 @@ updateChartFromJSON({
   freq: 1800
 });
 
-
+/*
 // Old below ======================================
 function drawGraphs ()  {
   // var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
@@ -528,9 +538,7 @@ function drawGraphs ()  {
                     minute: 'HH:mm'
                   }
                 }
-/*                  grid: {
-                      color: '#303030'
-                  }*/
+
               },
               y: {
                   grid: {
@@ -562,6 +570,8 @@ function drawGraphs ()  {
   //console.log("Display: " + ctx.style.display);
 
 };
+*/
+
 
 // Helper functions
 // ----------------------------------------------------------------------
@@ -598,10 +608,12 @@ function drawDash() {
   setBackgroundColor(colBackground);
 
   // Not 100% this is needed?
-  chartsCtx = document.getElementById('myChart').getContext('2d');
-  if (chartsCtx) {
-    chartsCtx.style.display = 'none';
+  const isChart = document.getElementById('mainCanvas');
+  if (isChart) {
+    chartsCtx = isChart.getContext('2d');
+    //isChart.style.display = 'none';
   }
+
   if (showGrid) drawGrid;
 
   dash.forEach(obj => {
@@ -967,9 +979,10 @@ function handleItemClick(item) {
             drawDash();
             break;
         case "Graphs":
-            drawGraphs();
-            let tmpGraphCtx = document.getElementById('mainCanvas');  // ctx is a canvas
-            tmpGraphCtx.style.display = 'block';
+            // drawGraphs();
+            drawInitialChart();
+            // let tmpGraphCtx = document.getElementById('mainCanvas');  // ctx is a canvas
+            // tmpGraphCtx.style.display = 'block';
 
             break;
         case "Toggle Grid":
