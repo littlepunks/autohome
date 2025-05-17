@@ -142,7 +142,7 @@ const socket = io();
 
 // Process a sensor message from the server
 socket.on('SMv2', (arg) => {
- console.log(arg);
+  //console.log(arg);
   
   const msg = typeof arg === 'string' ? JSON.parse(arg) : arg;
   updateSensor(msg.name, msg.value);
@@ -156,6 +156,12 @@ function updateSensor(name, value) {
   for (let item of dash) {
       if (item.name === name) {
         item.value = value;
+
+        // -----------------
+        // Eventually move to scheduled pulls of graph data from the controller
+        // but in the mean time add data to the graph object
+
+        // -----------------
         break; // Stop the loop once the name is found
       }
   }
@@ -274,39 +280,170 @@ function parseLabeledData(input) {
   return result;
 }
 
-  
-function drawGraphs ()  {
-  var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
+// ==========================================================================
+// Graphing/Charting section
+// ==========================================================================
 
-  // Build labels (x-axis)
-  // const labels = [];
-  // for (let index = 1; index < 8; index++) {
-  //     let hr = '12'; //(num).toString.padStart(2,0) for leading zero
-  //     let min = (index*5).toString().padStart(2,0);
-  //     labels.push(hr + ':' + min);   
-  // }
+// Global Chart.js objects
+let myChart1;
+let chartData = {
+  labels: [],
+  datasets: []
+};
 
-  labels = 
-[
-  "2025-05-16T01:56:46.804484",
-  "2025-05-16T02:05:46.804484",
-  "2025-05-16T02:16:46.804484",
-  "2025-05-16T02:26:46.804484",
-  "2025-05-16T02:38:46.804484",
-  "2025-05-16T02:46:46.804484",
-  "2025-05-16T03:08:46.804484"
-];
-  
-// If needed here's a function to convert epoch to ISO string:
-function epochToISO(epochSeconds) {
-  // Multiply by 1000 to convert from seconds to milliseconds
-  const date = new Date(epochSeconds * 1000);
-  return date.toISOString();
+// Get canvas and set background
+function initChartCanvas() {
+  const ctx = document.getElementById('mainCanvas');
+  ctx.style.backgroundColor = colBackground;
+  return ctx;
 }
-// e.g.
-// const epoch = 1498656600;
-// const isoString = epochToISO(epoch);
-// console.log(isoString); // Outputs: "2017-06-28T00:30:00.000Z"
+
+// ISO label conversion helper (optional)
+function epochToISO(epochMs) {
+  return new Date(epochMs).toISOString();
+}
+
+
+// Adds a full dataset
+function addChartDataset(label, data) {
+  chartData.datasets.push({ label, data, tension: 0.4 });
+}
+
+// Adds a new data point to an existing dataset (or creates one)
+function addChartDataPoint(sensorLabel, isoTime, value) {
+  // Add timestamp if it's new
+  if (!chartData.labels.includes(isoTime)) {
+    chartData.labels.push(isoTime);
+  }
+
+  // Find or create dataset
+  let dataset = chartData.datasets.find(ds => ds.label === sensorLabel);
+  if (!dataset) {
+    dataset = { label: sensorLabel, data: [], tension: 0.4 };
+    chartData.datasets.push(dataset);
+  }
+
+  dataset.data.push(value);
+}
+
+// Update chart from incoming JSON object
+function updateChartFromJSON(jsonObj) {
+  const { name, value, updated } = jsonObj;
+
+  const timeISO = epochToISO(updated);
+  let numericValue = parseFloat(value);
+
+  if (isNaN(numericValue)) {
+    console.warn(`Non-numeric value for ${name}:`, value);
+    return;
+  }
+
+  addChartDataPoint(name, timeISO, numericValue);
+  if (myChart1) myChart1.update();
+}
+
+// Chart configuration and instantiation
+function drawInitialChart() {
+  const ctx = initChartCanvas();
+
+  const config = {
+    type: 'line',
+    data: chartData,
+    options: {
+      responsive: true,
+      layout: {
+        padding: { left: 10, right: 10 }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 10 }
+        },
+        title: {
+          display: true,
+          text: 'Temperature Graph',
+          font: { size: 30 }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            parser: 'YYYY-MM-DDTHH:mm:ss.SSSZ',
+            tooltipFormat: 'HH:mm',
+            displayFormats: { minute: 'HH:mm' }
+          }
+        },
+        y: {
+          grid: { color: '#505050' }
+        }
+      }
+    }
+  };
+
+  Chart.defaults.color = 'lightgray';
+  Chart.defaults.font.size = 18;
+
+  myChart1 = new Chart(ctx, config);
+}
+
+
+drawInitialChart(); // Call once to start
+
+// Later, update with new data
+updateChartFromJSON({
+  id: "208",
+  name: "Bedroom",
+  value: "23.5",
+  type: "39",
+  updated: 1747450130425,  // epoch in milliseconds
+  freq: 1800
+});
+
+updateChartFromJSON({
+  id: "208",
+  name: "Bedroom",
+  value: "24",
+  type: "39",
+  updated: 1747450230425,  // epoch in milliseconds
+  freq: 1800
+});
+updateChartFromJSON({
+  id: "208",
+  name: "Bedroom",
+  value: "23.2",
+  type: "39",
+  updated: 1747450430425,  // epoch in milliseconds
+  freq: 1800
+});
+
+
+// Old below ======================================
+function drawGraphs ()  {
+  // var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
+  // ctx.style.backgroundColor = colBackground;
+
+  // labels = 
+  //   [
+  //     "2025-05-16T01:56:46.804484",
+  //     "2025-05-16T02:05:46.804484",
+  //     "2025-05-16T02:16:46.804484",
+  //     "2025-05-16T02:26:46.804484",
+  //     "2025-05-16T02:38:46.804484",
+  //     "2025-05-16T02:46:46.804484",
+  //     "2025-05-16T03:08:46.804484"
+  //   ];
+    
+  // If needed here's a function to convert epoch to ISO string:
+  // function epochToISO(epochSeconds) {
+  //   // Multiply by 1000 to convert from seconds to milliseconds
+  //   const date = new Date(epochSeconds * 1000);
+  //   return date.toISOString();
+  // }
+  // e.g.
+  // const epoch = 1498656600;
+  // const isoString = epochToISO(epoch);
+  // console.log(isoString); // Outputs: "2017-06-28T00:30:00.000Z"
 
   
   // Add new data to the chart dataset
@@ -334,7 +471,7 @@ function epochToISO(epochSeconds) {
       chart.datasets.push({ label: sensorLabel, data: [sensorData], tension: 0.4 });
     }
 
-  //  chart.update();
+    //  chart.update();
     // console.log(chart);
   }
 
@@ -343,14 +480,15 @@ function epochToISO(epochSeconds) {
       labels: labels,
       datasets: []
   };
-  addChartDataset(chartData, 'Lounge',  [15, 19, 20, 21, 26, 25, 20]);
+  //addChartDataset(chartData, 'Lounge',  [15, 19, 20, 21, 26, 25, 20]);
   addChartDataset(chartData, 'Kitchen', [24,23,20.5,19,21,17,17.5]);
   addChartDataset(chartData, 'Bedroom', [20,19]);
-  addChartDataset(chartData, 'Laundry', [15,21,20,18.2,16.9,15.5,14.5]);
+  //addChartDataset(chartData, 'Laundry', [15,21,20,18.2,16.9,15.5,14.5]);
   // addChartDataset(chartData, 'Tommy',   [14,22,19,19.2,15.2,15.8,14.7]);
   // addChartDataset(chartData, 'Freezer', [24,12,29,29.2,25.2,25.8,24.7]);
 
   addChartDataPoint(chartData, labels, 'Bedroom', '12:15', 25);
+  addChartDataPoint(chartData, labels, 'Bedroom', '12:16', 25);
   
 
   // Set charting options
@@ -384,11 +522,11 @@ function epochToISO(epochSeconds) {
               x: {
                 type: 'time',
                 time: {
-                  parser: 'YYYY-MM-DDTHH:mm:ss',
-                  tooltipFormat: 'HH:mm',
-                  displayFormats: {
-                    minute: 'HH:mm'
-                  }
+                  parser: 'YYYY-MM-DDTHH:mm:ss',
+                  tooltipFormat: 'HH:mm',
+                  displayFormats: {
+                    minute: 'HH:mm'
+                  }
                 }
 /*                  grid: {
                       color: '#303030'
@@ -401,12 +539,12 @@ function epochToISO(epochSeconds) {
               }
           },
         plugins: {
-          title: {
-            display: true,
-            text: 'Irregular Time Series Data (with Moment.js)'
-          }
-        }
+          title: {
+            display: true,
+            text: 'Temperature Graph'
+          }
       }
+    }
   };
 
   // Set default text colour and size
@@ -421,6 +559,8 @@ function epochToISO(epochSeconds) {
   } else {
     myChart1.update();
   }
+  //console.log("Display: " + ctx.style.display);
+
 };
 
 // Helper functions
@@ -457,6 +597,11 @@ function drawGrid() {
 function drawDash() {
   setBackgroundColor(colBackground);
 
+  // Not 100% this is needed?
+  chartsCtx = document.getElementById('myChart').getContext('2d');
+  if (chartsCtx) {
+    chartsCtx.style.display = 'none';
+  }
   if (showGrid) drawGrid;
 
   dash.forEach(obj => {
@@ -823,6 +968,9 @@ function handleItemClick(item) {
             break;
         case "Graphs":
             drawGraphs();
+            let tmpGraphCtx = document.getElementById('mainCanvas');  // ctx is a canvas
+            tmpGraphCtx.style.display = 'block';
+
             break;
         case "Toggle Grid":
             showGrid = !showGrid;
