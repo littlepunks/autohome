@@ -185,6 +185,7 @@ At startup:
 # To Do
 
 ## General
+- Run periodic checks that messages are being received on the serial port. Anything longer than 15mins without should trigger an email once!
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/) or use SSD
 - For each control have optional and default settings, especially related to visuals and alerting.
 () = optional
@@ -231,7 +232,7 @@ LEVELS of values that are critical, also need to know if higher or lower than ma
 
 ## Graphing
 - RRDTOOL to capture motion events
-- dashmodern.html has the latest charts/graphs with dummy data only
+- dash-modern.html has the latest charting
 - Charts:
 	- Change to timeseries graphs and epoch timestamp data
 	- change addChartData to include timestamp
