@@ -238,6 +238,18 @@ LEVELS of values that are critical, also need to know if higher or lower than ma
 	- Get controller to build up dataset, not dashboard
 	- Have client request (sockets) the data set to graph, then draw
 	- Maybe have client do an initial pull of all data and then just receive updates which are added to the client dataset. Maybe periodic full pull?
+ - Can extract rrdtool data using PowerShell:
+		$time = [int][double]::Parse((Get-Date -UFormat %s))
+		$rrdres = 900
+		$endTime = [math]::Floor($time / $rrdres) * $rrdres
+		rrdtool fetch subdata.rrd AVERAGE -r $rrdres -e $endTime -s e-1h
+	or bash:
+		 TIME=$(date +%s)
+		 RRDRES=900
+		 rrdtool fetch subdata.rrd AVERAGE -r $RRDRES \
+		    -e $(($TIME/$RRDRES*$RRDRES)) -s e-1h
+   Refer to https://oss.oetiker.ch/rrdtool/doc/rrdfetch.en.html for complexities around timescales.
+
 
 ## Sensors
 - TPLINK - plug online/offline events should change sensor status to red

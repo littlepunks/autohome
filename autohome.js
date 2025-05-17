@@ -568,7 +568,8 @@ function updateWeatherData(obj) {
     });
 }
 
-
+// Format the current date and time as a string
+// This function returns a string in the format "DD-MM-YYYY HH:MM:SS"
 function dateTimeString() {
 	const now = new Date(); // Get current date and time
 	const withLead0 = (value) => String(value).padStart(2, '0'); // Ensure leading zeros
@@ -577,7 +578,9 @@ function dateTimeString() {
 	return `${withLead0(now.getDate())}-${withLead0(now.getMonth() + 1)}-${now.getFullYear()} ` +
 			`${withLead0(now.getHours())}:${withLead0(now.getMinutes())}:${withLead0(now.getSeconds())}`;
 }
-  
+
+// Convert a timestamp to a formatted time string
+// This function takes a timestamp (in seconds) and converts it to a 12-hour format with AM/PM
 function convertTimestampToTime(timestamp) {
     const date = new Date(timestamp * 1000); // Convert the timestamp to milliseconds
     const hours = date.getHours(); // Get hours
