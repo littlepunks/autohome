@@ -142,9 +142,31 @@ const socket = io();
 
 // Process a sensor message from the server
 socket.on('SMv2', (arg) => {
-  //console.log(arg);
-  
   const msg = typeof arg === 'string' ? JSON.parse(arg) : arg;
+
+  updateChartFromJSON(msg);
+
+  console.log(msg);
+  // if (msg.name == "Bedroom") {
+  //     //addChartDataPoint(msg.name, msg.updated, mag.value);
+
+  //     // const { name, value, updated } = jsonObj;
+
+  //     const timeISO = epochToISO(msg.updated);
+  //     let numericValue = parseFloat(msg.value);
+
+  //     if (isNaN(numericValue)) {
+  //       console.warn(`Non-numeric value for value:`, mag.value);
+  //       return;
+  //     }
+
+  //     addChartDataPoint(msg.name, timeISO, numericValue);
+  //     if (myChart1) myChart1.update();
+
+
+  // }
+
+
   updateSensor(msg.name, msg.value);
 
   drawDash();
@@ -291,6 +313,21 @@ let chartData = {
   datasets: []
 };
 
+// An array of colors for the datasets
+const dataColors = [
+  'rgba(255, 0, 0, 0.2)',
+  'rgba(0, 255, 0, 0.2)',
+  'rgba(0, 0, 255, 0.2)',
+
+  'rgba(128, 128, 0, 0.2)',
+  'rgba(0, 128, 128, 0.2)',
+  'rgba(128, 0, 128, 0.2)',
+
+  'rgba(255, 128, 0, 0.2)',
+  'rgba(0, 255, 128, 0.2)',
+  'rgba(128, 0, 255, 0.2)'
+];
+
 // Get canvas and set background
 function initChartCanvas() {
   const ctx = document.getElementById('mainCanvas');
@@ -319,8 +356,22 @@ function addChartDataPoint(sensorLabel, isoTime, value) {
   // Find or create dataset
   let dataset = chartData.datasets.find(ds => ds.label === sensorLabel);
   if (!dataset) {
-    dataset = { label: sensorLabel, data: [], tension: 0.4 };
+    // Add new colors here
+    // dataColors[chartData.datasets.length];
+    dataset = {
+      label: sensorLabel,
+      data: [],
+      backgroundColor: dataColors[chartData.datasets.length],
+      borderColor: dataColors[chartData.datasets.length],
+      tension: 0.4
+    };
+
     chartData.datasets.push(dataset);
+    //console.log(chartData);
+
+    // Log the number elements in chartData.datasets to the console
+    // console.log(`Number of datasets: ${chartData.datasets.length}`);  
+    //console.log(chartData.datasets);  
   }
 
   dataset.data.push(value);
@@ -330,14 +381,19 @@ function addChartDataPoint(sensorLabel, isoTime, value) {
 function updateChartFromJSON(jsonObj) {
   const { name, value, updated } = jsonObj;
 
+  const ignoreList = ['Speed', 'Humidity', 'Pressure', 'Sunrise', 'Sunset', 'Wind', 'W Desc', 'W Main', 'Hall', 'Door'];
+
   const timeISO = epochToISO(updated);
   let numericValue = parseFloat(value);
 
-  if (isNaN(numericValue)) {
-    console.warn(`Non-numeric value for ${name}:`, value);
+  if (isNaN(numericValue) || ignoreList.includes(name)) {
+    //console.warn(`Non-numeric value for ${name}:`, value);
+    // The small graph controls are example where value is not a number
+    // so they can be safely skipped
     return;
   }
 
+  // Otherwise, add the data point to the chart
   addChartDataPoint(name, timeISO, numericValue);
   if (myChart1) myChart1.update();
 }
@@ -361,7 +417,7 @@ function drawInitialChart() {
         },
         title: {
           display: true,
-          text: 'Temperature Graph',
+          text: 'Temperatures',
           font: { size: 30 }
         }
       },
@@ -401,31 +457,29 @@ function drawInitialChart() {
 drawInitialChart(); // Call once to start
 
 // Later, update with new data
-updateChartFromJSON({
-  id: "208",
-  name: "Bedroom",
-  value: "23.5",
-  type: "39",
-  updated: 1747450130425,  // epoch in milliseconds
-  freq: 1800
-});
+// updateChartFromJSON({
+//   id: "208",
+//   name: "Bedroom",
+//   value: "23.5",
+//   updated: 1747450130425
+// });
 
-updateChartFromJSON({
-  id: "208",
-  name: "Bedroom",
-  value: "24",
-  type: "39",
-  updated: 1747450230425,  // epoch in milliseconds
-  freq: 1800
-});
-updateChartFromJSON({
-  id: "208",
-  name: "Bedroom",
-  value: "23.2",
-  type: "39",
-  updated: 1747450430425,  // epoch in milliseconds
-  freq: 1800
-});
+// updateChartFromJSON({
+//   id: "208",
+//   name: "Bedroom",
+//   value: "24",
+//   type: "39",
+//   updated: 1747450230425,  // epoch in milliseconds
+//   freq: 1800
+// });
+// updateChartFromJSON({
+//   id: "208",
+//   name: "Bedroom",
+//   value: "23.2",
+//   type: "39",
+//   updated: 1747450430425,  // epoch in milliseconds
+//   freq: 1800
+// });
 
 /*
 // Old below ======================================
@@ -605,6 +659,9 @@ function drawGrid() {
 
 // Draw all dash controls and the grid
 function drawDash() {
+  // Deleteme later ....
+return;
+
   setBackgroundColor(colBackground);
 
   // Not 100% this is needed?

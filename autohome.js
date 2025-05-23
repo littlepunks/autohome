@@ -37,6 +37,10 @@ let plugs = [];   // List of smart plugs/switches
 // Load environment variables
 require("dotenv").config();
 
+// Keep track of when data was last received from the gateway
+let lastDataReceived = Date.now();
+let serialConnectionErrorTriggered = false;
+
 // Initialize Express app and HTTP server
 const app = express();
 const server = http.Server(app);
@@ -59,12 +63,12 @@ const SENSORCHECKINTERVAL = 300000;  // 5 mins
 const RRDUPDATEINTERVAL = 300000;  // This should ALWAYS be 5 mins. That's what RRDTOOL expects.
 
 // Used by the decode function
-var rNode 		= "";
-var rSensor 	= "";
-var rMsgtype 	= "";
-var rAck 		= "";
-var rSubtype 	= "";
-var rPayload 	= "";
+let rNode 		= "";
+let rSensor 	= "";
+let rMsgtype 	= "";
+let rAck 		= "";
+let rSubtype 	= "";
+let rPayload 	= "";
 
 // AWS SES (Email) setup
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
@@ -168,7 +172,7 @@ if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome sta
 // if (enableTPLINK) {
 	
 // 	// Common list for smart plugs/switches
-// 	//var plugs = [];
+// 	//let plugs = [];
 
 // 	// TP-Link Smart Switch setup ---------------------------------------------------------------
 // 	const { Client } = require('tplink-smarthome-api');
@@ -179,7 +183,7 @@ if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome sta
 // 		logMsg('I',`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
 
 // 		// Assumes plug will be found
-// 		var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 		let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
 // 		decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
 
 // 		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
@@ -189,19 +193,19 @@ if (DEBUG) { sendEmail('dave.jacobsen@gmail.com',"AutoHome Debug", "AutoHome sta
 // 		device.on('power-on', () => {
 // 			logMsg('I', `TP-Link device ${device.alias} is on`);
 // 			// Need to check if it exists otherwise the decode will error
-// 			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
 // 			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
 
 // 		});
 // 		device.on('power-off', () => {
 // 			logMsg('I', `TP-Link device ${device.alias} is off`);
-// 			var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
 // 			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
 
 // 		});
 // 		device.on('in-use-update', inUse => {
 // 			//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
-// 			//var tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+// 			//let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
 // 			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
 // 		});  
 // 	});
@@ -293,6 +297,7 @@ function startSensorCheck() {
 function runSensorCheck() {
     const now = Date.now();
 
+    // Check each sesnor node for its last update time
     conf.mysensors.sensornodes.forEach(sensor => {
         let oldStatus = sensor.contact_status;
         let timeDiff = now - sensor.updated;
@@ -304,6 +309,17 @@ function runSensorCheck() {
             io.emit("SMv2", JSON.stringify(sensor));
         }
     });
+
+    // Check if the gateway has sent data recently
+    if ((lastDataReceived < (now - 2 * SENSORCHECKINTERVAL)) && (!serialConnectionErrorTriggered)) {
+        logMsg('E', 'Gateway has not sent data recently. Please check the connection.');
+        conf.mysensors.gatewayStatus = "2"; // 2 = error
+        sendEmail('dave.jacobsen@gmail.com', 'Gateway Error', 'Gateway has not sent data recently. Please check the connection.');
+        serialConnectionErrorTriggered = true;
+    } else {
+        serialConnectionErrorTriggered = false;
+    }
+
 }
 startSensorCheck();
 startPolling();
@@ -325,8 +341,8 @@ function stopTempTimer () {
 	// Write out current temperatures readings to RRDTool and generate new graphs
 	// Sensors MUST be in the order shown
 	// "U" is the value for UNKNOWN and is handled by RRDTOOL more gracefully than an empty string
-	var args = "N";
-	var getSensor;
+	let args = "N";
+	let getSensor;
 
 	// Build up RRD update string from each sensor in order
 	['Outside','Tom','Bedroom','Sophie','Michael','Laundry','Freezer','Balcony','Humidity','Pressure','Speed'].forEach(s => {
@@ -410,13 +426,14 @@ process.on('SIGINT', () => {
 logMsg('I', 'Commence opening serial port');
 
 const gw = new SerialPort({path: conf.mysensors.comport, baudRate: conf.mysensors.baud, autoOpen: conf.mysensors.autoopen});
-var gwErrFlag = true;  // We're in an error state until the port is officially open
+let gwErrFlag = true;  // We're in an error state until the port is officially open
 
 gw.open();
 gw.on('open', function() {
 	logMsg('I', 'Connected to serial gateway on ' + conf.mysensors.comport + ' at ' + conf.mysensors.baud + ' baud');
 	gwErrFlag = false;
 	}).on('data', function(data) {
+        lastDataReceived = Date.now(); // Update last data received time
 		processIncomingData(data.toString());
 		gwErrFlag = false;
 	}).on('end', function() {
@@ -446,8 +463,8 @@ function processIncomingData(str) {
 
 // Helper function to build up a message string from a sensor
 function appendData(str) {
-	var pos = 0;
-	var appendedString = "";
+	let pos = 0;
+	let appendedString = "";
 
     while (str.charAt(pos) != '\n' && pos < str.length) {
         appendedString = appendedString + str.charAt(pos);
@@ -478,7 +495,7 @@ function appendData(str) {
 // 		}
 // 		else {
 // 			logMsg('I', 'External weather data collected.');
-// 			var obj = JSON.parse(body);
+// 			let obj = JSON.parse(body);
 
 // 			// Check that there was neither an error nor an undefined object returned
 // 			if ((obj instanceof Error) || (! obj.main)) {
@@ -661,9 +678,9 @@ function decode(msg) {
 				case MS.V_SWITCH:
 				case MS.V_TEMP:
 				case MS.V_IMAGE:
-					var getSensor = conf.mysensors.sensornodes.find(sensor => sensor.id == rNode);
+					let getSensor = conf.mysensors.sensornodes.find(sensor => sensor.id == rNode);
 					if (getSensor !== undefined) {
-						var oldVal = getSensor.value;
+						let oldVal = getSensor.value;
 						getSensor.updated = new Date().getTime();
 						getSensor.value = rPayload;
 						getSensor.contact_status = '0';
@@ -770,10 +787,10 @@ function checkSensor(sensor) {
 //logMsg('I', 'Starting app.get');
 // What to serve from the root address. http://localhost/
 app.get('/', function(req, res){
-	var sendFileName = __dirname + '/dash.html';
+	let sendFileName = __dirname + '/dash.html';
 
 	// Geo check src ip
-	var geo = geoip.lookup(req.ip);
+	let geo = geoip.lookup(req.ip);
 
 	if (geo) {
 
@@ -800,7 +817,7 @@ app.get('/constants-client.js', function(req, res){
 
 // Returns JSON version of the current sensor values
 app.get('/sensors', function(req, res){
-	var sensorJSON = JSON.stringify(conf.mysensors.sensornodes);
+	let sensorJSON = JSON.stringify(conf.mysensors.sensornodes);
 	res.send(sensorJSON);
 });
 
