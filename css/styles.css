@@ -5,6 +5,10 @@ body,html {
     background-color: #153555;
 }
 .menu {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
     list-style-type: none;
     padding: 0;
     margin: 0;

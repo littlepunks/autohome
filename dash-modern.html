@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html">
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Autohome</title>
-  <link rel="stylesheet" href="styles.css"></head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
+  <link rel="stylesheet" href="styles.css">
+</head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
 <body>
 
 <ul class="menu" id="menubar">
@@ -144,32 +147,14 @@ const socket = io();
 socket.on('SMv2', (arg) => {
   const msg = typeof arg === 'string' ? JSON.parse(arg) : arg;
 
-  updateChartFromJSON(msg);
-
-  console.log(msg);
-  // if (msg.name == "Bedroom") {
-  //     //addChartDataPoint(msg.name, msg.updated, mag.value);
-
-  //     // const { name, value, updated } = jsonObj;
-
-  //     const timeISO = epochToISO(msg.updated);
-  //     let numericValue = parseFloat(msg.value);
-
-  //     if (isNaN(numericValue)) {
-  //       console.warn(`Non-numeric value for value:`, mag.value);
-  //       return;
-  //     }
-
-  //     addChartDataPoint(msg.name, timeISO, numericValue);
-  //     if (myChart1) myChart1.update();
-
-
-  // }
-
-
+  // Update the sensor value
   updateSensor(msg.name, msg.value);
-
+  // Update charts
+  updateChartFromJSON(msg);
+  // Redraw the dashboard
   drawDash();
+
+  console.log(`Sensor: ${msg.name}, Value: ${msg.value}, Updated: ${epochToISO(msg.updated)}`); 
   }
 );
 
@@ -191,6 +176,15 @@ function updateSensor(name, value) {
 
 let dash = []; // Initialize the dash array
 
+// Global Chart.js objects
+let temperatureGraph;
+let temperatureChartData = {
+  labels: [],
+  datasets: []
+};
+
+drawInitialChart(); // Call once to start
+
 // Request an initial sensor list from the server
 socket.emit('ClientMsg', 'init');
 
@@ -198,6 +192,8 @@ socket.emit('ClientMsg', 'init');
 socket.on('sensors', (arg) => {
   dash = JSON.parse(arg);
   dash.forEach(obj => {  //Set some initial values that are client specific
+    updateChartFromJSON(obj); // Add to chart data
+  
     obj.x = 0;
     obj.y = 0;
     obj.col = 0
@@ -207,7 +203,7 @@ socket.on('sensors', (arg) => {
     obj.max ??= 0;
     obj.suffix ??= ''; // Default suffix to empty string if not provided    
   });
-  console.log(dash);
+  //console.log(dash);
 
   // Update display info:
   function updateSensorLocation(data, name, col, row, enabled) {
@@ -250,7 +246,7 @@ socket.on('sensors', (arg) => {
 
 // Draw Graphs ****************
 
-  // Functon below should be able to parse rrdtool extract data into a graphable format
+  // [ NOT IN USE ] Functon below should be able to parse RRTOOL extract data into a graphable format
   //---------------
 function parseLabeledData(input) {
   // Split the input text into individual lines, removing any leading/trailing whitespace
@@ -303,32 +299,27 @@ function parseLabeledData(input) {
 }
 
 // ==========================================================================
-// Graphing/Charting section
+// Graphing/Charting
+// Using chart.js module
 // ==========================================================================
 
-// Global Chart.js objects
-let myChart1;
-let chartData = {
-  labels: [],
-  datasets: []
-};
-
 // An array of colors for the datasets
+// They are consumed in order as datasets are added
 const dataColors = [
-  'rgba(255, 0, 0, 0.2)',
-  'rgba(0, 255, 0, 0.2)',
-  'rgba(0, 0, 255, 0.2)',
+  'rgba(255, 0, 0, 0.5)',
+  'rgba(0, 255, 0, 0.5)',
+  'rgba(0, 0, 255, 0.5)',
 
-  'rgba(128, 128, 0, 0.2)',
-  'rgba(0, 128, 128, 0.2)',
-  'rgba(128, 0, 128, 0.2)',
+  'rgba(128, 128, 0, 0.5)',
+  'rgba(0, 128, 128, 0.5)',
+  'rgba(224, 0, 224, 0.5)',
 
-  'rgba(255, 128, 0, 0.2)',
-  'rgba(0, 255, 128, 0.2)',
-  'rgba(128, 0, 255, 0.2)'
+  'rgba(255, 128, 0, 0.5)',
+  'rgba(0, 255, 128, 0.5)',
+  'rgba(128, 0, 255, 0.5)'
 ];
 
-// Get canvas and set background
+// Get canvas and set background colour
 function initChartCanvas() {
   const ctx = document.getElementById('mainCanvas');
   ctx.style.backgroundColor = colBackground;
@@ -340,38 +331,32 @@ function epochToISO(epochMs) {
   return new Date(epochMs).toISOString();
 }
 
-
 // Adds a full dataset
 function addChartDataset(label, data) {
-  chartData.datasets.push({ label, data, tension: 0.4 });
+  temperatureChartData.datasets.push({ label, data, tension: 0.4 });
 }
 
 // Adds a new data point to an existing dataset (or creates one)
 function addChartDataPoint(sensorLabel, isoTime, value) {
-  // Add timestamp if it's new
-  if (!chartData.labels.includes(isoTime)) {
-    chartData.labels.push(isoTime);
+  // Add a timestamp if it doesn't already exist (x axis)
+  if (!temperatureChartData.labels.includes(isoTime)) {
+    temperatureChartData.labels.push(isoTime);
   }
 
-  // Find or create dataset
-  let dataset = chartData.datasets.find(ds => ds.label === sensorLabel);
+  // See if any existing dataset exists for the current sensor label
+  let dataset = temperatureChartData.datasets.find(ds => ds.label === sensorLabel);
   if (!dataset) {
-    // Add new colors here
-    // dataColors[chartData.datasets.length];
+    // Build a new dataset if it doesn't exist
     dataset = {
       label: sensorLabel,
       data: [],
-      backgroundColor: dataColors[chartData.datasets.length],
-      borderColor: dataColors[chartData.datasets.length],
+      backgroundColor: dataColors[temperatureChartData.datasets.length],
+      borderColor: dataColors[temperatureChartData.datasets.length],
       tension: 0.4
     };
 
-    chartData.datasets.push(dataset);
-    //console.log(chartData);
-
-    // Log the number elements in chartData.datasets to the console
-    // console.log(`Number of datasets: ${chartData.datasets.length}`);  
-    //console.log(chartData.datasets);  
+    // Add it to the chart data
+    temperatureChartData.datasets.push(dataset);
   }
 
   dataset.data.push(value);
@@ -379,34 +364,34 @@ function addChartDataPoint(sensorLabel, isoTime, value) {
 
 // Update chart from incoming JSON object
 function updateChartFromJSON(jsonObj) {
-  const { name, value, updated } = jsonObj;
+  const { name, value, updated, control } = jsonObj;
 
-  const ignoreList = ['Speed', 'Humidity', 'Pressure', 'Sunrise', 'Sunset', 'Wind', 'W Desc', 'W Main', 'Hall', 'Door'];
-
+  const includeList = ['Bedroom', 'Balcony', 'Freezer', 'Laundry', 'Tom', 'Web Temp', 'Feels Like'];
   const timeISO = epochToISO(updated);
   let numericValue = parseFloat(value);
 
-  if (isNaN(numericValue) || ignoreList.includes(name)) {
-    //console.warn(`Non-numeric value for ${name}:`, value);
-    // The small graph controls are example where value is not a number
-    // so they can be safely skipped
+  if (isNaN(numericValue) || !includeList.includes(name) || (control != 'GAU')) {
+    // The small weather icon controls are examples where value
+    // is not a number so they can be safely skipped
     return;
   }
 
   // Otherwise, add the data point to the chart
   addChartDataPoint(name, timeISO, numericValue);
-  if (myChart1) myChart1.update();
+
+  if (temperatureGraph) temperatureGraph.update();
 }
 
 // Chart configuration and instantiation
 function drawInitialChart() {
   const ctx = initChartCanvas();
 
-  const config = {
+  const temperatureChartConfig = {
     type: 'line',
-    data: chartData,
+    data: temperatureChartData,
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       layout: {
         padding: { left: 10, right: 10 }
       },
@@ -440,191 +425,14 @@ function drawInitialChart() {
   Chart.defaults.color = 'lightgray';
   Chart.defaults.font.size = 18;
 
-  // Check if a chart instance already exists on the canvas
-  // If it doesn't, create a new one
-  myChart1 = Chart.getChart(ctx);
-  if (!myChart1) {
-      myChart1 = new Chart(ctx, config);
+  // If a chart instance doesn't exist on the canvas create a new one
+  temperatureGraph = Chart.getChart(ctx);
+  if (!temperatureGraph) {
+      temperatureGraph = new Chart(ctx, temperatureChartConfig);
   } else {
-    myChart1.update();
+    temperatureGraph.update();
   }
-
-
-  // myChart1 = new Chart(ctx, config);
 }
-
-
-drawInitialChart(); // Call once to start
-
-// Later, update with new data
-// updateChartFromJSON({
-//   id: "208",
-//   name: "Bedroom",
-//   value: "23.5",
-//   updated: 1747450130425
-// });
-
-// updateChartFromJSON({
-//   id: "208",
-//   name: "Bedroom",
-//   value: "24",
-//   type: "39",
-//   updated: 1747450230425,  // epoch in milliseconds
-//   freq: 1800
-// });
-// updateChartFromJSON({
-//   id: "208",
-//   name: "Bedroom",
-//   value: "23.2",
-//   type: "39",
-//   updated: 1747450430425,  // epoch in milliseconds
-//   freq: 1800
-// });
-
-/*
-// Old below ======================================
-function drawGraphs ()  {
-  // var ctx = document.getElementById('mainCanvas');  // ctx is a canvas
-  // ctx.style.backgroundColor = colBackground;
-
-  // labels = 
-  //   [
-  //     "2025-05-16T01:56:46.804484",
-  //     "2025-05-16T02:05:46.804484",
-  //     "2025-05-16T02:16:46.804484",
-  //     "2025-05-16T02:26:46.804484",
-  //     "2025-05-16T02:38:46.804484",
-  //     "2025-05-16T02:46:46.804484",
-  //     "2025-05-16T03:08:46.804484"
-  //   ];
-    
-  // If needed here's a function to convert epoch to ISO string:
-  // function epochToISO(epochSeconds) {
-  //   // Multiply by 1000 to convert from seconds to milliseconds
-  //   const date = new Date(epochSeconds * 1000);
-  //   return date.toISOString();
-  // }
-  // e.g.
-  // const epoch = 1498656600;
-  // const isoString = epochToISO(epoch);
-  // console.log(isoString); // Outputs: "2017-06-28T00:30:00.000Z"
-
-  
-  // Add new data to the chart dataset
-  // Assumes you are entering enough data for all the labels (x-axis)
-  // e.g. addChartDataset(chartData, 'Room3', [1,2,3,4,5,6,7]);
-  function addChartDataset(chart, label, data) {
-      chart.datasets.push({label: label, data: data, tension: 0.4});
-      // chart.update();
-  }
-
-  // Add individual data as it is received
-  // e.g. addChartDataPoint(chartData, labels, 'Room3', 1234567890, 25);
-  function addChartDataPoint(chart, labels, sensorLabel, timeStamp, sensorData) {
-
-    //labels.push(timeStamp); // y-axis labels
-
-    // Check if the dataset with the given sensor name already exists
-    const dataset = chart.datasets.find(ds => ds.label === sensorLabel);
-
-    if (dataset) {
-      // If found, add the new value to the existing values array
-      dataset.data.push(sensorData);
-    } else {
-      // If not found, create a new dataset with the new name and value
-      chart.datasets.push({ label: sensorLabel, data: [sensorData], tension: 0.4 });
-    }
-
-    //  chart.update();
-    // console.log(chart);
-  }
-
-  // Start with two datasets
-  const chartData = {
-      labels: labels,
-      datasets: []
-  };
-  //addChartDataset(chartData, 'Lounge',  [15, 19, 20, 21, 26, 25, 20]);
-  addChartDataset(chartData, 'Kitchen', [24,23,20.5,19,21,17,17.5]);
-  addChartDataset(chartData, 'Bedroom', [20,19]);
-  //addChartDataset(chartData, 'Laundry', [15,21,20,18.2,16.9,15.5,14.5]);
-  // addChartDataset(chartData, 'Tommy',   [14,22,19,19.2,15.2,15.8,14.7]);
-  // addChartDataset(chartData, 'Freezer', [24,12,29,29.2,25.2,25.8,24.7]);
-
-  addChartDataPoint(chartData, labels, 'Bedroom', '12:15', 25);
-  addChartDataPoint(chartData, labels, 'Bedroom', '12:16', 25);
-  
-
-  // Set charting options
-  let config = { 
-      type: 'line',
-      data: chartData,
-      options: {
-          responsive: true,
-          layout: {
-              padding: {
-                  left: 10,
-                  right: 10
-              }
-          },
-          plugins: {
-              legend: {
-                  position: 'bottom',
-                  labels: {
-                      boxWidth: 10
-                  }
-              },
-              title: {
-                  display: true,
-                  text: 'Temperatures',
-                  font: {
-                      size: 30
-                  }
-              }
-          },
-          scales: {
-              x: {
-                type: 'time',
-                time: {
-                  parser: 'YYYY-MM-DDTHH:mm:ss',
-                  tooltipFormat: 'HH:mm',
-                  displayFormats: {
-                    minute: 'HH:mm'
-                  }
-                }
-
-              },
-              y: {
-                  grid: {
-                      color: '#505050'
-                  }
-              }
-          },
-        plugins: {
-          title: {
-            display: true,
-            text: 'Temperature Graph'
-          }
-      }
-    }
-  };
-
-  // Set default text colour and size
-  Chart.defaults.color = 'lightgray';
-  Chart.defaults.font.size = 18;
-
-  // Check if a chart instance already exists on the canvas
-  // If it doesn't, create a new one
-  var myChart1 = Chart.getChart(ctx);
-  if (!myChart1) {
-      myChart1 = new Chart(ctx, config);
-  } else {
-    myChart1.update();
-  }
-  //console.log("Display: " + ctx.style.display);
-
-};
-*/
 
 
 // Helper functions
@@ -918,18 +726,29 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimer); // Clear the previous timer
     resizeTimer = setTimeout(() => {
         // Resize the canvas and redraw
-        canvas.height = window.innerHeight - menuObj.offsetHeight-10;
-        canvas.width = (window.innerWidth > 500) ? 500 : window.innerWidth  ;
+        canvas.height = window.innerHeight - menuObj.offsetHeight;
+        canvas.width = Math.min(window.innerWidth, 500);
+
+        //const menu = document.querySelector('.menu');
+
+        // Ensure the canvas is positioned absolutely
+        //canvas.style.position = 'absolute';
+
+        // Set the top position of the canvas to the bottom of the menu
+        //canvas.style.top = menu.offsetHeight*20 + 'px';
+
+        
         margin = canvas.width /(cols*2);   // margin is half the column width
 
         colWidth = canvas.width/cols; // How far apart cells are   500 wide / 4 cols = 125 pxls
-        canvas.style.width = window.innerWidth;
-        canvas.style.height = window.innerHeight;
-
+        // canvas.style.width = window.innerWidth;
+        // canvas.style.height = window.innerHeight;
+        
         // Optionally, redraw your canvas content here
-        setBackgroundColor(colBackground);
+        //setBackgroundColor(colBackground);
         drawDash();
-    }, 100); // Adjust the delay as needed (e.g., 100ms)
+        temperatureGraph.resize();
+    }, 200); // Adjust the delay as needed (e.g., 100ms)
 
 });
 

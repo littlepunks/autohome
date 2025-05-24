@@ -80,7 +80,7 @@ const ses = new SESClient({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   }
 });
-
+    
 // Send an email using AWS SES. Send to dave.jacobsen@gmail.com by default
 async function sendEmail(mailRecipients='dave.jacobsen@gmail.com', mailSubject='Alert from Autohome', MailMessage='') {
   const params = {
