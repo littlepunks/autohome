@@ -49,6 +49,11 @@ const io = socketIo(server);
 app.use(express.urlencoded({ extended: false })); 
 app.use(express.json());
 
+app.use('/css', express.static(__dirname + '/css'));
+app.use('/js', express.static(__dirname + '/js'));
+app.use('/images', express.static(__dirname + '/images'));
+app.use('/modules', express.static(__dirname + '/modules'));
+
 // RRDTool setup
 //const rrdtool = 'C:/Users/littlepunk/Documents/autohome/rrdtool/rrdtool.exe';
 const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
@@ -827,9 +832,9 @@ app.get('/graphs', function(req, res){
 	res.sendFile(__dirname + '/graphs.html');
 });
 
-app.use(express.static('images'));
-app.use(express.static('js'));
-app.use(express.static('css'));
+// app.use(express.static('images'));
+// app.use(express.static('js'));
+// app.use(express.static('css'));
 
 logMsg('I', 'Starting io handler');
 // When a connection is made, setup the handler function

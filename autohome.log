@@ -38764,3 +38764,82 @@ I 25-05-2025 19:28:48 Got: Freezer (14): -19.8
 I 25-05-2025 19:30:00 Got: Balcony (5): 20.1
 I 25-05-2025 19:30:21 Got: Bedroom (2): 20.2
 I 25-05-2025 19:31:41 Got: Tom (1): 21.8
+I 25-05-2025 19:33:49 Got: Freezer (14): -19.3
+I 25-05-2025 19:35:01 Got: Balcony (5): 20.2
+I 25-05-2025 19:35:21 Got: Bedroom (2): 20.2
+I 25-05-2025 19:36:58 Got: Tom (1): 21.3
+I 25-05-2025 19:38:50 Got: Freezer (14): -18.8
+I 25-05-2025 19:40:02 Got: Balcony (5): 20.2
+I 25-05-2025 19:40:22 Got: Bedroom (2): 20.2
+I 25-05-2025 19:43:50 Got: Freezer (14): -18.3
+I 25-05-2025 19:45:03 Got: Balcony (5): 20.2
+I 25-05-2025 19:45:23 Got: Bedroom (2): 20.2
+I 25-05-2025 19:45:23 Requesting updated external weather.
+I 25-05-2025 19:45:23 Got: Web Temp (100): 14.3
+I 25-05-2025 19:45:23 Got: Humidity (50): 73
+I 25-05-2025 19:45:23 Got: Pressure (51): 1023
+I 25-05-2025 19:45:23 Got: Wind (202): 360
+I 25-05-2025 19:45:23 Got: Speed (203): 33
+I 25-05-2025 19:45:23 Got: Sunrise (204): 7:31 AM
+I 25-05-2025 19:45:23 Got: Sunset (205): 5:04 PM
+I 25-05-2025 19:45:23 Got: W Desc (209): broken clouds
+I 25-05-2025 19:45:23 Got: W Main (210): Clouds
+I 25-05-2025 19:45:23 Got: Feels Like (211): 13.7
+I 25-05-2025 19:45:23 Got: Weather (200): http://openweathermap.org/img/w/04n.png
+I 25-05-2025 19:45:23 Got: Tmp 1w (99): temp_graph_1w.png
+I 25-05-2025 19:45:23 Got: Hum 1w (206): humidity_1w.png
+I 25-05-2025 19:45:23 Got: Pre 1w (207): pressure_1w.png
+I 25-05-2025 19:45:23 Got: Spd 1w (208): speed_1w.png
+I 25-05-2025 19:48:51 Got: Freezer (14): -17.9
+I 25-05-2025 19:50:03 Got: Balcony (5): 20.3
+I 25-05-2025 19:50:24 Got: Bedroom (2): 20.2
+I 25-05-2025 19:52:42 Reading settings
+I 25-05-2025 19:52:42 Settings loaded
+I 25-05-2025 19:52:42 Commence opening serial port
+I 25-05-2025 19:52:42 Starting io handler
+I 25-05-2025 19:52:42 Starting http listen
+C 25-05-2025 19:52:42 Listening on *:8080
+I 25-05-2025 19:52:42 Connected to serial gateway on COM4 at 115200 baud
+I 25-05-2025 19:52:48 Got: Tom (1): 21.5
+I 25-05-2025 19:53:52 Reading settings
+I 25-05-2025 19:53:52 Settings loaded
+I 25-05-2025 19:53:52 Commence opening serial port
+I 25-05-2025 19:53:52 Starting io handler
+I 25-05-2025 19:53:52 Starting http listen
+C 25-05-2025 19:53:52 Listening on *:8080
+I 25-05-2025 19:53:52 Connected to serial gateway on COM4 at 115200 baud
+I 25-05-2025 19:55:04 Got: Balcony (5): 20.3
+I 25-05-2025 19:55:25 Got: Bedroom (2): 20.1
+I 25-05-2025 19:58:03 Reading settings
+I 25-05-2025 19:58:03 Settings loaded
+I 25-05-2025 19:58:03 Commence opening serial port
+I 25-05-2025 19:58:03 Starting http listen
+I 25-05-2025 19:58:03 Starting io handler
+C 25-05-2025 19:58:03 Listening on *:8080
+I 25-05-2025 19:58:03 Connected to serial gateway on COM4 at 115200 baud
+I 25-05-2025 19:58:53 Got: Freezer (14): -17.4
+I 25-05-2025 20:00:05 Got: Balcony (5): 20.3
+I 25-05-2025 20:00:25 Got: Bedroom (2): 20.1
+I 25-05-2025 20:03:21 Got: Tom (1): 21.3
+I 25-05-2025 20:03:54 Got: Freezer (14): -18.4
+I 25-05-2025 20:05:05 Got: Balcony (5): 20.3
+I 25-05-2025 20:05:17 Reading settings
+I 25-05-2025 20:05:17 Settings loaded
+I 25-05-2025 20:05:17 Commence opening serial port
+I 25-05-2025 20:05:17 Starting io handler
+I 25-05-2025 20:05:17 Starting http listen
+C 25-05-2025 20:05:17 Listening on *:8080
+I 25-05-2025 20:05:17 Connected to serial gateway on COM4 at 115200 baud
+I 25-05-2025 20:05:26 Got: Bedroom (2): 20.1
+I 25-05-2025 20:08:38 Got: Tom (1): 21.4
+I 25-05-2025 20:08:55 Got: Freezer (14): -18.5
+I 25-05-2025 20:10:06 Got: Balcony (5): 20.3
+I 25-05-2025 20:10:27 Got: Bedroom (2): 20.2
+I 25-05-2025 20:13:54 Got: Tom (1): 21.3
+I 25-05-2025 20:13:56 Got: Freezer (14): -20
+I 25-05-2025 20:15:07 Got: Balcony (5): 20.3
+I 25-05-2025 20:15:28 Got: Bedroom (2): 20.1
+I 25-05-2025 20:18:57 Got: Freezer (14): -20.4
+I 25-05-2025 20:20:07 Got: Balcony (5): 20.3
+I 25-05-2025 20:20:28 Got: Bedroom (2): 20.1
+I 25-05-2025 20:23:58 Got: Freezer (14): -19.8
