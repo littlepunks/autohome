@@ -188,6 +188,31 @@ drawInitialChart(); // Call once to start
 // Request an initial sensor list from the server
 socket.emit('ClientMsg', 'init');
 
+// Update sensor locations
+function updateSensorLocation(data, name, col, row, enabled) {
+  // for (let item of data) {
+  //     if (item.name === name) {
+  //       item.col = col;
+  //       item.row = row;
+  //       item.enabled = enabled;
+  //       item.x = (item.col-1) * colWidth;
+  //       item.y = (item.row-1) * colWidth;
+
+  //       break; // Stop the loop once the name is found
+  //     }
+  // }
+  const item = data.find(i => i.name === name);
+  if (item) {
+      Object.assign(item, {
+          col,
+          row,
+          enabled,
+          x: (col - 1) * colWidth,
+          y: (row - 1) * colWidth
+      });
+  }
+}
+
 // Process the initial sensor list from the server
 socket.on('sensors', (arg) => {
   dash = JSON.parse(arg);
@@ -205,20 +230,6 @@ socket.on('sensors', (arg) => {
   });
   //console.log(dash);
 
-  // Update display info:
-  function updateSensorLocation(data, name, col, row, enabled) {
-    for (let item of data) {
-        if (item.name === name) {
-          item.col = col;
-          item.row = row;
-          item.enabled = enabled;
-          item.x = (item.col-1) * colWidth;
-          item.y = (item.row-1) * colWidth;
-
-          break; // Stop the loop once the name is found
-        }
-    }
-  }
 
   // Set the initial locations of the sensors
   updateSensorLocation(dash, 'Bedroom', 1, 1, true);
@@ -366,7 +377,7 @@ function addChartDataPoint(sensorLabel, isoTime, value) {
 function updateChartFromJSON(jsonObj) {
   const { name, value, updated, control } = jsonObj;
 
-  const includeList = ['Bedroom', 'Balcony', 'Freezer', 'Laundry', 'Tom', 'Web Temp', 'Feels Like'];
+  const includeList = ['Bedroom', 'Balcony',  'Tom'];
   const timeISO = epochToISO(updated);
   let numericValue = parseFloat(value);
 
@@ -468,7 +479,7 @@ function drawGrid() {
 // Draw all dash controls and the grid
 function drawDash() {
   // Deleteme later ....
-return;
+  return;
 
   setBackgroundColor(colBackground);
 
@@ -704,7 +715,7 @@ function setBackgroundColor(color) {
 
 // Toggle menu item visibility
 function toggleMenuItem(itemId) {
-    var item = document.getElementById(itemId);
+    let item = document.getElementById(itemId);
     if (item) {
       item.style.display = (item.style.display == 'none') ? 'block' : 'none';
     }
@@ -712,7 +723,7 @@ function toggleMenuItem(itemId) {
 
 // Set menu item visibility
 function set(itemId, show) {
-    var item = document.getElementById(itemId);
+    let item = document.getElementById(itemId);
     if (item) {
         item.style.display = show ? 'block' : 'none';
     }
@@ -752,6 +763,25 @@ window.addEventListener('resize', () => {
 
 });
 
+// A popup component generator, just add content and x/y coordinates
+function createPopup(content, x, y) {
+    const popup = document.createElement("div");
+    popup.innerText = content;
+    Object.assign(popup.style, {
+        position: "absolute",
+        backgroundColor: "rgba(0,0,10,0.9)",
+        color: "white",
+        border: "1px solid white",
+        padding: "10px",
+        zIndex: "1000",
+        top: `${y}px`,
+        left: `${x}px`,
+        fontSize: "12px"
+    });
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 10000);
+}
+
 canvas.addEventListener("click", (event) => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -773,8 +803,7 @@ canvas.addEventListener("click", (event) => {
 
       // console.log(`Clicked on sensor: ${ctrl.name} (Row: ${row}, Column: ${col})`);
       // Show popup
-      const popup = document.createElement("div");
-      popup.innerText =
+      createPopup(
        `ID: ${ctrl.id}
         Name: ${ctrl.name}
         Value: ${ctrl.value}${ctrl.suffix ?? ''}
@@ -788,22 +817,7 @@ canvas.addEventListener("click", (event) => {
         Col: ${ctrl.col}
         Row: ${ctrl.row}
         Enabled: ${ctrl.enabled}
-        Control Type: ${ctrl.control}`;
-      popup.style.position = "absolute";
-      popup.style.backgroundColor = "rgba(0,0,10,0.9)";
-      popup.style.color = "white";
-      popup.style.border = "1px solid white";
-      popup.style.padding = "10px";
-      popup.style.zIndex = "1000";
-      popup.style.top = `${event.clientY}px`;
-      popup.style.left = `${event.clientX}px`;
-      popup.style.fontSize = "12px";
-      document.body.appendChild(popup);
-
-      // Remove popup after a delay
-      setTimeout(() => {
-          popup.remove();
-      }, 10000);
+        Control Type: ${ctrl.control}`,event.clientX, event.clientY);
     } else {
       //console.log(`Clicked on blank space (Row: ${row}, Column: ${col})`);
     }
