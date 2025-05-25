@@ -29,7 +29,6 @@ body,html {
 .menu li a:hover {
     background-color: #e06000;
 }
-
  
 .dropdown-content { 
     display: none;
@@ -67,7 +66,9 @@ body,html {
     background: #f0f0f0;
     border: 1px solid #ccc;
     padding: 5px;
-    display: none; /* Initially hidden */
+    display: none; /* Initially hidden then block */
+    left: 444px;
+    top: 518px;
 }
 .context-menu ul {
     list-style-type: none;

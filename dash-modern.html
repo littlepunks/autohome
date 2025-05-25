@@ -3,76 +3,68 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autohome</title>
+
+  <!-- External libraries -->
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autohome</title>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1"></script>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="styles.css">
-</head> <!-- ***** MUST REMOVE PATH WHEN USING LIVE ****-->
+
+  <!-- Project scripts -->
+      
+</head>
+
 <body>
-
-<ul class="menu" id="menubar">
-   <li><a onclick="handleItemClick('Home')">Home</a></li>
+  <ul class="menu" id="menubar">
+    <li><a onclick="handleItemClick('Home')">Home</a></li>
     
-  <li class="dropdown">
-    <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
-    <div class="dropdown-content" style="display: none;">
-      <a onclick="handleItemClick('Graphs')">Graphs</a>
-      <a href="http://192.168.68.72/autohome.html#">Mobile</a>
-      <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
-    </div>
-  </li>
-  
-  <li class="dropdown">
-    <a class="dropbtn">Services</a>
-    <div class="dropdown-content" style="display: none;">
-      <a onclick="handleItemClick('Web')">Web</a>
-      <a href="http://192.168.68.72/autohome.html#">Mobile App Development</a>
-      <a href="http://192.168.68.72/autohome.html#">UI/UX Design</a>
-    </div>
-  </li>
-  
-  <li>
-    <a id="Dev">Settings</a>
-    <div class="dropdown-content">
-      <a onclick="handleItemClick('Grid Code')">Grid Code</a>
-      <a onclick="handleItemClick('Toggle Grid')">Toggle Grid</a>
-      <a onclick="handleItemClick('Show All Items')">Show All Items</a>
-    </div>
+    <li class="dropdown">
+      <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
+      <div class="dropdown-content">
+        <a onclick="handleItemClick('Graphs')">Graphs</a>
+        <a href="http://192.168.68.72/autohome.html#">Mobile</a>
+        <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
+      </div>
+    </li>
 
-  </li>
-</ul>
-<div class="canvas-container">
-  <canvas id="mainCanvas" width="150" height="754"></canvas>
-</div>
-<div id="contextMenu" class="context-menu" style="left: 444px; top: 518px; display: block;">
-  <ul>
-      <li onclick="handleContextMenuClick('Hide')">Hide</li>
-      <li onclick="handleContextMenuClick('Something')">Something</li>
-      <li onclick="handleContextMenuClick('Else')">Else</li>
+    <li class="dropdown">
+      <a class="dropbtn">Services</a>
+      <div class="dropdown-content">
+        <a onclick="handleItemClick('Web')">Web</a>
+        <a href="http://192.168.68.72/autohome.html#">Mobile App Development</a>
+        <a href="http://192.168.68.72/autohome.html#">UI/UX Design</a>
+      </div>
+    </li>
+  
+    <li>
+      <a id="Dev">Settings</a>
+      <div class="dropdown-content">
+        <a onclick="handleItemClick('Grid Code')">Grid Code</a>
+        <a onclick="handleItemClick('Toggle Grid')">Toggle Grid</a>
+        <a onclick="handleItemClick('Show All Items')">Show All Items</a>
+      </div>
+    </li>
   </ul>
-</div>
 
+  <div class="canvas-container">
+    <canvas id="mainCanvas" width="150" height="754"></canvas>
+  </div>
+
+  <div id="contextMenu" class="context-menu">
+    <ul>
+        <li onclick="handleContextMenuClick('Hide')">Hide</li>
+        <li onclick="handleContextMenuClick('Something')">Something</li>
+        <li onclick="handleContextMenuClick('Else')">Else</li>
+    </ul>
+  </div>
+
+<!-- Eventuallu have </body> here when code below is moved to modules -->  
 <script>
-
-// ============================================================================================
-//
-// To do:
-// - Ideally when dragging a control the rest of the screen shows other controls
-// - When dragging target area should show a highlight
-// - Add switches, status, plain numbers, text, clock, alarm
-// - change language to 'controls'
-// - Better classes and values including (x,y) (r,c)
-// - Different size tiles
-// - When dragging bars, they move as gauges (?!), need common draw gauge function
-// - Change hard coded numbers like padding in pixels to ratios
-// - Doesn't resize properly when windows is very wide
-// - When resizing window the whole dash scales weirdly until you stop and do a proper refresh
-// ============================================================================================
-
-
 
 // Menu event handlers
 

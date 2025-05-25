@@ -38654,3 +38654,113 @@ I 25-05-2025 18:01:59 Got: Tom (1): 21
 I 25-05-2025 18:03:32 Got: Freezer (14): -17.6
 I 25-05-2025 18:04:49 Got: Balcony (5): 19.8
 I 25-05-2025 18:05:08 Got: Bedroom (2): 20.3
+I 25-05-2025 18:08:33 Got: Freezer (14): -17.4
+I 25-05-2025 18:09:50 Got: Balcony (5): 19.8
+I 25-05-2025 18:10:08 Got: Bedroom (2): 20.3
+I 25-05-2025 18:12:32 Got: Tom (1): 20.8
+I 25-05-2025 18:13:34 Got: Freezer (14): -17.8
+I 25-05-2025 18:14:50 Got: Balcony (5): 19.8
+I 25-05-2025 18:15:09 Got: Bedroom (2): 20.3
+I 25-05-2025 18:15:23 Requesting updated external weather.
+I 25-05-2025 18:15:23 Got: Web Temp (100): 15.4
+I 25-05-2025 18:15:23 Got: Humidity (50): 63
+I 25-05-2025 18:15:23 Got: Pressure (51): 1024
+I 25-05-2025 18:15:23 Got: Speed (203): 41
+I 25-05-2025 18:15:23 Got: Sunrise (204): 7:31 AM
+I 25-05-2025 18:15:23 Got: Wind (202): 360
+I 25-05-2025 18:15:23 Got: Sunset (205): 5:04 PM
+I 25-05-2025 18:15:23 Got: W Main (210): Clouds
+I 25-05-2025 18:15:23 Got: Feels Like (211): 14.6
+I 25-05-2025 18:15:23 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 25-05-2025 18:15:23 Got: Tmp 1w (99): temp_graph_1w.png
+I 25-05-2025 18:15:23 Got: Hum 1w (206): humidity_1w.png
+I 25-05-2025 18:15:23 Got: Pre 1w (207): pressure_1w.png
+I 25-05-2025 18:15:23 Got: Spd 1w (208): speed_1w.png
+I 25-05-2025 18:15:23 Got: W Desc (209): scattered clouds
+I 25-05-2025 18:17:48 Got: Tom (1): 21
+I 25-05-2025 18:18:35 Got: Freezer (14): -18.4
+I 25-05-2025 18:19:51 Got: Balcony (5): 19.8
+I 25-05-2025 18:20:10 Got: Bedroom (2): 20.3
+I 25-05-2025 18:23:36 Got: Freezer (14): -18.8
+I 25-05-2025 18:24:52 Got: Balcony (5): 19.9
+I 25-05-2025 18:25:11 Got: Bedroom (2): 20.3
+I 25-05-2025 18:28:37 Got: Freezer (14): -20.4
+I 25-05-2025 18:29:52 Got: Balcony (5): 19.9
+I 25-05-2025 18:30:12 Got: Bedroom (2): 20.2
+I 25-05-2025 18:33:38 Got: Freezer (14): -19.9
+I 25-05-2025 18:33:38 Got: Tom (1): 21.1
+I 25-05-2025 18:34:53 Got: Balcony (5): 19.9
+I 25-05-2025 18:35:12 Got: Bedroom (2): 20.2
+I 25-05-2025 18:38:39 Got: Freezer (14): -19.4
+I 25-05-2025 18:38:55 Got: Tom (1): 21
+I 25-05-2025 18:39:54 Got: Balcony (5): 20
+I 25-05-2025 18:40:13 Got: Bedroom (2): 20.2
+I 25-05-2025 18:43:40 Got: Freezer (14): -18.9
+I 25-05-2025 18:44:11 Got: Tom (1): 21.5
+I 25-05-2025 18:44:54 Got: Balcony (5): 20
+I 25-05-2025 18:45:14 Got: Bedroom (2): 20.2
+I 25-05-2025 18:45:23 Requesting updated external weather.
+I 25-05-2025 18:45:23 Got: Web Temp (100): 16.4
+I 25-05-2025 18:45:23 Got: Humidity (50): 59
+I 25-05-2025 18:45:23 Got: Pressure (51): 1023
+I 25-05-2025 18:45:23 Got: Speed (203): 37
+I 25-05-2025 18:45:23 Got: Sunrise (204): 7:31 AM
+I 25-05-2025 18:45:23 Got: Wind (202): 350
+I 25-05-2025 18:45:23 Got: W Desc (209): scattered clouds
+I 25-05-2025 18:45:23 Got: Sunset (205): 5:04 PM
+I 25-05-2025 18:45:23 Got: Feels Like (211): 15.6
+I 25-05-2025 18:45:23 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 25-05-2025 18:45:23 Got: Hum 1w (206): humidity_1w.png
+I 25-05-2025 18:45:23 Got: Tmp 1w (99): temp_graph_1w.png
+I 25-05-2025 18:45:23 Got: Pre 1w (207): pressure_1w.png
+I 25-05-2025 18:45:23 Got: Spd 1w (208): speed_1w.png
+I 25-05-2025 18:45:23 Got: W Main (210): Clouds
+I 25-05-2025 18:48:41 Got: Freezer (14): -18.3
+I 25-05-2025 18:49:28 Got: Tom (1): 21.8
+I 25-05-2025 18:49:55 Got: Balcony (5): 20
+I 25-05-2025 18:50:15 Got: Bedroom (2): 20.2
+I 25-05-2025 18:53:41 Got: Freezer (14): -17.9
+I 25-05-2025 18:54:56 Got: Balcony (5): 20
+I 25-05-2025 18:55:15 Got: Bedroom (2): 20.2
+I 25-05-2025 18:58:42 Got: Freezer (14): -17.6
+I 25-05-2025 18:59:56 Got: Balcony (5): 20
+I 25-05-2025 19:00:01 Got: Tom (1): 21.6
+I 25-05-2025 19:00:16 Got: Bedroom (2): 20.2
+I 25-05-2025 19:03:43 Got: Freezer (14): -17.4
+I 25-05-2025 19:04:57 Got: Balcony (5): 20.1
+I 25-05-2025 19:05:17 Got: Bedroom (2): 20.2
+I 25-05-2025 19:05:18 Got: Tom (1): 21.3
+I 25-05-2025 19:08:44 Got: Freezer (14): -18.2
+I 25-05-2025 19:09:58 Got: Balcony (5): 20.1
+I 25-05-2025 19:10:18 Got: Bedroom (2): 20.2
+I 25-05-2025 19:12:29 Sorry ::ffff:20.65.193.61 from USyou are denied
+I 25-05-2025 19:13:45 Got: Freezer (14): -18.4
+I 25-05-2025 19:14:58 Got: Balcony (5): 20.1
+I 25-05-2025 19:15:18 Got: Bedroom (2): 20.2
+I 25-05-2025 19:15:23 Requesting updated external weather.
+I 25-05-2025 19:15:23 Got: Web Temp (100): 14.8
+I 25-05-2025 19:15:23 Got: Humidity (50): 67
+I 25-05-2025 19:15:23 Got: Pressure (51): 1023
+I 25-05-2025 19:15:23 Got: Speed (203): 37
+I 25-05-2025 19:15:23 Got: Sunrise (204): 7:31 AM
+I 25-05-2025 19:15:23 Got: W Desc (209): broken clouds
+I 25-05-2025 19:15:23 Got: W Main (210): Clouds
+I 25-05-2025 19:15:23 Got: Feels Like (211): 14.1
+I 25-05-2025 19:15:23 Got: Weather (200): http://openweathermap.org/img/w/04n.png
+I 25-05-2025 19:15:23 Got: Tmp 1w (99): temp_graph_1w.png
+I 25-05-2025 19:15:23 Got: Sunset (205): 5:04 PM
+I 25-05-2025 19:15:23 Got: Pre 1w (207): pressure_1w.png
+I 25-05-2025 19:15:23 Got: Wind (202): 360
+I 25-05-2025 19:15:23 Got: Spd 1w (208): speed_1w.png
+I 25-05-2025 19:15:23 Got: Hum 1w (206): humidity_1w.png
+I 25-05-2025 19:18:46 Got: Freezer (14): -19.5
+I 25-05-2025 19:19:59 Got: Balcony (5): 20.1
+I 25-05-2025 19:20:19 Got: Bedroom (2): 20.2
+I 25-05-2025 19:23:47 Got: Freezer (14): -20.5
+I 25-05-2025 19:25:00 Got: Balcony (5): 20.1
+I 25-05-2025 19:25:20 Got: Bedroom (2): 20.2
+I 25-05-2025 19:26:24 Got: Tom (1): 21.4
+I 25-05-2025 19:28:48 Got: Freezer (14): -19.8
+I 25-05-2025 19:30:00 Got: Balcony (5): 20.1
+I 25-05-2025 19:30:21 Got: Bedroom (2): 20.2
+I 25-05-2025 19:31:41 Got: Tom (1): 21.8
