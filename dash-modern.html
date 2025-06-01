@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autohome</title>
+  <title>Autohome - Modern Dash</title>
 
   <!-- External libraries -->
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> <!-- Include Socket.io -->
@@ -26,10 +26,10 @@
     <li><a onclick="handleItemClick('Home')">Home</a></li>
     
     <li class="dropdown">
-      <a href="http://192.168.68.72/autohome.html#" class="dropbtn">Other</a>
+      <a href="http://192.168.68.72/autohome.html#" class="dropbtn">View</a>
       <div class="dropdown-content">
-        <a onclick="handleItemClick('Graphs')">Graphs</a>
-        <a href="http://192.168.68.72/autohome.html#">Mobile</a>
+        <a onclick="handleItemClick('TempGraphs')">Live Temp Graph</a>
+        <a onclick="handleItemClick('TempHistoryGraphs')">Temp History Graphs</a>
         <a href="http://192.168.68.72/autohome.html#">UI/UX</a>
       </div>
     </li>
@@ -67,7 +67,7 @@
 
 <!-- Eventuallu have </body> here when code below is moved to modules -->  
 <script>
-/*
+
 // Menu event handlers
 
 document.body.addEventListener("mouseover", (event) => {
@@ -177,7 +177,7 @@ let temperatureChartData = {
   datasets: []
 };
 
-drawInitialChart(); // Call once to start
+// *** drawInitialChart(); // Call once to start
 
 // Request an initial sensor list from the server
 socket.emit('ClientMsg', 'init');
@@ -211,7 +211,7 @@ function updateSensorLocation(data, name, col, row, enabled) {
 socket.on('sensors', (arg) => {
   dash = JSON.parse(arg);
   dash.forEach(obj => {  //Set some initial values that are client specific
-    updateChartFromJSON(obj); // Add to chart data
+    // *** updateChartFromJSON(obj); // Add to chart data
   
     obj.x = 0;
     obj.y = 0;
@@ -473,16 +473,17 @@ function drawGrid() {
 // Draw all dash controls and the grid
 function drawDash() {
   // Deleteme later ....
-  return;
+  //return;
 
   setBackgroundColor(colBackground);
 
   // Not 100% this is needed?
-  const isChart = document.getElementById('mainCanvas');
-  if (isChart) {
-    chartsCtx = isChart.getContext('2d');
-    //isChart.style.display = 'none';
-  }
+  // ***
+  // const isChart = document.getElementById('mainCanvas');
+  // if (isChart) {
+  //   chartsCtx = isChart.getContext('2d');
+  //   //isChart.style.display = 'none';
+  // }
 
   if (showGrid) drawGrid;
 
@@ -862,12 +863,15 @@ function handleItemClick(item) {
             updateAllDashItems(true);
             drawDash();
             break;
-        case "Graphs":
+        case "TempGraphs":
             // drawGraphs();
-            drawInitialChart();
+            // *** drawInitialChart();
             // let tmpGraphCtx = document.getElementById('mainCanvas');  // ctx is a canvas
             // tmpGraphCtx.style.display = 'block';
 
+            break;
+
+        case "TempHistoryGraphs":
             break;
         case "Toggle Grid":
             showGrid = !showGrid;
@@ -902,6 +906,6 @@ function copyGridCodeToClipboard() {
         console.error("Clipboard API not supported");
         alert(`Grid code (could not copy to clipboard):\n${gridTxt}`);
     }
-}*/
+}
 </script>
 </body></html>

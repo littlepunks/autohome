@@ -1,115 +1,161 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-    body {
-        background: black;
-    }
-    </style>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autohome - Experiments</title>
+
+  <!-- External libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@1.0.1"></script>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #114;
+    color: grey;
+    margin: 0;
+
+  }
+  .menu {
+    list-style-type: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 0px;
+    margin: 0;
+    background-color: #333;
+  }
+  .menu li {
+    display: inline-block;
+    padding-left: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;    
+  }
+  .menu li a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  .menu li a:hover {
+    background-color: #8b2a2a;
+  }
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #6b1a1a;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    top : 33px;
+  }
+  .dropdown-content a {
+    color: rgba(202, 64, 64, 0.678);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+</style>
 </head>
+
 <body>
-    <canvas id="myChart1" width="1" height="1"></canvas>
-    <canvas id="myChart2" width="2" height="1"></canvas>
-    <script>
-        var ctx1 = document.getElementById('myChart1');
-        var ctx2 = document.getElementById('myChart2');
-
-        // Canvas dimensions only define the x:y ratio and they are responsive
+  <ul class="menu" id="menubar">
+    <li><a onclick="handleItemClick('Home')">Home</a></li>
     
-        //const labels = ['Mon', 'Tue','Wed','Thu','Fri','Sat','Sun'];
+    <li class="dropdown">
+      <a class="dropbtn">View</a>
+      <div class="dropdown-content">
+        <a onclick="handleItemClick('Dash')">Dash</a>
+        <a onclick="handleItemClick('Graphs')">Graphs</a>
+      </div>
+    </li>
 
-        // Build labels (x-axis)
-        const labels = [];
-        for (let index = 1; index < 8; index++) {
-            let hr = '12'; //(num).toString.padStart(2,0) for leading zero
-            let min = (index*5).toString().padStart(2,0);
-            labels.push(hr + ':' + min);   
-        }
+    <li class="dropdown">
+      <a class="dropbtn">Services</a>
+      <div class="dropdown-content">
+        <a onclick="handleItemClick('Web')">Web</a>
+        <a onclick="handleItemClick('Settings')">Settings</a>
+      </div>
+    </li>
+  </ul>
 
-        // Start with two datasets
-        const data = {
-            labels: labels,
-            datasets: [{
-                label: 'Lounge',
-                data: [15, 19, 20, 21, 26, 25, 20],
-                tension: 0.4
-            },
-            {
-                label: 'Kitchen',
-                data: [24,23,20.5,19,21,17,17.5],
-                tension: 0.4
-            }
-            ]
-        };
-    
-        // Add more datasets
-        data.datasets.push({
-            label: 'Bedroom',
-            data: [14,13,18,11,16,19,18],
-            tension: 0.4
-        });
-        data.datasets.push({
-            label: 'Laundry',
-            data: [15,21,20,18.2,16.9,15.5,14.5],
-            tension: 0.4
-        });
-        data.datasets.push({
-            label: 'Tommy',
-            data: [14,22,19,19.2,15.2,15.8,14.7],
-            tension: 0.4
-        });
+  <div class="canvas-container">
+    <canvas id="canvasA" width="150" height="150"></canvas> <!-- blue -->
+    <canvas id="canvasB" width="150" height="150"></canvas> <!-- red  -->
+  </div>
+<script>
+
+const canvasA = document.getElementById('canvasA');
+const ctxA = canvasA.getContext('2d');
+const canvasB = document.getElementById('canvasB');
+const ctxB = canvasB.getContext('2d');
+
+setBackgroundColor('blue', ctxA, canvasA);
+setBackgroundColor('red', ctxB, canvasB);
 
 
-        let config = { 
-            type: 'line',
-            data: data,
-            options: {
-                responsive: true,
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 10
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            boxWidth: 10
-                        }
-                    },
-                    title: {
-                        display: true,
-                        text: 'Temperatures',
-                        font: {
-                            size: 30
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            color: '#303030'
-                        }
-                    },
-                    y: {
-                        grid: {
-                            color: '#505050'
-                        }
-                    }
-                }
-            }
-        };
-    
-        Chart.defaults.color = 'lightgray'; // Default color for all text
-        Chart.defaults.font.size = 18; // Default font size for all text
-        var myChart1 = new Chart(ctx1, config);
+function setVisibleCanvas(canvasId) {
+  if (canvasId === 'canvasA') {
+    canvasA.style.display = 'block';
+    canvasB.style.display = 'none';
+  } else if (canvasId === 'canvasB') {
+    canvasA.style.display = 'none';
+    canvasB.style.display = 'block';
+  }
+}
 
-        // Tweak title and draw second chart
-        config.options.plugins.title.text = 'Humidity';
-        var myChart2 = new Chart(ctx2, config);
-    </script>
+canvasA.style.display = 'block';  // Blue
+canvasB.style.display = 'none';  // Red
 
-    </body>
-</html>
+// Draw a black circle on canvasB
+ctxA.beginPath();
+ctxA.arc(75, 75, 50, 0, Math.PI * 2);
+ctxA.fillStyle = 'black';
+ctxA.fill();
+ctxA.closePath();
+
+// Draw a white circle on canvasB
+ctxB.beginPath();
+ctxB.arc(75, 75, 50, 0, Math.PI * 2);
+ctxB.fillStyle = 'white';
+ctxB.fill();
+ctxB.closePath();
+
+function handleItemClick(item) {
+  console.log(`Clicked on: ${item}`);
+  switch (item) {
+    case 'Dash':
+      setVisibleCanvas('canvasA'); // Show blue canvas
+      break;
+    case 'Graphs':
+      setVisibleCanvas('canvasB'); // Show red canvas
+      // Handle graphs logic here
+      break;
+    default:
+      console.log('Unknown item clicked');
+  }
+  // Add your logic here for handling item clicks
+}
+
+
+// Set background
+function setBackgroundColor(color, ctx, canvas) {
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+</script>
+</body></html>

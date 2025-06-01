@@ -32,6 +32,15 @@ require("dotenv").config();
 // Modules
 const MS = require("./modules/constants.js"); // MySensors API constants
 
+// Smart Plug definitions
+const enableWEMO   = false;   // Set to true to enable Wemo smart switches
+const enableTPLINK = true;   // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
+const enableTUYA   = false;   // Set to true to enable TUYA smart switches - WILL NEED TO UNCOMMENT RELATED CODE
+let plugs = [];   // List of smart plugs/switches
+
+
+
+
 // Get command-line arguments
 
 // Extract arguments
@@ -169,6 +178,8 @@ function runSensorCheck() {
     }
 
 }
+
+// Get things started
 startSensorCheck();
 startPolling();
 
@@ -449,6 +460,9 @@ function logMsg(type, txt) {
     });
 }
 
+const smartPlugs = require("./js/smart-devices.js"); // Smart devices module for TP-Link and Tuya
+
+smartPlugs.startTPLink(); // Start TP-Link smart switch handling
 
 // Decode a message received from a sensor
 function decode(msg) {
@@ -606,6 +620,11 @@ app.get('/', function(req, res){
 // Used for testing
 app.get('/test', function(req, res){
 	res.sendFile(__dirname + '/dash-modern.html');
+});
+
+// Used for testing
+app.get('/test2', function(req, res){
+	res.sendFile(__dirname + '/test.html');
 });
 
 // Used for testing
