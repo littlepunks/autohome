@@ -7,7 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Menu item click handler
   window.handleItemClick = function (action) {
     switch (action) {
-      case 'Graphs':
+      case 'Home':
+        window.destroyChart();
+        window.drawDash();
+        break;
+      case 'TempGraphs':
+        window.drawInitialChart();
+        break;
+      case 'TempHistoryGraphs':
         window.location.href = '/graphs';
         break;
       case 'Toggle Grid':
@@ -20,9 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case 'Grid Code':
         console.log('Grid code toggle requested (not implemented)');
-        break;
-      case 'Web':
-        window.open('https://your-site.com', '_blank');
         break;
       default:
         console.log(`Unhandled menu action: ${action}`);

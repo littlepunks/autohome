@@ -50936,3 +50936,1523 @@ I 01-06-2025 17:40:37 Got: Bedroom (2): 20.5
 I 01-06-2025 17:42:25 Got: Balcony (5): 19.3
 I 01-06-2025 17:43:41 Got: Freezer (14): -18.3
 I 01-06-2025 17:45:38 Got: Bedroom (2): 20.5
+I 01-06-2025 17:47:07 Got: Tom (1): 21.6
+I 01-06-2025 17:47:26 Got: Balcony (5): 19.3
+I 01-06-2025 17:48:01 Requesting updated external weather.
+I 01-06-2025 17:48:01 Got: Web Temp (100): 11.4
+I 01-06-2025 17:48:01 Got: Humidity (50): 71
+I 01-06-2025 17:48:01 Got: Pressure (51): 1017
+I 01-06-2025 17:48:01 Got: Speed (203): 6
+I 01-06-2025 17:48:01 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 17:48:01 Got: Sunset (205): 5:00 PM
+I 01-06-2025 17:48:01 Got: Wind (202): 140
+I 01-06-2025 17:48:01 Got: W Main (210): Clouds
+I 01-06-2025 17:48:01 Got: W Desc (209): few clouds
+I 01-06-2025 17:48:01 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 17:48:01 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 17:48:01 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 17:48:01 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 17:48:01 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 17:48:01 Got: Feels Like (211): 10.4
+I 01-06-2025 17:48:42 Got: Freezer (14): -18.3
+I 01-06-2025 17:50:38 Got: Bedroom (2): 20.4
+I 01-06-2025 17:52:26 Got: Balcony (5): 19.3
+I 01-06-2025 17:53:43 Got: Freezer (14): -20.5
+I 01-06-2025 17:55:39 Got: Bedroom (2): 20.4
+I 01-06-2025 17:57:27 Got: Balcony (5): 19.3
+I 01-06-2025 17:58:44 Got: Freezer (14): -20.4
+I 01-06-2025 18:00:40 Got: Bedroom (2): 20.4
+I 01-06-2025 18:02:28 Got: Balcony (5): 19.3
+I 01-06-2025 18:03:45 Got: Freezer (14): -19.6
+I 01-06-2025 18:05:41 Got: Bedroom (2): 20.3
+I 01-06-2025 18:07:28 Got: Balcony (5): 19.3
+I 01-06-2025 18:09:07 Settings loaded
+I 01-06-2025 18:09:07 Reading settings
+I 01-06-2025 18:09:07 Commence opening serial port
+I 01-06-2025 18:09:07 Starting io handler
+I 01-06-2025 18:09:07 Starting http listen
+C 01-06-2025 18:09:07 Listening on *:8080
+I 01-06-2025 18:09:07 Connected to serial gateway on COM4 at 115200 baud
+I 01-06-2025 18:11:05 Reading settings
+I 01-06-2025 18:11:05 Settings loaded
+I 01-06-2025 18:11:05 Commence opening serial port
+I 01-06-2025 18:11:05 Starting io handler
+I 01-06-2025 18:11:05 Starting http listen
+C 01-06-2025 18:11:05 Listening on *:8080
+I 01-06-2025 18:11:05 Connected to serial gateway on COM4 at 115200 baud
+I 01-06-2025 18:11:53 Reading settings
+I 01-06-2025 18:11:53 Settings loaded
+I 01-06-2025 18:11:53 Commence opening serial port
+I 01-06-2025 18:11:53 Starting io handler
+I 01-06-2025 18:11:53 Starting http listen
+C 01-06-2025 18:11:53 Listening on *:8080
+I 01-06-2025 18:11:53 Connected to serial gateway on COM4 at 115200 baud
+I 01-06-2025 18:12:29 Got: Balcony (5): 19.3
+I 01-06-2025 18:13:46 Got: Freezer (14): -18.6
+I 01-06-2025 18:15:42 Got: Bedroom (2): 20.3
+I 01-06-2025 18:17:30 Got: Balcony (5): 19.3
+I 01-06-2025 18:18:47 Got: Freezer (14): -18.4
+I 01-06-2025 18:20:43 Got: Bedroom (2): 20.3
+I 01-06-2025 18:22:30 Got: Balcony (5): 19.3
+I 01-06-2025 18:23:48 Got: Freezer (14): -18.3
+I 01-06-2025 18:25:44 Got: Bedroom (2): 20.3
+I 01-06-2025 18:27:31 Got: Balcony (5): 19.3
+I 01-06-2025 18:28:49 Got: Freezer (14): -18.1
+I 01-06-2025 18:30:44 Got: Bedroom (2): 20.3
+I 01-06-2025 18:32:32 Got: Balcony (5): 19.3
+I 01-06-2025 18:33:50 Got: Freezer (14): -18
+I 01-06-2025 18:35:45 Got: Bedroom (2): 20.2
+I 01-06-2025 18:37:32 Got: Balcony (5): 19.3
+I 01-06-2025 18:38:51 Got: Freezer (14): -18.1
+I 01-06-2025 18:39:48 Reading settings
+I 01-06-2025 18:39:48 Settings loaded
+I 01-06-2025 18:39:48 Commence opening serial port
+I 01-06-2025 18:39:48 Starting io handler
+I 01-06-2025 18:39:48 Starting http listen
+C 01-06-2025 18:39:48 Listening on *:8080
+I 01-06-2025 18:39:48 Connected to serial gateway on COM4 at 115200 baud
+I 01-06-2025 18:40:46 Got: Bedroom (2): 20.2
+I 01-06-2025 18:42:33 Got: Balcony (5): 19.3
+I 01-06-2025 18:43:52 Got: Freezer (14): -18.1
+I 01-06-2025 18:45:47 Got: Bedroom (2): 20.2
+I 01-06-2025 18:47:34 Got: Balcony (5): 19.3
+I 01-06-2025 18:48:53 Got: Freezer (14): -20.5
+I 01-06-2025 18:50:47 Got: Bedroom (2): 20.1
+I 01-06-2025 18:52:35 Got: Balcony (5): 19.3
+I 01-06-2025 18:53:54 Got: Freezer (14): -20.5
+I 01-06-2025 18:55:48 Got: Bedroom (2): 20.1
+I 01-06-2025 18:57:35 Got: Balcony (5): 19.3
+I 01-06-2025 18:58:55 Got: Freezer (14): -19.8
+I 01-06-2025 19:00:49 Got: Bedroom (2): 20.1
+I 01-06-2025 19:02:36 Got: Balcony (5): 19.3
+I 01-06-2025 19:03:55 Got: Freezer (14): -19
+I 01-06-2025 19:05:50 Got: Bedroom (2): 20.1
+I 01-06-2025 19:06:18 Got: Tom (1): 21.4
+I 01-06-2025 19:07:37 Got: Balcony (5): 19.3
+I 01-06-2025 19:08:56 Got: Freezer (14): -18.6
+I 01-06-2025 19:09:48 Requesting updated external weather.
+I 01-06-2025 19:09:48 Got: Web Temp (100): 8.4
+I 01-06-2025 19:09:48 Got: Humidity (50): 81
+I 01-06-2025 19:09:48 Got: Pressure (51): 1018
+I 01-06-2025 19:09:48 Got: Wind (202): 30
+I 01-06-2025 19:09:48 Got: Speed (203): 6
+I 01-06-2025 19:09:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 19:09:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 19:09:48 Got: W Desc (209): few clouds
+I 01-06-2025 19:09:48 Got: W Main (210): Clouds
+I 01-06-2025 19:09:48 Got: Feels Like (211): 7.7
+I 01-06-2025 19:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 19:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 19:09:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 19:09:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 19:09:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 19:10:50 Got: Bedroom (2): 20.1
+I 01-06-2025 19:11:35 Got: Tom (1): 21.2
+I 01-06-2025 19:12:37 Got: Balcony (5): 19.3
+I 01-06-2025 19:13:57 Got: Freezer (14): -18.5
+I 01-06-2025 19:15:51 Got: Bedroom (2): 20
+I 01-06-2025 19:16:51 Got: Tom (1): 21.1
+I 01-06-2025 19:17:38 Got: Balcony (5): 19.3
+I 01-06-2025 19:18:58 Got: Freezer (14): -18.3
+I 01-06-2025 19:20:52 Got: Bedroom (2): 20
+I 01-06-2025 19:22:08 Got: Tom (1): 21.3
+I 01-06-2025 19:22:39 Got: Balcony (5): 19.3
+I 01-06-2025 19:23:59 Got: Freezer (14): -18.1
+I 01-06-2025 19:25:53 Got: Bedroom (2): 20
+I 01-06-2025 19:27:25 Got: Tom (1): 21.5
+I 01-06-2025 19:27:39 Got: Balcony (5): 19.3
+I 01-06-2025 19:29:00 Got: Freezer (14): -18
+I 01-06-2025 19:30:54 Got: Bedroom (2): 20
+I 01-06-2025 19:32:40 Got: Balcony (5): 19.3
+I 01-06-2025 19:32:41 Got: Tom (1): 21.3
+I 01-06-2025 19:34:01 Got: Freezer (14): -18.3
+I 01-06-2025 19:35:54 Got: Bedroom (2): 20
+I 01-06-2025 19:37:41 Got: Balcony (5): 19.3
+I 01-06-2025 19:37:58 Got: Tom (1): 21
+I 01-06-2025 19:39:02 Got: Freezer (14): -18.2
+I 01-06-2025 19:39:48 Requesting updated external weather.
+I 01-06-2025 19:39:48 Got: Web Temp (100): 7.4
+I 01-06-2025 19:39:48 Got: Humidity (50): 87
+I 01-06-2025 19:39:48 Got: Pressure (51): 1018
+I 01-06-2025 19:39:48 Got: Wind (202): 10
+I 01-06-2025 19:39:48 Got: Speed (203): 6
+I 01-06-2025 19:39:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 19:39:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 19:39:48 Got: W Desc (209): few clouds
+I 01-06-2025 19:39:48 Got: W Main (210): Clouds
+I 01-06-2025 19:39:48 Got: Feels Like (211): 6.6
+I 01-06-2025 19:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 19:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 19:39:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 19:39:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 19:39:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 19:40:55 Got: Bedroom (2): 19.9
+I 01-06-2025 19:42:41 Got: Balcony (5): 19.3
+I 01-06-2025 19:43:14 Got: Tom (1): 21.5
+I 01-06-2025 19:44:03 Got: Freezer (14): -20
+I 01-06-2025 19:45:56 Got: Bedroom (2): 19.9
+I 01-06-2025 19:47:42 Got: Balcony (5): 19.3
+I 01-06-2025 19:48:31 Got: Tom (1): 21.3
+I 01-06-2025 19:49:04 Got: Freezer (14): -20.6
+I 01-06-2025 19:50:57 Got: Bedroom (2): 19.8
+I 01-06-2025 19:52:43 Got: Balcony (5): 19.3
+I 01-06-2025 19:54:04 Got: Freezer (14): -19.8
+I 01-06-2025 19:55:57 Got: Bedroom (2): 19.8
+I 01-06-2025 19:57:43 Got: Balcony (5): 19.2
+I 01-06-2025 19:59:05 Got: Tom (1): 21
+I 01-06-2025 19:59:05 Got: Freezer (14): -19
+I 01-06-2025 20:00:58 Got: Bedroom (2): 19.8
+I 01-06-2025 20:02:44 Got: Balcony (5): 19.2
+I 01-06-2025 20:04:06 Got: Freezer (14): -18.5
+I 01-06-2025 20:04:21 Got: Tom (1): 20.9
+I 01-06-2025 20:05:59 Got: Bedroom (2): 19.8
+I 01-06-2025 20:06:28 Sorry ::ffff:87.236.176.193 from GByou are denied
+I 01-06-2025 20:07:45 Got: Balcony (5): 19.3
+I 01-06-2025 20:09:07 Got: Freezer (14): -18.3
+I 01-06-2025 20:09:38 Got: Tom (1): 20.8
+I 01-06-2025 20:09:48 Requesting updated external weather.
+I 01-06-2025 20:09:48 Got: Web Temp (100): 7.4
+I 01-06-2025 20:09:48 Got: Humidity (50): 87
+I 01-06-2025 20:09:48 Got: Pressure (51): 1018
+I 01-06-2025 20:09:48 Got: Wind (202): 10
+I 01-06-2025 20:09:48 Got: Speed (203): 6
+I 01-06-2025 20:09:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 20:09:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 20:09:48 Got: W Desc (209): few clouds
+I 01-06-2025 20:09:48 Got: W Main (210): Clouds
+I 01-06-2025 20:09:48 Got: Feels Like (211): 6.6
+I 01-06-2025 20:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 20:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 20:09:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 20:09:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 20:09:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 20:11:00 Got: Bedroom (2): 19.8
+I 01-06-2025 20:12:45 Got: Balcony (5): 19.2
+I 01-06-2025 20:14:08 Got: Freezer (14): -18.2
+I 01-06-2025 20:16:00 Got: Bedroom (2): 19.8
+I 01-06-2025 20:17:46 Got: Balcony (5): 19.2
+I 01-06-2025 20:19:09 Got: Freezer (14): -18.1
+I 01-06-2025 20:21:01 Got: Bedroom (2): 19.7
+I 01-06-2025 20:22:47 Got: Balcony (5): 19.3
+I 01-06-2025 20:24:10 Got: Freezer (14): -17.9
+I 01-06-2025 20:26:02 Got: Bedroom (2): 19.7
+I 01-06-2025 20:27:47 Got: Balcony (5): 19.2
+I 01-06-2025 20:29:11 Got: Freezer (14): -18.1
+I 01-06-2025 20:30:44 Got: Tom (1): 21.1
+I 01-06-2025 20:31:03 Got: Bedroom (2): 19.7
+I 01-06-2025 20:32:48 Got: Balcony (5): 19.2
+I 01-06-2025 20:34:12 Got: Freezer (14): -18.1
+I 01-06-2025 20:36:01 Got: Tom (1): 21.4
+I 01-06-2025 20:36:03 Got: Bedroom (2): 19.6
+I 01-06-2025 20:37:49 Got: Balcony (5): 19.2
+I 01-06-2025 20:39:12 Got: Freezer (14): -19.1
+I 01-06-2025 20:39:48 Requesting updated external weather.
+I 01-06-2025 20:39:48 Got: Web Temp (100): 8.4
+I 01-06-2025 20:39:48 Got: Humidity (50): 87
+I 01-06-2025 20:39:48 Got: Pressure (51): 1018
+I 01-06-2025 20:39:48 Got: Speed (203): 6
+I 01-06-2025 20:39:48 Got: Wind (202): 40
+I 01-06-2025 20:39:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 20:39:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 20:39:48 Got: W Desc (209): clear sky
+I 01-06-2025 20:39:48 Got: W Main (210): Clear
+I 01-06-2025 20:39:48 Got: Feels Like (211): 7.7
+I 01-06-2025 20:39:48 Got: Weather (200): http://openweathermap.org/img/w/01n.png
+I 01-06-2025 20:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 20:39:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 20:39:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 20:39:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 20:41:04 Got: Bedroom (2): 19.6
+I 01-06-2025 20:42:49 Got: Balcony (5): 19.3
+I 01-06-2025 20:44:13 Got: Freezer (14): -20
+I 01-06-2025 20:46:05 Got: Bedroom (2): 19.6
+I 01-06-2025 20:46:34 Got: Tom (1): 21.5
+I 01-06-2025 20:47:50 Got: Balcony (5): 19.2
+I 01-06-2025 20:49:14 Got: Freezer (14): -19.3
+I 01-06-2025 20:51:06 Got: Bedroom (2): 19.6
+I 01-06-2025 20:51:51 Got: Tom (1): 21.4
+I 01-06-2025 20:52:51 Got: Balcony (5): 19.2
+I 01-06-2025 20:54:15 Got: Freezer (14): -18.8
+I 01-06-2025 20:56:06 Got: Bedroom (2): 19.6
+I 01-06-2025 20:57:51 Got: Balcony (5): 19.2
+I 01-06-2025 20:59:16 Got: Freezer (14): -18.4
+I 01-06-2025 21:01:07 Got: Bedroom (2): 19.5
+I 01-06-2025 21:02:52 Got: Balcony (5): 19.2
+I 01-06-2025 21:04:17 Got: Freezer (14): -18.2
+I 01-06-2025 21:06:08 Got: Bedroom (2): 19.5
+I 01-06-2025 21:07:41 Got: Tom (1): 21.1
+I 01-06-2025 21:07:53 Got: Balcony (5): 19.2
+I 01-06-2025 21:09:18 Got: Freezer (14): -18.1
+I 01-06-2025 21:09:48 Requesting updated external weather.
+I 01-06-2025 21:09:48 Got: Web Temp (100): 8.4
+I 01-06-2025 21:09:48 Got: Humidity (50): 87
+I 01-06-2025 21:09:48 Got: Pressure (51): 1018
+I 01-06-2025 21:09:48 Got: Wind (202): 10
+I 01-06-2025 21:09:48 Got: Speed (203): 4
+I 01-06-2025 21:09:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 21:09:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 21:09:48 Got: W Desc (209): scattered clouds
+I 01-06-2025 21:09:48 Got: W Main (210): Clouds
+I 01-06-2025 21:09:48 Got: Feels Like (211): 8.4
+I 01-06-2025 21:09:48 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 01-06-2025 21:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 21:09:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 21:09:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 21:09:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 21:11:09 Got: Bedroom (2): 19.5
+I 01-06-2025 21:12:53 Got: Balcony (5): 19.2
+I 01-06-2025 21:12:58 Got: Tom (1): 21.3
+I 01-06-2025 21:14:19 Got: Freezer (14): -17.9
+I 01-06-2025 21:16:09 Got: Bedroom (2): 19.5
+I 01-06-2025 21:17:54 Got: Balcony (5): 19.1
+I 01-06-2025 21:19:20 Got: Freezer (14): -17.8
+I 01-06-2025 21:21:10 Got: Bedroom (2): 19.5
+I 01-06-2025 21:22:55 Got: Balcony (5): 19.1
+I 01-06-2025 21:23:31 Got: Tom (1): 21.4
+I 01-06-2025 21:24:21 Got: Freezer (14): -18
+I 01-06-2025 21:26:11 Got: Bedroom (2): 19.5
+I 01-06-2025 21:27:55 Got: Balcony (5): 19.1
+I 01-06-2025 21:29:21 Got: Freezer (14): -17.9
+I 01-06-2025 21:31:12 Got: Bedroom (2): 19.4
+I 01-06-2025 21:32:56 Got: Balcony (5): 19.1
+I 01-06-2025 21:34:04 Got: Tom (1): 21.5
+I 01-06-2025 21:34:22 Got: Freezer (14): -18.9
+I 01-06-2025 21:36:13 Got: Bedroom (2): 19.4
+I 01-06-2025 21:37:57 Got: Balcony (5): 19.1
+I 01-06-2025 21:39:23 Got: Freezer (14): -20.1
+I 01-06-2025 21:39:48 Requesting updated external weather.
+I 01-06-2025 21:39:48 Got: Web Temp (100): 8.4
+I 01-06-2025 21:39:48 Got: Humidity (50): 87
+I 01-06-2025 21:39:48 Got: Pressure (51): 1018
+I 01-06-2025 21:39:48 Got: Wind (202): 10
+I 01-06-2025 21:39:48 Got: Speed (203): 4
+I 01-06-2025 21:39:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 21:39:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 21:39:48 Got: W Desc (209): scattered clouds
+I 01-06-2025 21:39:48 Got: W Main (210): Clouds
+I 01-06-2025 21:39:48 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 01-06-2025 21:39:48 Got: Feels Like (211): 8.4
+I 01-06-2025 21:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 21:39:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 21:39:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 21:39:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 21:41:13 Got: Bedroom (2): 19.4
+I 01-06-2025 21:42:57 Got: Balcony (5): 19.1
+I 01-06-2025 21:44:24 Got: Freezer (14): -19.8
+I 01-06-2025 21:46:14 Got: Bedroom (2): 19.4
+I 01-06-2025 21:47:58 Got: Balcony (5): 19.1
+I 01-06-2025 21:49:25 Got: Freezer (14): -19.1
+I 01-06-2025 21:51:15 Got: Bedroom (2): 19.3
+I 01-06-2025 21:52:59 Got: Balcony (5): 19.1
+I 01-06-2025 21:54:26 Got: Freezer (14): -18.7
+I 01-06-2025 21:56:16 Got: Bedroom (2): 19.3
+I 01-06-2025 21:57:59 Got: Balcony (5): 19.1
+I 01-06-2025 21:59:27 Got: Freezer (14): -18.5
+I 01-06-2025 22:01:16 Got: Bedroom (2): 19.3
+I 01-06-2025 22:03:00 Got: Balcony (5): 19.2
+I 01-06-2025 22:04:28 Got: Freezer (14): -18.3
+I 01-06-2025 22:05:44 Got: Tom (1): 21.3
+I 01-06-2025 22:06:17 Got: Bedroom (2): 19.3
+I 01-06-2025 22:08:01 Got: Balcony (5): 19.2
+I 01-06-2025 22:09:29 Got: Freezer (14): -18.1
+I 01-06-2025 22:09:48 Requesting updated external weather.
+I 01-06-2025 22:09:48 Got: Web Temp (100): 8.4
+I 01-06-2025 22:09:48 Got: Humidity (50): 87
+I 01-06-2025 22:09:48 Got: Pressure (51): 1018
+I 01-06-2025 22:09:48 Got: Wind (202): 10
+I 01-06-2025 22:09:48 Got: Speed (203): 6
+I 01-06-2025 22:09:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 22:09:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 22:09:48 Got: W Desc (209): few clouds
+I 01-06-2025 22:09:48 Got: W Main (210): Clouds
+I 01-06-2025 22:09:48 Got: Feels Like (211): 7.7
+I 01-06-2025 22:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 22:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 22:09:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 22:09:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 22:09:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 22:11:01 Got: Tom (1): 21.2
+I 01-06-2025 22:11:18 Got: Bedroom (2): 19.3
+I 01-06-2025 22:13:01 Got: Balcony (5): 19.2
+I 01-06-2025 22:14:30 Got: Freezer (14): -18
+I 01-06-2025 22:16:18 Got: Tom (1): 21
+I 01-06-2025 22:16:19 Got: Bedroom (2): 19.3
+I 01-06-2025 22:18:02 Got: Balcony (5): 19.1
+I 01-06-2025 22:19:30 Got: Freezer (14): -18.1
+I 01-06-2025 22:21:19 Got: Bedroom (2): 19.3
+I 01-06-2025 22:21:34 Got: Tom (1): 20.8
+I 01-06-2025 22:23:03 Got: Balcony (5): 19.1
+I 01-06-2025 22:24:31 Got: Freezer (14): -18.1
+I 01-06-2025 22:26:20 Got: Bedroom (2): 19.2
+I 01-06-2025 22:26:51 Got: Tom (1): 20.6
+I 01-06-2025 22:28:04 Got: Balcony (5): 19.1
+I 01-06-2025 22:29:32 Got: Freezer (14): -18.6
+I 01-06-2025 22:31:21 Got: Bedroom (2): 19.1
+I 01-06-2025 22:33:04 Got: Balcony (5): 19
+I 01-06-2025 22:34:33 Got: Freezer (14): -20.5
+I 01-06-2025 22:36:22 Got: Bedroom (2): 19.1
+I 01-06-2025 22:37:24 Got: Tom (1): 20.5
+I 01-06-2025 22:38:05 Got: Balcony (5): 18.9
+I 01-06-2025 22:39:34 Got: Freezer (14): -19.9
+I 01-06-2025 22:39:48 Requesting updated external weather.
+I 01-06-2025 22:39:48 Got: Web Temp (100): 8.4
+I 01-06-2025 22:39:48 Got: Humidity (50): 87
+I 01-06-2025 22:39:48 Got: Pressure (51): 1018
+I 01-06-2025 22:39:48 Got: Speed (203): 6
+I 01-06-2025 22:39:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 22:39:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 22:39:48 Got: W Desc (209): few clouds
+I 01-06-2025 22:39:48 Got: W Main (210): Clouds
+I 01-06-2025 22:39:48 Got: Feels Like (211): 7.7
+I 01-06-2025 22:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 22:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 22:39:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 22:39:48 Got: Wind (202): 10
+I 01-06-2025 22:39:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 22:39:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 22:41:22 Got: Bedroom (2): 19.1
+I 01-06-2025 22:43:06 Got: Balcony (5): 18.8
+I 01-06-2025 22:44:35 Got: Freezer (14): -19.1
+I 01-06-2025 22:46:23 Got: Bedroom (2): 19.1
+I 01-06-2025 22:47:57 Got: Tom (1): 20.3
+I 01-06-2025 22:48:06 Got: Balcony (5): 18.8
+I 01-06-2025 22:49:36 Got: Freezer (14): -18.5
+I 01-06-2025 22:51:24 Got: Bedroom (2): 19.1
+I 01-06-2025 22:53:07 Got: Balcony (5): 18.7
+I 01-06-2025 22:53:14 Got: Tom (1): 20.2
+I 01-06-2025 22:54:37 Got: Freezer (14): -18.3
+I 01-06-2025 22:56:25 Got: Bedroom (2): 19
+I 01-06-2025 22:58:08 Got: Balcony (5): 18.6
+I 01-06-2025 22:58:30 Got: Tom (1): 20.1
+I 01-06-2025 22:59:38 Got: Freezer (14): -18.2
+I 01-06-2025 23:01:25 Got: Bedroom (2): 19
+I 01-06-2025 23:03:08 Got: Balcony (5): 18.6
+I 01-06-2025 23:03:47 Got: Tom (1): 20
+I 01-06-2025 23:04:39 Got: Freezer (14): -18
+I 01-06-2025 23:06:26 Got: Bedroom (2): 19
+I 01-06-2025 23:08:09 Got: Balcony (5): 18.5
+I 01-06-2025 23:09:03 Got: Tom (1): 19.8
+I 01-06-2025 23:09:39 Got: Freezer (14): -17.8
+I 01-06-2025 23:09:48 Requesting updated external weather.
+I 01-06-2025 23:09:48 Got: Web Temp (100): 7.4
+I 01-06-2025 23:09:48 Got: Humidity (50): 93
+I 01-06-2025 23:09:48 Got: Pressure (51): 1018
+I 01-06-2025 23:09:48 Got: Wind (202): 10
+I 01-06-2025 23:09:48 Got: Speed (203): 6
+I 01-06-2025 23:09:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 23:09:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 23:09:48 Got: W Desc (209): few clouds
+I 01-06-2025 23:09:48 Got: W Main (210): Clouds
+I 01-06-2025 23:09:48 Got: Feels Like (211): 6.6
+I 01-06-2025 23:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 01-06-2025 23:09:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 23:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 23:09:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 23:09:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 23:11:27 Got: Bedroom (2): 19
+I 01-06-2025 23:13:10 Got: Balcony (5): 18.5
+I 01-06-2025 23:14:19 Got: Tom (1): 19.7
+I 01-06-2025 23:14:40 Got: Freezer (14): -18.1
+I 01-06-2025 23:16:28 Got: Bedroom (2): 19
+I 01-06-2025 23:18:10 Got: Balcony (5): 18.4
+I 01-06-2025 23:19:36 Got: Tom (1): 19.6
+I 01-06-2025 23:19:41 Got: Freezer (14): -18
+I 01-06-2025 23:21:29 Got: Bedroom (2): 18.9
+I 01-06-2025 23:23:11 Got: Balcony (5): 18.3
+I 01-06-2025 23:24:42 Got: Freezer (14): -18.6
+I 01-06-2025 23:26:29 Got: Bedroom (2): 18.9
+I 01-06-2025 23:28:12 Got: Balcony (5): 18.3
+I 01-06-2025 23:29:43 Got: Freezer (14): -20.1
+I 01-06-2025 23:30:09 Got: Tom (1): 19.5
+I 01-06-2025 23:31:30 Got: Bedroom (2): 18.8
+I 01-06-2025 23:33:12 Got: Balcony (5): 18.2
+I 01-06-2025 23:34:44 Got: Freezer (14): -19.6
+I 01-06-2025 23:35:25 Got: Tom (1): 19.4
+I 01-06-2025 23:36:31 Got: Bedroom (2): 18.8
+I 01-06-2025 23:38:13 Got: Balcony (5): 18.1
+I 01-06-2025 23:39:45 Got: Freezer (14): -19
+I 01-06-2025 23:39:48 Requesting updated external weather.
+I 01-06-2025 23:39:48 Got: Humidity (50): 93
+I 01-06-2025 23:39:48 Got: Pressure (51): 1017
+I 01-06-2025 23:39:48 Got: Wind (202): 20
+I 01-06-2025 23:39:48 Got: Speed (203): 9
+I 01-06-2025 23:39:48 Got: Sunrise (204): 7:36 AM
+I 01-06-2025 23:39:48 Got: Sunset (205): 5:00 PM
+I 01-06-2025 23:39:48 Got: W Desc (209): clear sky
+I 01-06-2025 23:39:48 Got: W Main (210): Clear
+I 01-06-2025 23:39:48 Got: Feels Like (211): 4.5
+I 01-06-2025 23:39:48 Got: Weather (200): http://openweathermap.org/img/w/01n.png
+I 01-06-2025 23:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 01-06-2025 23:39:48 Got: Spd 1w (208): speed_1w.png
+I 01-06-2025 23:39:48 Got: Pre 1w (207): pressure_1w.png
+I 01-06-2025 23:39:48 Got: Web Temp (100): 6.4
+I 01-06-2025 23:39:48 Got: Hum 1w (206): humidity_1w.png
+I 01-06-2025 23:40:41 Got: Tom (1): 19.5
+I 01-06-2025 23:41:32 Got: Bedroom (2): 18.8
+I 01-06-2025 23:43:14 Got: Balcony (5): 18.1
+I 01-06-2025 23:44:46 Got: Freezer (14): -18.6
+I 01-06-2025 23:45:58 Got: Tom (1): 19.3
+I 01-06-2025 23:46:32 Got: Bedroom (2): 18.8
+I 01-06-2025 23:48:14 Got: Balcony (5): 18
+I 01-06-2025 23:49:47 Got: Freezer (14): -18.3
+I 01-06-2025 23:51:14 Got: Tom (1): 19.2
+I 01-06-2025 23:51:33 Got: Bedroom (2): 18.8
+I 01-06-2025 23:53:15 Got: Balcony (5): 18
+I 01-06-2025 23:54:48 Got: Freezer (14): -18.2
+I 01-06-2025 23:56:31 Got: Tom (1): 19.1
+I 01-06-2025 23:56:34 Got: Bedroom (2): 18.8
+I 01-06-2025 23:58:16 Got: Balcony (5): 18
+I 01-06-2025 23:59:48 Got: Freezer (14): -18
+I 02-06-2025 00:01:35 Got: Bedroom (2): 18.7
+I 02-06-2025 00:03:16 Got: Balcony (5): 17.9
+I 02-06-2025 00:04:49 Got: Freezer (14): -17.9
+I 02-06-2025 00:06:35 Got: Bedroom (2): 18.7
+I 02-06-2025 00:07:03 Got: Tom (1): 19
+I 02-06-2025 00:08:17 Got: Balcony (5): 17.8
+I 02-06-2025 00:09:48 Requesting updated external weather.
+I 02-06-2025 00:09:48 Got: Web Temp (100): 6.4
+I 02-06-2025 00:09:48 Got: Humidity (50): 93
+I 02-06-2025 00:09:48 Got: Wind (202): 20
+I 02-06-2025 00:09:48 Got: Pressure (51): 1017
+I 02-06-2025 00:09:48 Got: Speed (203): 9
+I 02-06-2025 00:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 00:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 00:09:48 Got: W Desc (209): clear sky
+I 02-06-2025 00:09:48 Got: W Main (210): Clear
+I 02-06-2025 00:09:48 Got: Feels Like (211): 4.5
+I 02-06-2025 00:09:48 Got: Weather (200): http://openweathermap.org/img/w/01n.png
+I 02-06-2025 00:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 00:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 00:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 00:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 00:09:50 Got: Freezer (14): -18
+I 02-06-2025 00:11:36 Got: Bedroom (2): 18.6
+I 02-06-2025 00:13:18 Got: Balcony (5): 17.8
+I 02-06-2025 00:14:51 Got: Freezer (14): -17.8
+I 02-06-2025 00:16:37 Got: Bedroom (2): 18.6
+I 02-06-2025 00:17:36 Got: Tom (1): 18.8
+I 02-06-2025 00:18:18 Got: Balcony (5): 17.7
+I 02-06-2025 00:19:52 Got: Freezer (14): -18.4
+I 02-06-2025 00:21:38 Got: Bedroom (2): 18.6
+I 02-06-2025 00:22:52 Got: Tom (1): 18.7
+I 02-06-2025 00:23:19 Got: Balcony (5): 17.6
+I 02-06-2025 00:24:53 Got: Freezer (14): -20.7
+I 02-06-2025 00:26:38 Got: Bedroom (2): 18.6
+I 02-06-2025 00:28:08 Got: Tom (1): 18.6
+I 02-06-2025 00:28:20 Got: Balcony (5): 17.6
+I 02-06-2025 00:29:54 Got: Freezer (14): -20.1
+I 02-06-2025 00:31:39 Got: Bedroom (2): 18.6
+I 02-06-2025 00:33:20 Got: Balcony (5): 17.5
+I 02-06-2025 00:34:55 Got: Freezer (14): -19.5
+I 02-06-2025 00:36:40 Got: Bedroom (2): 18.6
+I 02-06-2025 00:38:21 Got: Balcony (5): 17.5
+I 02-06-2025 00:38:41 Got: Tom (1): 18.5
+I 02-06-2025 00:39:48 Requesting updated external weather.
+I 02-06-2025 00:39:48 Got: Web Temp (100): 7.4
+I 02-06-2025 00:39:48 Got: Humidity (50): 93
+I 02-06-2025 00:39:48 Got: Pressure (51): 1016
+I 02-06-2025 00:39:48 Got: Wind (202): 10
+I 02-06-2025 00:39:48 Got: Speed (203): 7
+I 02-06-2025 00:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 00:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 00:39:48 Got: W Desc (209): scattered clouds
+I 02-06-2025 00:39:48 Got: W Main (210): Clouds
+I 02-06-2025 00:39:48 Got: Feels Like (211): 6.1
+I 02-06-2025 00:39:48 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 02-06-2025 00:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 00:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 00:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 00:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 00:39:56 Got: Freezer (14): -18.8
+I 02-06-2025 00:41:41 Got: Bedroom (2): 18.5
+I 02-06-2025 00:43:22 Got: Balcony (5): 17.5
+I 02-06-2025 00:43:57 Got: Tom (1): 18.4
+I 02-06-2025 00:44:57 Got: Freezer (14): -18.5
+I 02-06-2025 00:46:41 Got: Bedroom (2): 18.5
+I 02-06-2025 00:48:22 Got: Balcony (5): 17.4
+I 02-06-2025 00:49:13 Got: Tom (1): 18.3
+I 02-06-2025 00:49:57 Got: Freezer (14): -18.3
+I 02-06-2025 00:51:42 Got: Bedroom (2): 18.5
+I 02-06-2025 00:53:23 Got: Balcony (5): 17.3
+I 02-06-2025 00:54:58 Got: Freezer (14): -18.2
+I 02-06-2025 00:56:43 Got: Bedroom (2): 18.5
+I 02-06-2025 00:58:24 Got: Balcony (5): 17.3
+I 02-06-2025 00:59:46 Got: Tom (1): 18.2
+I 02-06-2025 00:59:59 Got: Freezer (14): -18
+I 02-06-2025 01:01:44 Got: Bedroom (2): 18.5
+I 02-06-2025 01:03:24 Got: Balcony (5): 17.3
+I 02-06-2025 01:05:00 Got: Freezer (14): -17.9
+I 02-06-2025 01:05:02 Got: Tom (1): 18.1
+I 02-06-2025 01:06:44 Got: Bedroom (2): 18.4
+I 02-06-2025 01:08:25 Got: Balcony (5): 17.2
+I 02-06-2025 01:09:48 Requesting updated external weather.
+I 02-06-2025 01:09:48 Got: Web Temp (100): 6.4
+I 02-06-2025 01:09:48 Got: Humidity (50): 93
+I 02-06-2025 01:09:48 Got: Pressure (51): 1016
+I 02-06-2025 01:09:48 Got: Wind (202): 360
+I 02-06-2025 01:09:48 Got: Speed (203): 6
+I 02-06-2025 01:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 01:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 01:09:48 Got: W Desc (209): scattered clouds
+I 02-06-2025 01:09:48 Got: W Main (210): Clouds
+I 02-06-2025 01:09:48 Got: Feels Like (211): 5.5
+I 02-06-2025 01:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 01:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 01:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 01:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 01:09:48 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 02-06-2025 01:10:01 Got: Freezer (14): -18.1
+I 02-06-2025 01:11:45 Got: Bedroom (2): 18.4
+I 02-06-2025 01:13:26 Got: Balcony (5): 17.1
+I 02-06-2025 01:15:02 Got: Freezer (14): -18.3
+I 02-06-2025 01:16:46 Got: Bedroom (2): 18.4
+I 02-06-2025 01:18:26 Got: Balcony (5): 17.1
+I 02-06-2025 01:20:03 Got: Freezer (14): -20.6
+I 02-06-2025 01:21:47 Got: Bedroom (2): 18.3
+I 02-06-2025 01:23:27 Got: Balcony (5): 17
+I 02-06-2025 01:25:04 Got: Freezer (14): -20.5
+I 02-06-2025 01:26:06 Got: Tom (1): 17.9
+I 02-06-2025 01:26:47 Got: Bedroom (2): 18.3
+I 02-06-2025 01:28:28 Got: Balcony (5): 17
+I 02-06-2025 01:30:05 Got: Freezer (14): -19.5
+I 02-06-2025 01:31:23 Got: Tom (1): 17.8
+I 02-06-2025 01:31:48 Got: Bedroom (2): 18.3
+I 02-06-2025 01:33:28 Got: Balcony (5): 17
+I 02-06-2025 01:35:06 Got: Freezer (14): -18.8
+I 02-06-2025 01:36:39 Got: Tom (1): 17.9
+I 02-06-2025 01:36:49 Got: Bedroom (2): 18.3
+I 02-06-2025 01:38:29 Got: Balcony (5): 16.9
+I 02-06-2025 01:39:48 Requesting updated external weather.
+I 02-06-2025 01:39:48 Got: Web Temp (100): 6.4
+I 02-06-2025 01:39:48 Got: Humidity (50): 93
+I 02-06-2025 01:39:48 Got: Pressure (51): 1015
+I 02-06-2025 01:39:48 Got: Wind (202): 360
+I 02-06-2025 01:39:48 Got: Speed (203): 6
+I 02-06-2025 01:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 01:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 01:39:48 Got: W Desc (209): scattered clouds
+I 02-06-2025 01:39:48 Got: W Main (210): Clouds
+I 02-06-2025 01:39:48 Got: Feels Like (211): 5.5
+I 02-06-2025 01:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 01:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 01:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 01:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 01:39:48 Got: Weather (200): http://openweathermap.org/img/w/03n.png
+I 02-06-2025 01:40:06 Got: Freezer (14): -18.4
+I 02-06-2025 01:41:50 Got: Bedroom (2): 18.3
+I 02-06-2025 01:41:55 Got: Tom (1): 17.8
+I 02-06-2025 01:43:30 Got: Balcony (5): 16.8
+I 02-06-2025 01:45:07 Got: Freezer (14): -18.3
+I 02-06-2025 01:46:51 Got: Bedroom (2): 18.2
+I 02-06-2025 01:48:30 Got: Balcony (5): 16.8
+I 02-06-2025 01:50:08 Got: Freezer (14): -18.2
+I 02-06-2025 01:51:51 Got: Bedroom (2): 18.2
+I 02-06-2025 01:53:31 Got: Balcony (5): 16.8
+I 02-06-2025 01:55:09 Got: Freezer (14): -18
+I 02-06-2025 01:56:52 Got: Bedroom (2): 18.1
+I 02-06-2025 01:57:43 Got: Tom (1): 17.7
+I 02-06-2025 01:58:32 Got: Balcony (5): 16.7
+I 02-06-2025 02:00:10 Got: Freezer (14): -17.9
+I 02-06-2025 02:01:53 Got: Bedroom (2): 18.1
+I 02-06-2025 02:03:32 Got: Balcony (5): 16.6
+I 02-06-2025 02:05:11 Got: Freezer (14): -18.1
+I 02-06-2025 02:06:54 Got: Bedroom (2): 18.1
+I 02-06-2025 02:08:15 Got: Tom (1): 17.6
+I 02-06-2025 02:08:33 Got: Balcony (5): 16.6
+I 02-06-2025 02:09:48 Requesting updated external weather.
+I 02-06-2025 02:09:48 Got: Web Temp (100): 8.4
+I 02-06-2025 02:09:48 Got: Humidity (50): 93
+I 02-06-2025 02:09:48 Got: Pressure (51): 1015
+I 02-06-2025 02:09:48 Got: Wind (202): 350
+I 02-06-2025 02:09:48 Got: Speed (203): 7
+I 02-06-2025 02:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 02:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 02:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 02:09:48 Got: W Main (210): Clouds
+I 02-06-2025 02:09:48 Got: Feels Like (211): 7.2
+I 02-06-2025 02:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 02:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 02:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 02:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 02:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 02:10:12 Got: Freezer (14): -18.2
+I 02-06-2025 02:11:54 Got: Bedroom (2): 18.1
+I 02-06-2025 02:13:34 Got: Balcony (5): 16.6
+I 02-06-2025 02:15:13 Got: Freezer (14): -20.2
+I 02-06-2025 02:16:55 Got: Bedroom (2): 18.1
+I 02-06-2025 02:18:34 Got: Balcony (5): 16.5
+I 02-06-2025 02:18:48 Got: Tom (1): 17.5
+I 02-06-2025 02:20:14 Got: Freezer (14): -20.1
+I 02-06-2025 02:21:56 Got: Bedroom (2): 18
+I 02-06-2025 02:23:35 Got: Balcony (5): 16.5
+I 02-06-2025 02:25:15 Got: Freezer (14): -19.5
+I 02-06-2025 02:26:57 Got: Bedroom (2): 18
+I 02-06-2025 02:28:36 Got: Balcony (5): 16.5
+I 02-06-2025 02:29:20 Got: Tom (1): 17.4
+I 02-06-2025 02:30:16 Got: Freezer (14): -18.8
+I 02-06-2025 02:31:57 Got: Bedroom (2): 18
+I 02-06-2025 02:33:36 Got: Balcony (5): 16.4
+I 02-06-2025 02:34:36 Got: Tom (1): 17.3
+I 02-06-2025 02:35:16 Got: Freezer (14): -18.5
+I 02-06-2025 02:36:58 Got: Bedroom (2): 18
+I 02-06-2025 02:38:37 Got: Balcony (5): 16.3
+I 02-06-2025 02:39:48 Requesting updated external weather.
+I 02-06-2025 02:39:48 Got: Web Temp (100): 8.4
+I 02-06-2025 02:39:48 Got: Humidity (50): 93
+I 02-06-2025 02:39:48 Got: Pressure (51): 1015
+I 02-06-2025 02:39:48 Got: Wind (202): 350
+I 02-06-2025 02:39:48 Got: Speed (203): 7
+I 02-06-2025 02:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 02:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 02:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 02:39:48 Got: W Main (210): Clouds
+I 02-06-2025 02:39:48 Got: Feels Like (211): 7.2
+I 02-06-2025 02:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 02:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 02:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 02:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 02:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 02:40:17 Got: Freezer (14): -18.3
+I 02-06-2025 02:41:59 Got: Bedroom (2): 18
+I 02-06-2025 02:43:38 Got: Balcony (5): 16.3
+I 02-06-2025 02:45:18 Got: Freezer (14): -18.1
+I 02-06-2025 02:47:00 Got: Bedroom (2): 17.9
+I 02-06-2025 02:48:38 Got: Balcony (5): 16.3
+I 02-06-2025 02:50:19 Got: Freezer (14): -18
+I 02-06-2025 02:50:24 Got: Tom (1): 17.1
+I 02-06-2025 02:52:00 Got: Bedroom (2): 17.9
+I 02-06-2025 02:53:39 Got: Balcony (5): 16.2
+I 02-06-2025 02:55:20 Got: Freezer (14): -17.9
+I 02-06-2025 02:55:40 Got: Tom (1): 17.2
+I 02-06-2025 02:57:01 Got: Bedroom (2): 17.9
+I 02-06-2025 02:58:40 Got: Balcony (5): 16.1
+I 02-06-2025 03:00:21 Got: Freezer (14): -18
+I 02-06-2025 03:02:02 Got: Bedroom (2): 17.8
+I 02-06-2025 03:03:40 Got: Balcony (5): 16.1
+I 02-06-2025 03:05:22 Got: Freezer (14): -18
+I 02-06-2025 03:06:12 Got: Tom (1): 17.1
+I 02-06-2025 03:07:03 Got: Bedroom (2): 17.8
+I 02-06-2025 03:08:41 Got: Balcony (5): 16.1
+I 02-06-2025 03:09:48 Requesting updated external weather.
+I 02-06-2025 03:09:48 Got: Web Temp (100): 9.4
+I 02-06-2025 03:09:48 Got: Humidity (50): 87
+I 02-06-2025 03:09:48 Got: Pressure (51): 1015
+I 02-06-2025 03:09:48 Got: Wind (202): 360
+I 02-06-2025 03:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 03:09:48 Got: Speed (203): 9
+I 02-06-2025 03:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 03:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 03:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 03:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 03:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 03:09:48 Got: W Main (210): Clouds
+I 02-06-2025 03:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 03:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 03:09:48 Got: Feels Like (211): 8
+I 02-06-2025 03:10:23 Got: Freezer (14): -20.1
+I 02-06-2025 03:12:03 Got: Bedroom (2): 17.8
+I 02-06-2025 03:13:42 Got: Balcony (5): 16.1
+I 02-06-2025 03:15:24 Got: Freezer (14): -20.7
+I 02-06-2025 03:17:04 Got: Bedroom (2): 17.8
+I 02-06-2025 03:18:42 Got: Balcony (5): 16
+I 02-06-2025 03:20:25 Got: Freezer (14): -20.1
+I 02-06-2025 03:22:00 Got: Tom (1): 17
+I 02-06-2025 03:22:05 Got: Bedroom (2): 17.7
+I 02-06-2025 03:23:43 Got: Balcony (5): 16
+I 02-06-2025 03:25:25 Got: Freezer (14): -19.3
+I 02-06-2025 03:27:06 Got: Bedroom (2): 17.7
+I 02-06-2025 03:27:16 Got: Tom (1): 17.1
+I 02-06-2025 03:28:44 Got: Balcony (5): 16
+I 02-06-2025 03:32:06 Got: Bedroom (2): 17.7
+I 02-06-2025 03:32:32 Got: Tom (1): 17
+I 02-06-2025 03:33:44 Got: Balcony (5): 16
+I 02-06-2025 03:35:27 Got: Freezer (14): -18.5
+I 02-06-2025 03:37:07 Got: Bedroom (2): 17.6
+I 02-06-2025 03:37:11 Sorry ::ffff:147.185.133.226 from USyou are denied
+I 02-06-2025 03:37:49 Got: Tom (1): 16.9
+I 02-06-2025 03:38:26 Sorry ::ffff:147.185.133.226 from USyou are denied
+I 02-06-2025 03:38:45 Got: Balcony (5): 15.9
+I 02-06-2025 03:39:48 Requesting updated external weather.
+I 02-06-2025 03:39:48 Got: Web Temp (100): 9.4
+I 02-06-2025 03:39:48 Got: Humidity (50): 93
+I 02-06-2025 03:39:48 Got: Pressure (51): 1015
+I 02-06-2025 03:39:48 Got: Wind (202): 330
+I 02-06-2025 03:39:48 Got: Speed (203): 6
+I 02-06-2025 03:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 03:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 03:39:48 Got: W Desc (209): haze
+I 02-06-2025 03:39:48 Got: W Main (210): Haze
+I 02-06-2025 03:39:48 Got: Feels Like (211): 8.9
+I 02-06-2025 03:39:48 Got: Weather (200): http://openweathermap.org/img/w/50n.png
+I 02-06-2025 03:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 03:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 03:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 03:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 03:40:28 Got: Freezer (14): -18.3
+I 02-06-2025 03:42:08 Got: Bedroom (2): 17.6
+I 02-06-2025 03:43:05 Got: Tom (1): 17
+I 02-06-2025 03:43:46 Got: Balcony (5): 15.9
+I 02-06-2025 03:45:29 Got: Freezer (14): -18.1
+I 02-06-2025 03:47:09 Got: Bedroom (2): 17.6
+I 02-06-2025 03:48:21 Got: Tom (1): 16.9
+I 02-06-2025 03:48:46 Got: Balcony (5): 15.8
+I 02-06-2025 03:50:30 Got: Freezer (14): -17.9
+I 02-06-2025 03:52:09 Got: Bedroom (2): 17.6
+I 02-06-2025 03:53:37 Got: Tom (1): 16.8
+I 02-06-2025 03:53:47 Got: Balcony (5): 15.8
+I 02-06-2025 03:55:31 Got: Freezer (14): -18.1
+I 02-06-2025 03:57:10 Got: Bedroom (2): 17.6
+I 02-06-2025 03:58:48 Got: Balcony (5): 15.8
+I 02-06-2025 03:58:53 Got: Tom (1): 16.9
+I 02-06-2025 04:00:32 Got: Freezer (14): -18.1
+I 02-06-2025 04:02:11 Got: Bedroom (2): 17.6
+I 02-06-2025 04:03:48 Got: Balcony (5): 15.7
+I 02-06-2025 04:04:09 Got: Tom (1): 16.8
+I 02-06-2025 04:05:33 Got: Freezer (14): -19.3
+I 02-06-2025 04:07:12 Got: Bedroom (2): 17.5
+I 02-06-2025 04:08:49 Got: Balcony (5): 15.7
+I 02-06-2025 04:09:25 Got: Tom (1): 16.6
+I 02-06-2025 04:09:48 Requesting updated external weather.
+I 02-06-2025 04:09:48 Got: Web Temp (100): 9.4
+I 02-06-2025 04:09:48 Got: Humidity (50): 93
+I 02-06-2025 04:09:48 Got: Pressure (51): 1015
+I 02-06-2025 04:09:48 Got: Wind (202): 330
+I 02-06-2025 04:09:48 Got: Speed (203): 6
+I 02-06-2025 04:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 04:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 04:09:48 Got: W Desc (209): haze
+I 02-06-2025 04:09:48 Got: W Main (210): Haze
+I 02-06-2025 04:09:48 Got: Weather (200): http://openweathermap.org/img/w/50n.png
+I 02-06-2025 04:09:48 Got: Feels Like (211): 8.9
+I 02-06-2025 04:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 04:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 04:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 04:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 04:10:34 Got: Freezer (14): -20.6
+I 02-06-2025 04:12:12 Got: Bedroom (2): 17.5
+I 02-06-2025 04:13:50 Got: Balcony (5): 15.6
+I 02-06-2025 04:14:41 Got: Tom (1): 16.8
+I 02-06-2025 04:15:35 Got: Freezer (14): -20
+I 02-06-2025 04:17:13 Got: Bedroom (2): 17.5
+I 02-06-2025 04:18:50 Got: Balcony (5): 15.6
+I 02-06-2025 04:19:57 Got: Tom (1): 16.6
+I 02-06-2025 04:20:36 Got: Freezer (14): -19.1
+I 02-06-2025 04:22:14 Got: Bedroom (2): 17.5
+I 02-06-2025 04:23:51 Got: Balcony (5): 15.6
+I 02-06-2025 04:25:13 Got: Tom (1): 16.5
+I 02-06-2025 04:25:36 Got: Freezer (14): -18.6
+I 02-06-2025 04:27:15 Got: Bedroom (2): 17.5
+I 02-06-2025 04:28:52 Got: Balcony (5): 15.5
+I 02-06-2025 04:30:29 Got: Tom (1): 16.6
+I 02-06-2025 04:30:37 Got: Freezer (14): -18.4
+I 02-06-2025 04:32:15 Got: Bedroom (2): 17.4
+I 02-06-2025 04:33:52 Got: Balcony (5): 15.5
+I 02-06-2025 04:37:16 Got: Bedroom (2): 17.4
+I 02-06-2025 04:38:53 Got: Balcony (5): 15.5
+I 02-06-2025 04:39:48 Requesting updated external weather.
+I 02-06-2025 04:39:48 Got: Web Temp (100): 8.4
+I 02-06-2025 04:39:48 Got: Humidity (50): 87
+I 02-06-2025 04:39:48 Got: Pressure (51): 1015
+I 02-06-2025 04:39:48 Got: Wind (202): 20
+I 02-06-2025 04:39:48 Got: Speed (203): 13
+I 02-06-2025 04:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 04:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 04:39:48 Got: W Main (210): Clouds
+I 02-06-2025 04:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 04:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 04:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 04:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 04:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 04:39:48 Got: Feels Like (211): 6.2
+I 02-06-2025 04:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 04:40:39 Got: Freezer (14): -18.1
+I 02-06-2025 04:41:00 Got: Tom (1): 16.5
+I 02-06-2025 04:42:17 Got: Bedroom (2): 17.4
+I 02-06-2025 04:43:54 Got: Balcony (5): 15.4
+I 02-06-2025 04:45:40 Got: Freezer (14): -18
+I 02-06-2025 04:47:18 Got: Bedroom (2): 17.3
+I 02-06-2025 04:48:54 Got: Balcony (5): 15.4
+I 02-06-2025 04:50:41 Got: Freezer (14): -18.1
+I 02-06-2025 04:51:32 Got: Tom (1): 16.6
+I 02-06-2025 04:52:18 Got: Bedroom (2): 17.3
+I 02-06-2025 04:53:55 Got: Balcony (5): 15.3
+I 02-06-2025 04:55:42 Got: Freezer (14): -18.1
+I 02-06-2025 04:56:48 Got: Tom (1): 16.5
+I 02-06-2025 04:57:19 Got: Bedroom (2): 17.3
+I 02-06-2025 04:58:55 Got: Balcony (5): 15.3
+I 02-06-2025 05:00:43 Got: Freezer (14): -18.6
+I 02-06-2025 05:02:04 Got: Tom (1): 16.3
+I 02-06-2025 05:02:20 Got: Bedroom (2): 17.3
+I 02-06-2025 05:03:56 Got: Balcony (5): 15.3
+I 02-06-2025 05:05:44 Got: Freezer (14): -20.5
+I 02-06-2025 05:07:21 Got: Bedroom (2): 17.3
+I 02-06-2025 05:08:57 Got: Balcony (5): 15.2
+I 02-06-2025 05:09:48 Requesting updated external weather.
+I 02-06-2025 05:09:48 Got: Web Temp (100): 8.4
+I 02-06-2025 05:09:48 Got: Humidity (50): 87
+I 02-06-2025 05:09:48 Got: Pressure (51): 1015
+I 02-06-2025 05:09:48 Got: Wind (202): 20
+I 02-06-2025 05:09:48 Got: Speed (203): 13
+I 02-06-2025 05:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 05:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 05:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 05:09:48 Got: W Main (210): Clouds
+I 02-06-2025 05:09:48 Got: Feels Like (211): 6.2
+I 02-06-2025 05:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 05:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 05:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 05:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 05:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 05:12:22 Got: Bedroom (2): 17.3
+I 02-06-2025 05:12:36 Got: Tom (1): 16.2
+I 02-06-2025 05:13:57 Got: Balcony (5): 15.2
+I 02-06-2025 05:15:46 Got: Freezer (14): -19.4
+I 02-06-2025 05:17:22 Got: Bedroom (2): 17.2
+I 02-06-2025 05:17:52 Got: Tom (1): 16.1
+I 02-06-2025 05:18:58 Got: Balcony (5): 15.1
+I 02-06-2025 05:20:47 Got: Freezer (14): -18.8
+I 02-06-2025 05:22:23 Got: Bedroom (2): 17.2
+I 02-06-2025 05:23:08 Got: Tom (1): 16.2
+I 02-06-2025 05:23:59 Got: Balcony (5): 15.1
+I 02-06-2025 05:25:48 Got: Freezer (14): -18.5
+I 02-06-2025 05:27:24 Got: Bedroom (2): 17.1
+I 02-06-2025 05:28:59 Got: Balcony (5): 15.1
+I 02-06-2025 05:30:48 Got: Freezer (14): -18.3
+I 02-06-2025 05:32:25 Got: Bedroom (2): 17.1
+I 02-06-2025 05:33:40 Got: Tom (1): 16.1
+I 02-06-2025 05:34:00 Got: Balcony (5): 15.1
+I 02-06-2025 05:35:49 Got: Freezer (14): -18.2
+I 02-06-2025 05:37:25 Got: Bedroom (2): 17.1
+I 02-06-2025 05:38:56 Got: Tom (1): 16
+I 02-06-2025 05:39:01 Got: Balcony (5): 15
+I 02-06-2025 05:39:48 Requesting updated external weather.
+I 02-06-2025 05:39:48 Got: Web Temp (100): 8.4
+I 02-06-2025 05:39:48 Got: Humidity (50): 81
+I 02-06-2025 05:39:48 Got: Pressure (51): 1015
+I 02-06-2025 05:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 05:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 05:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 05:39:48 Got: W Main (210): Clouds
+I 02-06-2025 05:39:48 Got: Feels Like (211): 6.8
+I 02-06-2025 05:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 05:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 05:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 05:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 05:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 05:39:48 Got: Wind (202): 360
+I 02-06-2025 05:39:48 Got: Speed (203): 9
+I 02-06-2025 05:40:50 Got: Freezer (14): -18
+I 02-06-2025 05:42:26 Got: Bedroom (2): 17.1
+I 02-06-2025 05:44:01 Got: Balcony (5): 15
+I 02-06-2025 05:44:12 Got: Tom (1): 16.1
+I 02-06-2025 05:45:51 Got: Freezer (14): -18
+I 02-06-2025 05:47:27 Got: Bedroom (2): 17.1
+I 02-06-2025 05:49:02 Got: Balcony (5): 15
+I 02-06-2025 05:49:27 Got: Tom (1): 16
+I 02-06-2025 05:50:52 Got: Freezer (14): -18.1
+I 02-06-2025 05:52:28 Got: Bedroom (2): 17
+I 02-06-2025 05:54:03 Got: Balcony (5): 14.9
+I 02-06-2025 05:54:43 Got: Tom (1): 16.1
+I 02-06-2025 05:55:53 Got: Freezer (14): -18.3
+I 02-06-2025 05:57:28 Got: Bedroom (2): 17
+I 02-06-2025 05:59:03 Got: Balcony (5): 14.9
+I 02-06-2025 05:59:59 Got: Tom (1): 16
+I 02-06-2025 06:00:54 Got: Freezer (14): -20.6
+I 02-06-2025 06:02:29 Got: Bedroom (2): 17
+I 02-06-2025 06:04:04 Got: Balcony (5): 14.8
+I 02-06-2025 06:05:15 Got: Tom (1): 16.1
+I 02-06-2025 06:05:55 Got: Freezer (14): -20.2
+I 02-06-2025 06:07:30 Got: Bedroom (2): 17
+I 02-06-2025 06:09:05 Got: Balcony (5): 14.8
+I 02-06-2025 06:09:48 Requesting updated external weather.
+I 02-06-2025 06:09:48 Got: Web Temp (100): 9.4
+I 02-06-2025 06:09:48 Got: Humidity (50): 87
+I 02-06-2025 06:09:48 Got: Pressure (51): 1015
+I 02-06-2025 06:09:48 Got: Wind (202): 360
+I 02-06-2025 06:09:48 Got: Speed (203): 9
+I 02-06-2025 06:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 06:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 06:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 06:09:48 Got: W Main (210): Clouds
+I 02-06-2025 06:09:48 Got: Feels Like (211): 8
+I 02-06-2025 06:09:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 06:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 06:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 06:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 06:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 06:10:56 Got: Freezer (14): -19.3
+I 02-06-2025 06:12:31 Got: Bedroom (2): 17
+I 02-06-2025 06:14:05 Got: Balcony (5): 14.8
+I 02-06-2025 06:15:57 Got: Freezer (14): -18.7
+I 02-06-2025 06:17:31 Got: Bedroom (2): 17
+I 02-06-2025 06:19:06 Got: Balcony (5): 14.8
+I 02-06-2025 06:20:57 Got: Freezer (14): -18.3
+I 02-06-2025 06:21:03 Got: Tom (1): 15.8
+I 02-06-2025 06:22:32 Got: Bedroom (2): 16.9
+I 02-06-2025 06:24:07 Got: Balcony (5): 14.8
+I 02-06-2025 06:25:58 Got: Freezer (14): -18.2
+I 02-06-2025 06:26:19 Got: Tom (1): 16
+I 02-06-2025 06:27:33 Got: Bedroom (2): 16.9
+I 02-06-2025 06:29:07 Got: Balcony (5): 14.7
+I 02-06-2025 06:30:59 Got: Freezer (14): -18
+I 02-06-2025 06:32:34 Got: Bedroom (2): 16.8
+I 02-06-2025 06:34:08 Got: Balcony (5): 14.7
+I 02-06-2025 06:36:00 Got: Freezer (14): -17.9
+I 02-06-2025 06:36:50 Got: Tom (1): 15.9
+I 02-06-2025 06:37:34 Got: Bedroom (2): 16.8
+I 02-06-2025 06:39:09 Got: Balcony (5): 14.6
+I 02-06-2025 06:39:48 Requesting updated external weather.
+I 02-06-2025 06:39:48 Got: Web Temp (100): 8.4
+I 02-06-2025 06:39:48 Got: Humidity (50): 87
+I 02-06-2025 06:39:48 Got: Pressure (51): 1016
+I 02-06-2025 06:39:48 Got: Wind (202): 10
+I 02-06-2025 06:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 06:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 06:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 06:39:48 Got: Weather (200): http://openweathermap.org/img/w/02n.png
+I 02-06-2025 06:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 06:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 06:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 06:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 06:39:48 Got: W Main (210): Clouds
+I 02-06-2025 06:39:48 Got: Feels Like (211): 7.7
+I 02-06-2025 06:39:48 Got: Speed (203): 6
+I 02-06-2025 06:41:01 Got: Freezer (14): -17.9
+I 02-06-2025 06:42:06 Got: Tom (1): 16
+I 02-06-2025 06:42:35 Got: Bedroom (2): 16.8
+I 02-06-2025 06:44:09 Got: Balcony (5): 14.6
+I 02-06-2025 06:46:02 Got: Freezer (14): -18.1
+I 02-06-2025 06:47:36 Got: Bedroom (2): 16.8
+I 02-06-2025 06:49:10 Got: Balcony (5): 14.6
+I 02-06-2025 06:51:03 Got: Freezer (14): -18.1
+I 02-06-2025 06:52:37 Got: Bedroom (2): 16.8
+I 02-06-2025 06:52:38 Got: Tom (1): 15.8
+I 02-06-2025 06:54:11 Got: Balcony (5): 14.6
+I 02-06-2025 06:56:04 Got: Freezer (14): -19.8
+I 02-06-2025 06:57:37 Got: Bedroom (2): 16.8
+I 02-06-2025 06:57:54 Got: Tom (1): 15.9
+I 02-06-2025 06:59:11 Got: Balcony (5): 14.5
+I 02-06-2025 07:01:05 Got: Freezer (14): -19.7
+I 02-06-2025 07:02:38 Got: Bedroom (2): 16.8
+I 02-06-2025 07:03:10 Got: Tom (1): 15.7
+I 02-06-2025 07:04:12 Got: Balcony (5): 14.5
+I 02-06-2025 07:06:06 Got: Freezer (14): -19.1
+I 02-06-2025 07:07:39 Got: Bedroom (2): 16.7
+I 02-06-2025 07:08:25 Got: Tom (1): 15.8
+I 02-06-2025 07:09:13 Got: Balcony (5): 14.5
+I 02-06-2025 07:09:48 Requesting updated external weather.
+I 02-06-2025 07:09:48 Got: Web Temp (100): 7.4
+I 02-06-2025 07:09:48 Got: Humidity (50): 93
+I 02-06-2025 07:09:48 Got: Pressure (51): 1016
+I 02-06-2025 07:09:48 Got: Wind (202): 10
+I 02-06-2025 07:09:48 Got: Speed (203): 9
+I 02-06-2025 07:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 07:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 07:09:48 Got: W Desc (209): broken clouds
+I 02-06-2025 07:09:48 Got: W Main (210): Clouds
+I 02-06-2025 07:09:48 Got: Feels Like (211): 5.6
+I 02-06-2025 07:09:48 Got: Weather (200): http://openweathermap.org/img/w/04n.png
+I 02-06-2025 07:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 07:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 07:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 07:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 07:11:06 Got: Freezer (14): -18.6
+I 02-06-2025 07:12:40 Got: Bedroom (2): 16.7
+I 02-06-2025 07:13:41 Got: Tom (1): 15.7
+I 02-06-2025 07:14:13 Got: Balcony (5): 14.5
+I 02-06-2025 07:16:07 Got: Freezer (14): -18.3
+I 02-06-2025 07:17:40 Got: Bedroom (2): 16.6
+I 02-06-2025 07:18:57 Got: Tom (1): 15.8
+I 02-06-2025 07:19:14 Got: Balcony (5): 14.5
+I 02-06-2025 07:21:08 Got: Freezer (14): -18.2
+I 02-06-2025 07:22:41 Got: Bedroom (2): 16.6
+I 02-06-2025 07:24:15 Got: Balcony (5): 14.4
+I 02-06-2025 07:26:09 Got: Freezer (14): -18
+I 02-06-2025 07:27:42 Got: Bedroom (2): 16.6
+I 02-06-2025 07:29:15 Got: Balcony (5): 14.4
+I 02-06-2025 07:29:29 Got: Tom (1): 15.6
+I 02-06-2025 07:31:10 Got: Freezer (14): -17.8
+I 02-06-2025 07:32:43 Got: Bedroom (2): 16.6
+I 02-06-2025 07:34:16 Got: Balcony (5): 14.3
+I 02-06-2025 07:34:45 Got: Tom (1): 15.8
+I 02-06-2025 07:36:11 Got: Freezer (14): -17.8
+I 02-06-2025 07:37:43 Got: Bedroom (2): 16.6
+I 02-06-2025 07:39:17 Got: Balcony (5): 14.3
+I 02-06-2025 07:39:48 Requesting updated external weather.
+I 02-06-2025 07:39:48 Got: Web Temp (100): 7.4
+I 02-06-2025 07:39:48 Got: Humidity (50): 87
+I 02-06-2025 07:39:48 Got: Pressure (51): 1016
+I 02-06-2025 07:39:48 Got: Wind (202): 350
+I 02-06-2025 07:39:48 Got: Speed (203): 9
+I 02-06-2025 07:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 07:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 07:39:48 Got: W Desc (209): scattered clouds
+I 02-06-2025 07:39:48 Got: W Main (210): Clouds
+I 02-06-2025 07:39:48 Got: Feels Like (211): 5.6
+I 02-06-2025 07:39:48 Got: Weather (200): http://openweathermap.org/img/w/03d.png
+I 02-06-2025 07:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 07:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 07:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 07:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 07:40:00 Got: Tom (1): 15.6
+I 02-06-2025 07:41:12 Got: Freezer (14): -17.9
+I 02-06-2025 07:42:44 Got: Bedroom (2): 16.6
+I 02-06-2025 07:44:17 Got: Balcony (5): 14.3
+I 02-06-2025 07:46:13 Got: Freezer (14): -17.9
+I 02-06-2025 07:47:45 Got: Bedroom (2): 16.6
+I 02-06-2025 07:49:18 Got: Balcony (5): 14.3
+I 02-06-2025 07:51:14 Got: Freezer (14): -19.8
+I 02-06-2025 07:52:46 Got: Bedroom (2): 16.5
+I 02-06-2025 07:54:19 Got: Balcony (5): 14.3
+I 02-06-2025 07:56:15 Got: Freezer (14): -20.2
+I 02-06-2025 07:57:46 Got: Bedroom (2): 16.5
+I 02-06-2025 07:59:19 Got: Balcony (5): 14.3
+I 02-06-2025 08:01:15 Got: Freezer (14): -19.6
+I 02-06-2025 08:02:47 Got: Bedroom (2): 16.5
+I 02-06-2025 08:04:20 Got: Balcony (5): 14.2
+I 02-06-2025 08:05:57 Sorry ::ffff:3.132.23.201 from USyou are denied
+I 02-06-2025 08:06:16 Got: Freezer (14): -18.9
+I 02-06-2025 08:07:38 Sorry ::ffff:3.132.23.201 from USyou are denied
+I 02-06-2025 08:07:48 Got: Bedroom (2): 16.5
+I 02-06-2025 08:09:21 Got: Balcony (5): 14.2
+I 02-06-2025 08:09:48 Requesting updated external weather.
+I 02-06-2025 08:09:48 Got: Web Temp (100): 8.4
+I 02-06-2025 08:09:48 Got: Speed (203): 13
+I 02-06-2025 08:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 08:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 08:09:48 Got: W Desc (209): scattered clouds
+I 02-06-2025 08:09:48 Got: W Main (210): Clouds
+I 02-06-2025 08:09:48 Got: Feels Like (211): 6.2
+I 02-06-2025 08:09:48 Got: Weather (200): http://openweathermap.org/img/w/03d.png
+I 02-06-2025 08:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 08:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 08:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 08:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 08:09:48 Got: Humidity (50): 87
+I 02-06-2025 08:09:48 Got: Pressure (51): 1016
+I 02-06-2025 08:09:48 Got: Wind (202): 10
+I 02-06-2025 08:11:17 Got: Freezer (14): -18.5
+I 02-06-2025 08:11:35 Got: Tom (1): 15.5
+I 02-06-2025 08:12:49 Got: Bedroom (2): 16.5
+I 02-06-2025 08:14:21 Got: Balcony (5): 14.2
+I 02-06-2025 08:16:18 Got: Freezer (14): -18.3
+I 02-06-2025 08:17:49 Got: Bedroom (2): 16.5
+I 02-06-2025 08:19:22 Got: Balcony (5): 14.1
+I 02-06-2025 08:21:19 Got: Freezer (14): -18.1
+I 02-06-2025 08:22:50 Got: Bedroom (2): 16.5
+I 02-06-2025 08:24:23 Got: Balcony (5): 14.1
+I 02-06-2025 08:26:20 Got: Freezer (14): -18
+I 02-06-2025 08:27:23 Got: Tom (1): 15.4
+I 02-06-2025 08:27:51 Got: Bedroom (2): 16.5
+I 02-06-2025 08:29:23 Got: Balcony (5): 14.1
+I 02-06-2025 08:31:21 Got: Freezer (14): -17.8
+I 02-06-2025 08:32:39 Got: Tom (1): 15.5
+I 02-06-2025 08:32:52 Got: Bedroom (2): 16.5
+I 02-06-2025 08:34:24 Got: Balcony (5): 14.1
+I 02-06-2025 08:36:22 Got: Freezer (14): -18.1
+I 02-06-2025 08:37:52 Got: Bedroom (2): 16.5
+I 02-06-2025 08:37:54 Got: Tom (1): 15.6
+I 02-06-2025 08:39:25 Got: Balcony (5): 14.1
+I 02-06-2025 08:39:48 Requesting updated external weather.
+I 02-06-2025 08:39:48 Got: Web Temp (100): 8.4
+I 02-06-2025 08:39:48 Got: Speed (203): 13
+I 02-06-2025 08:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 08:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 08:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 08:39:48 Got: W Main (210): Clouds
+I 02-06-2025 08:39:48 Got: Feels Like (211): 6.2
+I 02-06-2025 08:39:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 08:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 08:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 08:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 08:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 08:39:48 Got: Humidity (50): 87
+I 02-06-2025 08:39:48 Got: Wind (202): 10
+I 02-06-2025 08:39:48 Got: Pressure (51): 1017
+I 02-06-2025 08:41:23 Got: Freezer (14): -18
+I 02-06-2025 08:42:53 Got: Bedroom (2): 16.6
+I 02-06-2025 08:44:25 Got: Balcony (5): 14.1
+I 02-06-2025 08:46:24 Got: Freezer (14): -19.2
+I 02-06-2025 08:47:54 Got: Bedroom (2): 16.6
+I 02-06-2025 08:48:26 Got: Tom (1): 15.7
+I 02-06-2025 08:49:26 Got: Balcony (5): 14.1
+I 02-06-2025 08:51:24 Got: Freezer (14): -20.2
+I 02-06-2025 08:52:55 Got: Bedroom (2): 16.6
+I 02-06-2025 08:53:42 Got: Tom (1): 15.6
+I 02-06-2025 08:54:26 Got: Balcony (5): 14.1
+I 02-06-2025 08:56:25 Got: Freezer (14): -19.6
+I 02-06-2025 08:57:55 Got: Bedroom (2): 16.6
+I 02-06-2025 08:59:27 Got: Balcony (5): 14.1
+I 02-06-2025 09:01:26 Got: Freezer (14): -18.9
+I 02-06-2025 09:02:56 Got: Bedroom (2): 16.6
+I 02-06-2025 09:04:14 Got: Tom (1): 15.8
+I 02-06-2025 09:04:28 Got: Balcony (5): 14.1
+I 02-06-2025 09:06:27 Got: Freezer (14): -18.5
+I 02-06-2025 09:07:57 Got: Bedroom (2): 16.7
+I 02-06-2025 09:09:28 Got: Balcony (5): 14.1
+I 02-06-2025 09:09:29 Got: Tom (1): 15.7
+I 02-06-2025 09:09:48 Requesting updated external weather.
+I 02-06-2025 09:09:48 Got: Web Temp (100): 9.1
+I 02-06-2025 09:09:48 Got: Humidity (50): 85
+I 02-06-2025 09:09:48 Got: Pressure (51): 1017
+I 02-06-2025 09:09:48 Got: Wind (202): 360
+I 02-06-2025 09:09:48 Got: Speed (203): 13
+I 02-06-2025 09:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 09:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 09:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 09:09:48 Got: W Main (210): Clouds
+I 02-06-2025 09:09:48 Got: Feels Like (211): 7.1
+I 02-06-2025 09:09:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 09:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 09:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 09:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 09:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 09:11:28 Got: Freezer (14): -18.2
+I 02-06-2025 09:12:58 Got: Bedroom (2): 16.7
+I 02-06-2025 09:14:29 Got: Balcony (5): 14.1
+I 02-06-2025 09:14:45 Got: Tom (1): 15.8
+I 02-06-2025 09:16:29 Got: Freezer (14): -18.1
+I 02-06-2025 09:17:58 Got: Bedroom (2): 16.8
+I 02-06-2025 09:19:30 Got: Balcony (5): 14.1
+I 02-06-2025 09:20:01 Got: Tom (1): 16
+I 02-06-2025 09:21:30 Got: Freezer (14): -18
+I 02-06-2025 09:22:59 Got: Bedroom (2): 16.8
+I 02-06-2025 09:24:30 Got: Balcony (5): 14.1
+I 02-06-2025 09:25:17 Got: Tom (1): 16.1
+I 02-06-2025 09:26:31 Got: Freezer (14): -17.8
+I 02-06-2025 09:28:00 Got: Bedroom (2): 16.8
+I 02-06-2025 09:29:31 Got: Balcony (5): 14.2
+I 02-06-2025 09:30:33 Got: Tom (1): 16.3
+I 02-06-2025 09:31:32 Got: Freezer (14): -18
+I 02-06-2025 09:31:49 Sorry ::ffff:164.92.193.109 from DEyou are denied
+I 02-06-2025 09:33:01 Got: Bedroom (2): 16.9
+I 02-06-2025 09:34:32 Got: Balcony (5): 14.2
+I 02-06-2025 09:35:49 Got: Tom (1): 16.5
+I 02-06-2025 09:36:33 Got: Freezer (14): -18
+I 02-06-2025 09:38:01 Got: Bedroom (2): 17
+I 02-06-2025 09:39:32 Got: Balcony (5): 14.3
+I 02-06-2025 09:39:48 Requesting updated external weather.
+I 02-06-2025 09:39:48 Got: Web Temp (100): 10.4
+I 02-06-2025 09:39:48 Got: Humidity (50): 82
+I 02-06-2025 09:39:48 Got: Pressure (51): 1017
+I 02-06-2025 09:39:48 Got: Wind (202): 360
+I 02-06-2025 09:39:48 Got: Speed (203): 13
+I 02-06-2025 09:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 09:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 09:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 09:39:48 Got: W Main (210): Clouds
+I 02-06-2025 09:39:48 Got: Feels Like (211): 9.6
+I 02-06-2025 09:39:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 09:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 09:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 09:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 09:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 09:41:05 Got: Tom (1): 16.6
+I 02-06-2025 09:41:33 Got: Freezer (14): -18.6
+I 02-06-2025 09:43:02 Got: Bedroom (2): 17.1
+I 02-06-2025 09:44:33 Got: Balcony (5): 14.3
+I 02-06-2025 09:46:34 Got: Freezer (14): -20.4
+I 02-06-2025 09:48:03 Got: Bedroom (2): 17.1
+I 02-06-2025 09:49:34 Got: Balcony (5): 14.3
+I 02-06-2025 09:51:35 Got: Freezer (14): -19.9
+I 02-06-2025 09:51:37 Got: Tom (1): 16.7
+I 02-06-2025 09:53:04 Got: Bedroom (2): 17.2
+I 02-06-2025 09:54:34 Got: Balcony (5): 14.4
+I 02-06-2025 09:56:36 Got: Freezer (14): -19.2
+I 02-06-2025 09:56:53 Got: Tom (1): 16.8
+I 02-06-2025 09:58:04 Got: Bedroom (2): 17.3
+I 02-06-2025 09:59:35 Got: Balcony (5): 14.5
+I 02-06-2025 10:01:37 Got: Freezer (14): -18.6
+I 02-06-2025 10:02:09 Got: Tom (1): 17
+I 02-06-2025 10:03:05 Got: Bedroom (2): 17.4
+I 02-06-2025 10:04:36 Got: Balcony (5): 14.5
+I 02-06-2025 10:06:38 Got: Freezer (14): -18.3
+I 02-06-2025 10:07:25 Got: Tom (1): 17.1
+I 02-06-2025 10:08:06 Got: Bedroom (2): 17.5
+I 02-06-2025 10:09:36 Got: Balcony (5): 14.6
+I 02-06-2025 10:09:48 Requesting updated external weather.
+I 02-06-2025 10:09:48 Got: Web Temp (100): 11.8
+I 02-06-2025 10:09:48 Got: Humidity (50): 74
+I 02-06-2025 10:09:48 Got: Pressure (51): 1017
+I 02-06-2025 10:09:48 Got: Wind (202): 68
+I 02-06-2025 10:09:48 Got: Speed (203): 14
+I 02-06-2025 10:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 10:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 10:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 10:09:48 Got: W Main (210): Clouds
+I 02-06-2025 10:09:48 Got: Feels Like (211): 11
+I 02-06-2025 10:09:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 10:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 10:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 10:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 10:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 10:11:39 Got: Freezer (14): -18.1
+I 02-06-2025 10:12:41 Got: Tom (1): 17.4
+I 02-06-2025 10:13:07 Got: Bedroom (2): 17.5
+I 02-06-2025 10:14:37 Got: Balcony (5): 14.6
+I 02-06-2025 10:16:40 Got: Freezer (14): -18
+I 02-06-2025 10:17:57 Got: Tom (1): 17.5
+I 02-06-2025 10:18:08 Got: Bedroom (2): 17.6
+I 02-06-2025 10:19:38 Got: Balcony (5): 14.7
+I 02-06-2025 10:21:41 Got: Freezer (14): -17.9
+I 02-06-2025 10:23:08 Got: Bedroom (2): 17.6
+I 02-06-2025 10:23:13 Got: Tom (1): 17.6
+I 02-06-2025 10:24:38 Got: Balcony (5): 14.8
+I 02-06-2025 10:26:42 Got: Freezer (14): -17.8
+I 02-06-2025 10:28:09 Got: Bedroom (2): 17.7
+I 02-06-2025 10:28:29 Got: Tom (1): 17.8
+I 02-06-2025 10:29:39 Got: Balcony (5): 14.9
+I 02-06-2025 10:31:42 Got: Freezer (14): -18
+I 02-06-2025 10:33:10 Got: Bedroom (2): 17.8
+I 02-06-2025 10:33:45 Got: Tom (1): 17.9
+I 02-06-2025 10:34:40 Got: Balcony (5): 14.9
+I 02-06-2025 10:36:43 Got: Freezer (14): -18
+I 02-06-2025 10:38:11 Got: Bedroom (2): 17.8
+I 02-06-2025 10:39:40 Got: Balcony (5): 15
+I 02-06-2025 10:39:48 Requesting updated external weather.
+I 02-06-2025 10:39:48 Got: Web Temp (100): 12.6
+I 02-06-2025 10:39:48 Got: Humidity (50): 73
+I 02-06-2025 10:39:48 Got: Pressure (51): 1016
+I 02-06-2025 10:39:48 Got: Wind (202): 52
+I 02-06-2025 10:39:48 Got: Speed (203): 16
+I 02-06-2025 10:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 10:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 10:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 10:39:48 Got: W Main (210): Clouds
+I 02-06-2025 10:39:48 Got: Feels Like (211): 11.8
+I 02-06-2025 10:39:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 10:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 10:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 10:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 10:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 10:41:44 Got: Freezer (14): -19.8
+I 02-06-2025 10:43:11 Got: Bedroom (2): 18
+I 02-06-2025 10:44:18 Got: Tom (1): 17.8
+I 02-06-2025 10:44:41 Got: Balcony (5): 15.1
+I 02-06-2025 10:46:45 Got: Freezer (14): -20.2
+I 02-06-2025 10:48:12 Got: Bedroom (2): 18
+I 02-06-2025 10:49:34 Got: Tom (1): 18
+I 02-06-2025 10:49:42 Got: Balcony (5): 15.1
+I 02-06-2025 10:51:46 Got: Freezer (14): -19.6
+I 02-06-2025 10:53:13 Got: Bedroom (2): 18.1
+I 02-06-2025 10:54:42 Got: Balcony (5): 15.2
+I 02-06-2025 10:54:50 Got: Tom (1): 18.1
+I 02-06-2025 10:56:47 Got: Freezer (14): -18.9
+I 02-06-2025 10:58:14 Got: Bedroom (2): 18.2
+I 02-06-2025 10:59:43 Got: Balcony (5): 15.3
+I 02-06-2025 11:00:06 Got: Tom (1): 18.3
+I 02-06-2025 11:01:48 Got: Freezer (14): -18.5
+I 02-06-2025 11:03:14 Got: Bedroom (2): 18.3
+I 02-06-2025 11:04:44 Got: Balcony (5): 15.4
+I 02-06-2025 11:06:49 Got: Freezer (14): -18.2
+I 02-06-2025 11:08:15 Got: Bedroom (2): 18.4
+I 02-06-2025 11:09:44 Got: Balcony (5): 15.5
+I 02-06-2025 11:09:48 Requesting updated external weather.
+I 02-06-2025 11:09:48 Got: Web Temp (100): 13.6
+I 02-06-2025 11:09:48 Got: Humidity (50): 69
+I 02-06-2025 11:09:48 Got: Pressure (51): 1016
+I 02-06-2025 11:09:48 Got: Wind (202): 44
+I 02-06-2025 11:09:48 Got: Speed (203): 18
+I 02-06-2025 11:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 11:09:48 Got: W Main (210): Clouds
+I 02-06-2025 11:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 11:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 11:09:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 11:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 11:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 11:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 11:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 11:09:48 Got: Feels Like (211): 12.8
+I 02-06-2025 11:10:39 Got: Tom (1): 18.5
+I 02-06-2025 11:11:50 Got: Freezer (14): -18.1
+I 02-06-2025 11:13:16 Got: Bedroom (2): 18.5
+I 02-06-2025 11:14:45 Got: Balcony (5): 15.6
+I 02-06-2025 11:16:51 Got: Freezer (14): -18
+I 02-06-2025 11:18:17 Got: Bedroom (2): 18.6
+I 02-06-2025 11:19:46 Got: Balcony (5): 15.7
+I 02-06-2025 11:21:11 Got: Tom (1): 18.7
+I 02-06-2025 11:21:51 Got: Freezer (14): -17.8
+I 02-06-2025 11:23:17 Got: Bedroom (2): 18.7
+I 02-06-2025 11:24:46 Got: Balcony (5): 15.8
+I 02-06-2025 11:26:27 Got: Tom (1): 18.8
+I 02-06-2025 11:26:52 Got: Freezer (14): -18
+I 02-06-2025 11:28:18 Got: Bedroom (2): 18.8
+I 02-06-2025 11:29:47 Got: Balcony (5): 16
+I 02-06-2025 11:31:53 Got: Freezer (14): -18
+I 02-06-2025 11:33:19 Got: Bedroom (2): 18.9
+I 02-06-2025 11:34:48 Got: Balcony (5): 16.1
+I 02-06-2025 11:36:54 Got: Freezer (14): -19.6
+I 02-06-2025 11:37:00 Got: Tom (1): 19
+I 02-06-2025 11:38:20 Got: Bedroom (2): 19
+I 02-06-2025 11:39:48 Requesting updated external weather.
+I 02-06-2025 11:39:48 Got: Balcony (5): 16.2
+I 02-06-2025 11:39:48 Got: Web Temp (100): 14.4
+I 02-06-2025 11:39:48 Got: Humidity (50): 65
+I 02-06-2025 11:39:48 Got: Pressure (51): 1016
+I 02-06-2025 11:39:48 Got: Wind (202): 360
+I 02-06-2025 11:39:48 Got: Speed (203): 19
+I 02-06-2025 11:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 11:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 11:39:48 Got: W Desc (209): few clouds
+I 02-06-2025 11:39:48 Got: W Main (210): Clouds
+I 02-06-2025 11:39:48 Got: Feels Like (211): 13.6
+I 02-06-2025 11:39:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 11:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 11:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 11:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 11:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 11:41:55 Got: Freezer (14): -20.5
+I 02-06-2025 11:42:16 Got: Tom (1): 19.1
+I 02-06-2025 11:43:20 Got: Bedroom (2): 19
+I 02-06-2025 11:44:49 Got: Balcony (5): 16.3
+I 02-06-2025 11:46:56 Got: Freezer (14): -19.9
+I 02-06-2025 11:47:33 Got: Tom (1): 19.3
+I 02-06-2025 11:48:21 Got: Bedroom (2): 19.1
+I 02-06-2025 11:49:50 Got: Balcony (5): 16.5
+I 02-06-2025 11:51:57 Got: Freezer (14): -19.1
+I 02-06-2025 11:52:49 Got: Tom (1): 19.4
+I 02-06-2025 11:53:22 Got: Bedroom (2): 19
+I 02-06-2025 11:54:50 Got: Balcony (5): 16.6
+I 02-06-2025 11:56:58 Got: Freezer (14): -18.6
+I 02-06-2025 11:58:05 Got: Tom (1): 19.5
+I 02-06-2025 11:58:23 Got: Bedroom (2): 19
+I 02-06-2025 11:59:51 Got: Balcony (5): 16.7
+I 02-06-2025 12:01:59 Got: Freezer (14): -18.4
+I 02-06-2025 12:03:22 Got: Tom (1): 19.6
+I 02-06-2025 12:03:23 Got: Bedroom (2): 19.1
+I 02-06-2025 12:04:52 Got: Balcony (5): 16.8
+I 02-06-2025 12:07:00 Got: Freezer (14): -18.2
+I 02-06-2025 12:08:24 Got: Bedroom (2): 19.1
+I 02-06-2025 12:08:38 Got: Tom (1): 19.8
+I 02-06-2025 12:09:48 Requesting updated external weather.
+I 02-06-2025 12:09:48 Got: Web Temp (100): 14.7
+I 02-06-2025 12:09:48 Got: Humidity (50): 63
+I 02-06-2025 12:09:48 Got: Pressure (51): 1016
+I 02-06-2025 12:09:48 Got: Wind (202): 360
+I 02-06-2025 12:09:48 Got: Speed (203): 19
+I 02-06-2025 12:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 12:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 12:09:48 Got: W Desc (209): few clouds
+I 02-06-2025 12:09:48 Got: W Main (210): Clouds
+I 02-06-2025 12:09:48 Got: Feels Like (211): 13.8
+I 02-06-2025 12:09:48 Got: Weather (200): http://openweathermap.org/img/w/02d.png
+I 02-06-2025 12:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 12:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 12:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 12:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 12:09:52 Got: Balcony (5): 17
+I 02-06-2025 12:12:01 Got: Freezer (14): -18.1
+I 02-06-2025 12:13:25 Got: Bedroom (2): 19.1
+I 02-06-2025 12:13:55 Got: Tom (1): 19.9
+I 02-06-2025 12:14:53 Got: Balcony (5): 17
+I 02-06-2025 12:17:01 Got: Freezer (14): -17.9
+I 02-06-2025 12:18:26 Got: Bedroom (2): 19.1
+I 02-06-2025 12:19:11 Got: Tom (1): 20
+I 02-06-2025 12:19:54 Got: Balcony (5): 17.1
+I 02-06-2025 12:22:02 Got: Freezer (14): -18
+I 02-06-2025 12:23:26 Got: Bedroom (2): 19.1
+I 02-06-2025 12:24:27 Got: Tom (1): 20.1
+I 02-06-2025 12:24:54 Got: Balcony (5): 17.3
+I 02-06-2025 12:27:03 Got: Freezer (14): -18
+I 02-06-2025 12:28:27 Got: Bedroom (2): 19.2
+I 02-06-2025 12:29:44 Got: Tom (1): 20.2
+I 02-06-2025 12:29:55 Got: Balcony (5): 17.4
+I 02-06-2025 12:32:04 Got: Freezer (14): -19
+I 02-06-2025 12:33:28 Got: Bedroom (2): 19.3
+I 02-06-2025 12:34:56 Got: Balcony (5): 17.5
+I 02-06-2025 12:35:00 Got: Tom (1): 20.3
+I 02-06-2025 12:37:05 Got: Freezer (14): -21
+I 02-06-2025 12:38:29 Got: Bedroom (2): 19.3
+I 02-06-2025 12:39:48 Requesting updated external weather.
+I 02-06-2025 12:39:48 Got: Web Temp (100): 15.2
+I 02-06-2025 12:39:48 Got: Humidity (50): 61
+I 02-06-2025 12:39:48 Got: Pressure (51): 1014
+I 02-06-2025 12:39:48 Got: Wind (202): 360
+I 02-06-2025 12:39:48 Got: Speed (203): 20
+I 02-06-2025 12:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 12:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 12:39:48 Got: W Desc (209): clear sky
+I 02-06-2025 12:39:48 Got: W Main (210): Clear
+I 02-06-2025 12:39:48 Got: Feels Like (211): 14.3
+I 02-06-2025 12:39:48 Got: Weather (200): http://openweathermap.org/img/w/01d.png
+I 02-06-2025 12:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 12:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 12:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 12:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 12:39:56 Got: Balcony (5): 17.6
+I 02-06-2025 12:40:24 Sorry ::ffff:162.142.125.220 from USyou are denied
+I 02-06-2025 12:42:06 Got: Freezer (14): -20.3
+I 02-06-2025 12:43:30 Got: Bedroom (2): 19.4
+I 02-06-2025 12:44:57 Got: Balcony (5): 17.7
+I 02-06-2025 12:45:33 Got: Tom (1): 20.5
+I 02-06-2025 12:47:07 Got: Freezer (14): -19.4
+I 02-06-2025 12:48:30 Got: Bedroom (2): 19.5
+I 02-06-2025 12:49:58 Got: Balcony (5): 17.8
+I 02-06-2025 12:52:08 Got: Freezer (14): -18.7
+I 02-06-2025 12:53:31 Got: Bedroom (2): 19.5
+I 02-06-2025 12:54:58 Got: Balcony (5): 17.9
+I 02-06-2025 12:56:06 Got: Tom (1): 20.6
+I 02-06-2025 12:57:09 Got: Freezer (14): -18.4
+I 02-06-2025 12:58:32 Got: Bedroom (2): 19.6
+I 02-06-2025 12:59:59 Got: Balcony (5): 18
+I 02-06-2025 13:02:10 Got: Freezer (14): -18.2
+I 02-06-2025 13:03:33 Got: Bedroom (2): 19.6
+I 02-06-2025 13:05:00 Got: Balcony (5): 18.1
+I 02-06-2025 13:06:40 Got: Tom (1): 20.7
+I 02-06-2025 13:07:10 Got: Freezer (14): -18.1
+I 02-06-2025 13:08:33 Got: Bedroom (2): 19.6
+I 02-06-2025 13:09:48 Requesting updated external weather.
+I 02-06-2025 13:09:48 Got: Web Temp (100): 15.2
+I 02-06-2025 13:09:48 Got: Humidity (50): 59
+I 02-06-2025 13:09:48 Got: Pressure (51): 1014
+I 02-06-2025 13:09:48 Got: Speed (203): 22
+I 02-06-2025 13:09:48 Got: Wind (202): 10
+I 02-06-2025 13:09:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 13:09:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 13:09:48 Got: W Desc (209): clear sky
+I 02-06-2025 13:09:48 Got: Feels Like (211): 14.3
+I 02-06-2025 13:09:48 Got: W Main (210): Clear
+I 02-06-2025 13:09:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 13:09:48 Got: Weather (200): http://openweathermap.org/img/w/01d.png
+I 02-06-2025 13:09:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 13:09:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 13:09:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 13:10:00 Got: Balcony (5): 18.2
+I 02-06-2025 13:11:56 Got: Tom (1): 20.8
+I 02-06-2025 13:12:11 Got: Freezer (14): -17.9
+I 02-06-2025 13:13:34 Got: Bedroom (2): 19.7
+I 02-06-2025 13:15:01 Got: Balcony (5): 18.3
+I 02-06-2025 13:17:12 Got: Freezer (14): -18
+I 02-06-2025 13:18:35 Got: Bedroom (2): 19.8
+I 02-06-2025 13:20:02 Got: Balcony (5): 18.4
+I 02-06-2025 13:22:13 Got: Freezer (14): -18
+I 02-06-2025 13:23:36 Got: Bedroom (2): 19.8
+I 02-06-2025 13:25:02 Got: Balcony (5): 18.5
+I 02-06-2025 13:27:14 Got: Freezer (14): -18.8
+I 02-06-2025 13:28:36 Got: Bedroom (2): 19.9
+I 02-06-2025 13:30:03 Got: Balcony (5): 18.6
+I 02-06-2025 13:32:15 Got: Freezer (14): -21
+I 02-06-2025 13:33:02 Got: Tom (1): 20.9
+I 02-06-2025 13:33:37 Got: Bedroom (2): 20
+I 02-06-2025 13:35:04 Got: Balcony (5): 18.6
+I 02-06-2025 13:37:16 Got: Freezer (14): -20.3
+I 02-06-2025 13:38:19 Got: Tom (1): 21
+I 02-06-2025 13:38:38 Got: Bedroom (2): 20
+I 02-06-2025 13:39:48 Requesting updated external weather.
+I 02-06-2025 13:39:48 Got: Web Temp (100): 14.7
+I 02-06-2025 13:39:48 Got: Humidity (50): 64
+I 02-06-2025 13:39:48 Got: Pressure (51): 1014
+I 02-06-2025 13:39:48 Got: Wind (202): 10
+I 02-06-2025 13:39:48 Got: Sunrise (204): 7:37 AM
+I 02-06-2025 13:39:48 Got: Sunset (205): 5:00 PM
+I 02-06-2025 13:39:48 Got: Speed (203): 26
+I 02-06-2025 13:39:48 Got: W Desc (209): clear sky
+I 02-06-2025 13:39:48 Got: Feels Like (211): 13.9
+I 02-06-2025 13:39:48 Got: Weather (200): http://openweathermap.org/img/w/01d.png
+I 02-06-2025 13:39:48 Got: Tmp 1w (99): temp_graph_1w.png
+I 02-06-2025 13:39:48 Got: Hum 1w (206): humidity_1w.png
+I 02-06-2025 13:39:48 Got: W Main (210): Clear
+I 02-06-2025 13:39:48 Got: Pre 1w (207): pressure_1w.png
+I 02-06-2025 13:39:48 Got: Spd 1w (208): speed_1w.png
+I 02-06-2025 13:40:04 Got: Balcony (5): 18.7
+I 02-06-2025 13:42:17 Got: Freezer (14): -19.6

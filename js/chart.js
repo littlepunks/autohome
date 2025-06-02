@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error('Canvas context not found. Chart cannot be rendered.');
     return;
   }
-
+  // Initialize the temperature graph and chart data
   let temperatureGraph;
   let temperatureChartData = {
     labels: [],
@@ -106,6 +106,14 @@ document.addEventListener("DOMContentLoaded", () => {
     temperatureGraph = new Chart(ctx, config);
   }
 
+  function destroyChart() {
+    if (temperatureGraph) {
+      temperatureGraph.destroy();
+      temperatureGraph = null;
+    }
+  } 
+
   window.updateChartFromJSON = updateChartFromJSON;
-  drawInitialChart();
+  window.drawInitialChart = drawInitialChart;
+  window.destroyChart = destroyChart;
 });

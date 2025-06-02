@@ -50,28 +50,44 @@ socket.on("sensors", (data) => {
 
 socket.on("SMv2", (data) => {
   const obj = JSON.parse(data);
-  updateSensorLocation(dash, obj.name, obj.col, obj.row, obj.enabled);
-  drawDash();
+  console.log('Received SMv2 data:', obj);
 
-  // Update the chart too, if applicable
-  if (window.updateChartFromJSON) {
-    window.updateChartFromJSON(obj);
+  // Update sensor value
+  const sensor = dash.find(s => s.name === obj.name);
+  if (sensor) {
+    Object.assign(sensor, {
+      value: obj.value,
+      updated: obj.updated,
+      contact_status: obj.contact_status,
+      alarmState: obj.alarmState,
+      min: obj.min,
+      max: obj.max,
+      control: obj.control,
+      suffix: obj.suffix,
+      enabled: obj.enabled
+    });
+
+    // Then draw the dashboard
+    drawDash();
+
+    // Update the chart too, if applicable
+    if (window.updateChartFromJSON) {
+      window.updateChartFromJSON(obj);
+    }
   }
 });
 
 // Request initial data
 socket.emit("ClientMsg", "init");
 
-
-
 // Coordinate conversion
-function xy2rc(xy) {
-  return (xy < 0) ? 1 : (Math.floor(xy / colWidth) + 1);
-}
+// function xy2rc(xy) {
+//   return (xy < 0) ? 1 : (Math.floor(xy / colWidth) + 1);
+// }
 
-function rc2xy(rc) {
-  return (rc <= 0) ? 0 : ((rc - 1) * colWidth);
-}
+// function rc2xy(rc) {
+//   return (rc <= 0) ? 0 : ((rc - 1) * colWidth);
+// }
 
 // Grid drawing
 function drawGrid() {
@@ -111,13 +127,10 @@ function setBackgroundColor(color) {
 
 // Draw dashboard elements
 function drawDash() {
-  // Delete this later when not testing charts
-  return;
-  
   setBackgroundColor(colBackground);
   if (showGrid) drawGrid();
   dash.forEach(obj => {
-    if (obj.enabled) drawDashObj(obj);
+    if (obj.enabled) drawDashObj(obj, { shadow: true });
   });
 }
 
@@ -152,7 +165,9 @@ window.addEventListener('resize', () => {
 
 // Drawing logic
 function drawDashObj(dashObj, overrides = {}) {
-  if (!dashObj.enabled) return;
+  //if (!dashObj.enabled) return;
+
+  // console.log('Drawing object:', dashObj.name, 'at', dashObj.col, dashObj.row);
 
   const drawFunctions = {
     'GAU': drawGauge,
@@ -163,6 +178,7 @@ function drawDashObj(dashObj, overrides = {}) {
   const drawFunction = drawFunctions[dashObj.control];
 
   if (drawFunction) {
+
     if (overrides.shadow) {
       ctx.shadowColor = 'rgba(0, 0, 0, 1)';
       ctx.shadowBlur = 0;
@@ -192,6 +208,7 @@ function drawArc(x, y, radius, style, isStroke = false, lineWidth = 1) {
 }
 
 function drawGauge(g, opts) {
+
   const thickness = 14;
   let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
   let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
@@ -332,3 +349,5 @@ function createPopup(content, x, y) {
   document.body.appendChild(popup);
   setTimeout(() => popup.remove(), 10000);
 } 
+
+window.drawDash = drawDash; // Expose drawDash for external use
