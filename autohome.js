@@ -163,7 +163,7 @@ function runSensorCheck() {
                                 timeDiff > sensor.freq * 1000 ? "1" : "0";
 
         if (oldStatus !== sensor.contact_status) {
-            io.emit("SMv2", JSON.stringify(sensor));
+            io.emit("Sensor", JSON.stringify(sensor));
         }
     });
 
@@ -498,7 +498,7 @@ function decode(msg) {
 						getSensor.value = rPayload;
 						getSensor.contact_status = '0';
 						// Send JSON of sensor
-						io.emit('SMv2', JSON.stringify(getSensor));
+						io.emit('Sensor', JSON.stringify(getSensor));
 						logMsg('I', `Got: ${getSensor.name} (${rNode}): ${getSensor.value}`);
 						logMsg('DI', "Sending JSON: " + JSON.stringify(getSensor));
 
@@ -680,14 +680,14 @@ io.on("connection", function (socket) {
     // Helper Functions
     function handleRedraw() {
         conf.mysensors.sensornodes.forEach(sensor => {
-            io.emit("SMv2", JSON.stringify(sensor));
+            io.emit("Sensor", JSON.stringify(sensor));
         });
         logMsg("DR", "Redraw requested");
-        io.emit("", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
+        // *** Needed? considering above?   io.emit("", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
     }
 
     function handleInit() {
-        io.emit("sensors", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
+        io.emit("AllSensors", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
         logMsg("DR", "Init requested");
     }
 
@@ -727,7 +727,7 @@ function updateSensorState(sensor) {
     sensor.contact_status = '0';
 
     logMsg('I', `Changing ${sensor.name} (${sensor.id}) to ${sensor.value}`);
-    io.emit('SMv2', JSON.stringify(sensor));
+    io.emit('Sensor', JSON.stringify(sensor));
 }
 
 function handleSpecialActions(butID, value) {

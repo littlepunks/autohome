@@ -17,7 +17,9 @@ let margin = canvas.width / (cols * 2);
 let colWidth = canvas.width / cols;
 let rowHeight = canvas.height / rows;
 
-let showGrid = true;
+// Don't show grid by default
+//let showGrid = false;
+window.showGrid = false;
 
 const colGaugeBkgnd = '#907010';
 const colGaugeColor = '#d0b020';
@@ -35,7 +37,9 @@ let resizeTimer = null;
 // Listen for sensor data from the server
 const socket = io();
 
-socket.on("sensors", (data) => {
+socket.on("AllSensors", (data) => {
+  console.log('Received full set of sensor data (', new Date().toLocaleString(), ')');
+
   const parsed = JSON.parse(data);
   dash = parsed;
   drawDash();
@@ -48,9 +52,10 @@ socket.on("sensors", (data) => {
   });
 });
 
-socket.on("SMv2", (data) => {
+socket.on("Sensor", (data) => {
   const obj = JSON.parse(data);
-  console.log('Received SMv2 data:', obj);
+  // or use Date().isostring() for ISO format
+  console.log('Received (', new Date().toLocaleString(), '):', obj);
 
   // Update sensor value
   const sensor = dash.find(s => s.name === obj.name);
@@ -91,6 +96,7 @@ socket.emit("ClientMsg", "init");
 
 // Grid drawing
 function drawGrid() {
+  ctx.save();
   ctx.shadowOffsetX = 0;
   ctx.shadowOffsetY = 0;
   ctx.shadowBlur = 0;
@@ -109,10 +115,11 @@ function drawGrid() {
   }
 
   ctx.stroke();
+  ctx.restore();
 
-  ctx.shadowOffsetX = 5;
-  ctx.shadowOffsetY = 5;
-  ctx.shadowBlur = 10;
+  // ctx.shadowOffsetX = 5;
+  // ctx.shadowOffsetY = 5;
+  // ctx.shadowBlur = 10;
 }
 
 // Set background
@@ -128,7 +135,7 @@ function setBackgroundColor(color) {
 // Draw dashboard elements
 function drawDash() {
   setBackgroundColor(colBackground);
-  if (showGrid) drawGrid();
+  if (window.showGrid) drawGrid();
   dash.forEach(obj => {
     if (obj.enabled) drawDashObj(obj, { shadow: true });
   });
@@ -181,14 +188,14 @@ function drawDashObj(dashObj, overrides = {}) {
 
     if (overrides.shadow) {
       ctx.shadowColor = 'rgba(0, 0, 0, 1)';
-      ctx.shadowBlur = 0;
-      ctx.shadowOffsetX = 10;
-      ctx.shadowOffsetY = 10;
+      ctx.shadowBlur = 2;
+      ctx.shadowOffsetX = 2;
+      ctx.shadowOffsetY = 2;
     } else {
       ctx.shadowColor = 'rgba(0, 0, 20, 0.5)';
-      ctx.shadowBlur = 10;
-      ctx.shadowOffsetX = 5;
-      ctx.shadowOffsetY = 5;
+      ctx.shadowBlur = 5;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
     }
     drawFunction(dashObj, overrides);
   }
@@ -213,7 +220,7 @@ function drawGauge(g, opts) {
   let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
   let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
 
-  if (opts && Object.keys(opts).length > 0 && showGrid) drawGrid();
+  if (opts && Object.keys(opts).length > 0 && window.showGrid) drawGrid();
 
   const colorMap = { 1: 'darkorange', 2: 'red' };
   const fillColor = colorMap[g.contact_status] || 'darkgreen';
@@ -242,7 +249,7 @@ function drawStatus(g, opts) {
   let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
   let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
 
-  if (opts && Object.keys(opts).length > 0 && showGrid) drawGrid();
+  if (opts && Object.keys(opts).length > 0 && window.showGrid) drawGrid();
 
   const colorMap = { 1: 'darkorange', 2: 'red' };
   const fillColor = colorMap[g.contact_status] || 'darkgreen';
@@ -272,7 +279,7 @@ function drawBarV(b, opts) {
   let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
   let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
-  if (opts && Object.keys(opts).length > 0 && showGrid) drawGrid();
+  if (opts && Object.keys(opts).length > 0 && window.showGrid) drawGrid();
 
   const lineWidth = canvas.width / (8 * cols);
   drawLine(bx, by - (0.8 * margin), bx, by + (0.8 * margin), colGaugeBkgnd, lineWidth);
@@ -295,7 +302,7 @@ function drawBarH(b, opts) {
   let bx = opts?.x ?? margin + (b.col - 1) * colWidth;
   let by = opts?.y ?? margin + (b.row - 1) * colWidth;
 
-  if (opts && Object.keys(opts).length > 0 && showGrid) drawGrid();
+  if (opts && Object.keys(opts).length > 0 && window.showGrid) drawGrid();
 
   const lineWidth = canvas.width / (8 * cols);
   drawLine(bx - (0.8 * margin), by, bx + (0.8 * margin), by, colGaugeBkgnd, lineWidth);
@@ -351,3 +358,4 @@ function createPopup(content, x, y) {
 } 
 
 window.drawDash = drawDash; // Expose drawDash for external use
+//window.showGrid = showGrid; // Expose showGrid for external toggling

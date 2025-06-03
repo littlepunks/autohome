@@ -18,12 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = '/graphs';
         break;
       case 'Toggle Grid':
-        showGrid = !showGrid;
-        drawDash();
+        window.showGrid = !window.showGrid;
+        console.log(`Grid visibility toggled to: ${window.showGrid}`);
+        window.drawDash();
         break;
       case 'Show All Items':
         dash.forEach(item => item.enabled = true);
-        drawDash();
+        window.drawDash();
         break;
       case 'Grid Code':
         console.log('Grid code toggle requested (not implemented)');

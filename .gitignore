@@ -15,7 +15,6 @@ test.sh
 .env
 backups/
 rrdtool/
-autohome.log
 *.png
 sensor_chart.png
 images/*.png
