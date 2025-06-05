@@ -23,14 +23,15 @@
 
 <body>
   <ul class="menu" id="menubar">
-    <li><a onclick="handleItemClick('Home')">Home</a></li>
+    <li><a onclick="handleItemClick('homeCanvas')">Home</a></li>
     
     <li class="dropdown">
       <a class="dropbtn">View</a>
       <div class="dropdown-content">
-        <a onclick="handleItemClick('TempGraphs')">Live Temp Graph</a>
-        <a onclick="handleItemClick('TempHistoryGraphs')">Temp History Graphs</a>
-        <a href="http://192.168.68.72:8080/test">UI/UX</a>
+        <a onclick="handleItemClick('graphCanvas')">Live Temp Graph</a>
+        <a onclick="handleItemClick('switchesCanvas')">Switches</a>
+        <a onclick="handleItemClick('weatherCanvas')">Weather</a>
+        <a onclick="handleItemClick('weatherHistoryCanvas')">Temp History Graphs</a>
       </div>
     </li>
 
@@ -38,8 +39,6 @@
       <a class="dropbtn">Services</a>
       <div class="dropdown-content">
         <a onclick="handleItemClick('Web')">Web</a>
-        <a href="http://192.168.68.72:8080/test">Mobile App Development</a>
-        <a href="http://192.168.68.72:8080/test">UI/UX Design</a>
       </div>
     </li>
   
@@ -54,7 +53,11 @@
   </ul>
 
   <div class="canvas-container">
-    <canvas id="mainCanvas" width="150" height="754"></canvas>
+    <canvas id="homeCanvas" width="150" height="754"></canvas>
+    <canvas id="graphCanvas" width="150" height="754"></canvas>
+    <canvas id="switchesCanvas" width="150" height="754"></canvas>
+    <canvas id="weatherCanvas" width="150" height="754"></canvas>
+    <canvas id="weatherHistoryCanvas" width="150" height="754"></canvas>
   </div>
 
   <div id="contextMenu" class="context-menu">

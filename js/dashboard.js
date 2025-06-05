@@ -1,25 +1,44 @@
 // dashboard.js
 
-// Set up canvas and context
-const canvas = document.getElementById('mainCanvas');
-const ctx = canvas.getContext('2d');
-const contextMenu = document.getElementById('contextMenu');
-contextMenu.style.display = 'none';
+//const { isNumber } = require("util");
 
+// Set up canvas and context
+
+let currentCanvasName = 'homeCanvas'; // Default canvas
+document.currentCanvasName = currentCanvasName; // Store current canvas globally
+document.currentCanvas = document.getElementById(currentCanvasName); // Store current canvas globally
+document.currentCtx = document.currentCanvas.getContext('2d'); // Store current canvas context globally
+
+// Get the menu height and calculate the standard canvas size.
 const menuObj = document.getElementById('menubar');
-canvas.height = window.innerHeight - menuObj.offsetHeight - 10;
-canvas.width = Math.min(window.innerWidth, 500);
+const canvasHeight = window.innerHeight - menuObj.offsetHeight - 10;
+const canvasWidth = Math.min(window.innerWidth, 500);
+
+
+// Show only the first (home) canvas and hide the others, also set size
+document.querySelectorAll('.canvas-container canvas').forEach(canvas => {
+  canvas.style.display = (canvas.id === currentCanvasName) ? 'block' : 'none';
+  canvas.height = canvasHeight;
+  canvas.width = canvasWidth;
+});
+
+
+const canvas = document.currentCanvas;
+const ctx = document.currentCtx;
+//const contextMenu = document.getElementById('contextMenu');
+//contextMenu.style.display = 'none';
+
 
 // Grid setup
 const cols = 4;
 const rows = 5;
 let margin = canvas.width / (cols * 2);
 let colWidth = canvas.width / cols;
-let rowHeight = canvas.height / rows;
+let rowHeight = colWidth; //canvas.height / rows;
 
 // Don't show grid by default
 //let showGrid = false;
-window.showGrid = false;
+window.showGrid = true;
 
 const colGaugeBkgnd = '#907010';
 const colGaugeColor = '#d0b020';
@@ -32,11 +51,11 @@ const PI2 = 2 * Math.PI;
 let dash = [];
 let resizeTimer = null;
 
-// ... existing dashboard.js content above ...
 
 // Listen for sensor data from the server
 const socket = io();
 
+// Handle the full set of sensor data from the server
 socket.on("AllSensors", (data) => {
   console.log('Received full set of sensor data (', new Date().toLocaleString(), ')');
 
@@ -52,6 +71,7 @@ socket.on("AllSensors", (data) => {
   });
 });
 
+// Handle individual sensor updates from the server
 socket.on("Sensor", (data) => {
   const obj = JSON.parse(data);
   // or use Date().isostring() for ISO format
@@ -85,14 +105,55 @@ socket.on("Sensor", (data) => {
 // Request initial data
 socket.emit("ClientMsg", "init");
 
-// Coordinate conversion
-// function xy2rc(xy) {
-//   return (xy < 0) ? 1 : (Math.floor(xy / colWidth) + 1);
-// }
+// Show first canvas only (home page)
+function showHomeCanvas() {
+  const canvases = document.querySelectorAll('.canvas-container canvas');
+  canvases.forEach((canvas, index) => {
+    canvas.style.display = (index === 0) ? 'block' : 'none';
+  });
+}
 
-// function rc2xy(rc) {
-//   return (rc <= 0) ? 0 : ((rc - 1) * colWidth);
-// }
+showHomeCanvas(); // Show the home canvas on initial load
+
+// A function that takes a canvas id and a file name and draws a scaled image on the canvas
+function drawScaledImage(canvasId, fileName, position) {
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext('2d');
+  const img = new Image();
+  img.src = fileName;
+  img.onload = () => {
+    // const scale = canvas.width / img.width;
+    const scale = 0.92;
+
+    const x = (canvas.width / 2) - (img.width * scale / 2);
+    let y=0;
+    //const y = (canvas.height / 2) - (img.height * scale / 2);
+    switch (position.toLowerCase()) {
+      case 'top':
+        y = 0; // Align to top
+        break;
+      case 'bottom':
+        y = canvas.height - (img.height * scale); // Align to bottom
+        break;
+      case 'middle':
+        y = (canvas.height / 2) - (img.height * scale / 2); // Center vertically
+        break;
+    }
+
+    //ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+  };
+}
+
+// Redraw weather graphs on the weather canvas
+window.redrawWeatherGraphs = function() {
+  drawScaledImage('weatherCanvas', 'images/temp_graph_1d.png', 'top');
+  drawScaledImage('weatherCanvas', 'images/pressure_1d.png', 'middle');
+  drawScaledImage('weatherCanvas', 'images/humidity_1d.png', 'bottom');
+}
+
+window.redrawWeatherGraphs(); // Initial draw of weather graphs
+
 
 // Grid drawing
 function drawGrid() {
@@ -141,19 +202,20 @@ function drawDash() {
   });
 }
 
+// Maybe not needed, but kept for reference
 // Update sensor location
-function updateSensorLocation(data, name, col, row, enabled) {
-  const item = data.find(i => i.name === name);
-  if (item) {
-    Object.assign(item, {
-      col,
-      row,
-      enabled,
-      x: (col - 1) * colWidth,
-      y: (row - 1) * colWidth
-    });
-  }
-}
+// function updateSensorLocation(data, name, col, row, enabled) {
+//   const item = data.find(i => i.name === name);
+//   if (item) {
+//     Object.assign(item, {
+//       col,
+//       row,
+//       enabled,
+//       x: (col - 1) * colWidth,
+//       y: (row - 1) * colWidth
+//     });
+//   }
+// }
 
 // Resize handler
 window.addEventListener('resize', () => {
@@ -168,15 +230,12 @@ window.addEventListener('resize', () => {
   }, 200);
 });
 
-// dashboard.js (continued)
 
-// Drawing logic
+// Drawing dashboard objects
 function drawDashObj(dashObj, overrides = {}) {
-  //if (!dashObj.enabled) return;
-
-  // console.log('Drawing object:', dashObj.name, 'at', dashObj.col, dashObj.row);
 
   const drawFunctions = {
+    'BUT': drawSwitch,
     'GAU': drawGauge,
     'STA': drawStatus,
     'bar-v': drawBarV,
@@ -237,11 +296,41 @@ function drawGauge(g, opts) {
   ctx.fillStyle = g.alarmState === 1 ? 'orange' : g.alarmState === 2 ? 'red' : 'white';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = `${canvas.width / (11 * cols)}px Arial`;
+  ctx.font = `${canvas.width / (10 * cols)}px Arial`;
   ctx.fillText(g.name, cx, cy - margin * 0.3);
   const gaugeText = `${g.value}${g.suffix ?? ''}`;
   ctx.font = `${Math.max(12, canvas.width / (cols * (gaugeText.length * 5)))}px Arial`;
   ctx.fillText(gaugeText, cx, cy + margin * 0.25);
+}
+
+// Draw a switch
+function drawSwitch(g, opts) {
+  const width = 50;
+  const height = 25;
+  const radius = height / 2;
+  let cx = opts?.x ?? margin + (g.col - 1) * colWidth;
+  let cy = opts?.y ?? margin + (g.row - 1) * colWidth;
+
+  const isOn = g.value === "1";
+  const bgColor = isOn ? 'green' : 'red';
+  const circleX = isOn ? cx + width/2 - radius : cx-width/2 + radius;
+
+  // Draw background (rounded rectangle)
+  ctx.fillStyle = bgColor;
+  ctx.beginPath();
+  ctx.roundRect(cx-width/2, cy, width, height, radius);
+  ctx.fill();
+
+  // Draw toggle circle
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.arc(circleX, cy + radius, radius * 0.8, 0, 2 * Math.PI);
+  ctx.fill();
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = `${canvas.width / (9 * cols)}px Arial`;
+  ctx.fillText(g.name, cx, cy - margin * 0.3);
 }
 
 function drawStatus(g, opts) {
@@ -332,13 +421,33 @@ canvas.addEventListener("click", (event) => {
   const row = Math.floor(y / rowHeight) + 1;
   const ctrl = dash.find(obj => obj.col === col && obj.row === row);
 
+  // console.log(`x: ${x}, y: ${y}, colWidth: ${colWidth}, rowHeight: ${rowHeight}`);
+  //console.log(`Clicked on col: ${col}, row: ${row}, control: ${ctrl ? ctrl.name : 'none'}`);
+
   if (ctrl) {
     const time = new Date(ctrl.updated).toLocaleString('en-NZ');
-    const info = `ID: ${ctrl.id}\nName: ${ctrl.name}\nValue: ${ctrl.value}${ctrl.suffix ?? ''}\nContact Status: ${ctrl.contact_status}\nLast Contact: ${time}\nAlarmState: ${ctrl.alarmState}\nMin: ${ctrl.min}\nMax: ${ctrl.max}\nCol: ${ctrl.col}\nRow: ${ctrl.row}\nEnabled: ${ctrl.enabled}\nControl: ${ctrl.control}`;
-    createPopup(info, event.clientX, event.clientY);
+    const info = `Name: ${ctrl.name} (${ctrl.id}) [${ctrl.control}]\nValue: ${ctrl.value}${ctrl.suffix ?? ''}, Min: ${ctrl.min}, Max: ${ctrl.max}\nContact Status: ${ctrl.contact_status}, Last Contact: ${time}\n${(typeof ctrl.alarmState === 'number')?'AlarmState: '+ctrl.alarmState:''}${(ctrl.warningThreshold)?', Warning: '+ctrl.warningThreshold:''}${(ctrl.alarmThreshold)?', Alarm: '+ctrl.alarmThreshold:''}`;
+    console.log(info);
+
+    // Need to act depending on the control clicked.
+    if (ctrl.control === 'BUT') {
+      // Buttons
+      // if (ctrl.id === '105') { // Special case for the '105' button
+      //   console.log('Sky light clicked, performing special action');
+      //   // Call TPLINK on the sky light
+      //   socket.emit('ClientMsg', 'BUT;105');
+      // } else {
+      //   console.log(`Button ${ctrl.name} pressed');'}`);
+      // }
+      socket.emit('ClientMsg', `BUT;${ctrl.id}`);
+    } else {
+      console.log(`No action set for clicking on: ${ctrl.name} (${ctrl.id}) [${ctrl.control}]`);
+    }
+    // createPopup(info, event.clientX, event.clientY);  *** temporarily disabled.
   }
 });
 
+// Create a popup ready to display sensor information
 function createPopup(content, x, y) {
   const popup = document.createElement("div");
   popup.innerText = content;
@@ -354,8 +463,8 @@ function createPopup(content, x, y) {
     fontSize: "12px"
   });
   document.body.appendChild(popup);
-  setTimeout(() => popup.remove(), 10000);
+  setTimeout(() => popup.remove(), 10000);  // Remove after 10 seconds
+  popup.addEventListener("click", () => popup.remove()); // Remove on click
 } 
 
 window.drawDash = drawDash; // Expose drawDash for external use
-//window.showGrid = showGrid; // Expose showGrid for external toggling

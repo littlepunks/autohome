@@ -7,7 +7,7 @@
 
 "use strict";
 
-// Import dependencies
+// Import dependencies ---------------------------
 
 // Comms and server
 const express = require("express");
@@ -37,9 +37,6 @@ const enableWEMO   = false;   // Set to true to enable Wemo smart switches
 const enableTPLINK = true;   // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
 const enableTUYA   = false;   // Set to true to enable TUYA smart switches - WILL NEED TO UNCOMMENT RELATED CODE
 let plugs = [];   // List of smart plugs/switches
-
-
-
 
 // Get command-line arguments
 
@@ -74,6 +71,8 @@ const autohomeLogFile = './autohome.log'; // Log file for console messages
 
 let conf = {}; // settings.json will be loaded in here later
 const settingsFile = './settings.json'; // Settings file to load
+
+
 
 const SENSORCHECKINTERVAL = 300000;  // 5 mins
 const RRDUPDATEINTERVAL = 300000;  // This should ALWAYS be 5 mins. That's what RRDTOOL expects.
@@ -187,6 +186,7 @@ startPolling();
 function updateStatuses() {
  	// Update external temp/humidity/pressure
  	getOutsideWeather();
+    getWeatherFromMetService(); // To be added later with MetService API
 }
 
 // Regularly check sensor update times and highlight any missing by changing the colour
@@ -311,14 +311,14 @@ function processIncomingData(str) {
 	
 // IS THIS NEEDED??? Used where? Surely to update a display or change a sensor setting
 // Send a text message off to the gateway
-function gwWrite(msg, logtxt) {
-	gw.write(msg + '\n', function(err) {
-		if (err) {
-	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
-	  	}
-	  	logMsg('DI', logtxt);
-	});
-}
+// function gwWrite(msg, logtxt) {
+// 	gw.write(msg + '\n', function(err) {
+// 		if (err) {
+// 	    	return logMsg('E', 'Error on serial write to MySensors gateway: ' + err.message);
+// 	  	}
+// 	  	logMsg('DI', logtxt);
+// 	});
+// }
 
 // Helper function to build up a message string from a sensor
 function appendData(str) {
@@ -338,8 +338,54 @@ function appendData(str) {
         // There's still more data to process so chop of what's been processed and recurse
         appendData(str.substr(pos + 1, str.length - pos - 1));
     }
- }
+}
 
+async function getWeatherFromMetService() {
+    // Getting data from the MetService API
+    // =========================================================
+    // Use these from .env
+    //     METSERVICE_KEY
+    //     METSERVICE_URL
+    //
+    // API Console : https://console.metoceanapi.com/#/dashboard
+    // Login with Gmail credentials
+    // =========================================================
+
+    let url = process.env.METSERVICE_URL;    // Use from .env
+
+    let data = {
+        points: [{lon: 174.7787, lat: -41.2924}],   // Wellington, NZ
+        variables: ['precipitation.rate'],
+        time: {
+            from: new Date(Date.now() - 60*60*1000).toISOString(),  // Time 1 hour ago
+            interval: '1h',
+            repeat: 0,
+        }
+    };
+
+    let options = {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.METSERVICE_KEY    // *** Use key from .env
+        }
+    };
+
+    await fetch(url, options)
+        .then(response => {
+        return response.json();
+        }).then(json => {
+        //console.log(JSON.stringify(json.dimensions.time.data, null, 2), JSON.stringify(json.variables["precipitation.rate"].data[0], null, 2));
+        // Send the precipitation rate to the MySensors gateway
+        decode(`201;0;${MS.C_SET};0;${MS.V_TEMP};${json.variables["precipitation.rate"].data[0].toFixed(1)}`);
+    });
+}
+
+// Do initial fetch of weather data from MetService API
+getWeatherFromMetService().catch(error => {
+    logMsg('E', `Error fetching weather from MetService: ${error.message}`);
+});
 
 async function getOutsideWeather() {
     logMsg("I", "Requesting updated external weather.");
@@ -370,6 +416,7 @@ function updateWeatherData(obj) {
         { id: 100, value: Math.round((obj.main.temp - 273.15) * 10) / 10 },
         { id: 50, value: obj.main.humidity },
         { id: 51, value: Math.round(obj.main.pressure) },
+        // { id: 201, value: getWeatherFromMetService() },    // To be added later with MetService API
         { id: 202, value: obj.wind.deg },
         { id: 203, value: Math.round(3.6 * obj.wind.speed) },
         { id: 204, value: convertTimestampToTime(obj.sys.sunrise) },
@@ -460,7 +507,24 @@ function logMsg(type, txt) {
     });
 }
 
+// Export logMsg for use in sub-modules
+module.exports.logMsg = logMsg;
+module.exports.updateSmartDeviceStatus = updateSmartDeviceStatus;
+
 const smartPlugs = require("./js/smart-devices.js"); // Smart devices module for TP-Link and Tuya
+
+const e = require("express");
+
+function updateSmartDeviceStatus(deviceName, deviceStatus){
+    logMsg('C', `Need to update ${deviceName} with ${deviceStatus}`);
+    let smartDevice = conf.mysensors.sensornodes.find(n => n.name == deviceName);
+    if (smartDevice) {
+        smartDevice.value = deviceStatus ? '1':'0';
+        io.emit('Sensor', JSON.stringify(smartDevice));
+        logMsg('C', JSON.stringify(smartDevice));
+        
+    }
+}
 
 smartPlugs.startTPLink(); // Start TP-Link smart switch handling
 
@@ -610,7 +674,8 @@ app.get('/', function(req, res){
 			logMsg('I', 'Hello ' + req.ip + ' from ' + geo.country);
 		} else {
 			logMsg('I', 'Sorry ' + req.ip + ' from ' + geo.country + 'you are denied');
-			sendFileName = __dirname + '/sorry.html';
+			// Just ignore it   //sendFileName = __dirname + '/sorry.html';
+            return;
 		}
 	}
 	res.sendFile(sendFileName);
@@ -663,9 +728,9 @@ io.on("connection", function (socket) {
             case "init":
                 handleInit();
                 break;
-            case "BUT":
+            case "BUT":  //e.g. "BUT;105"
             case "CHK":
-                handleButtonOrCheckbox(param);
+                handleButtonOrCheckbox(param); 
                 break;
             default:
                 logMsg("I", `Received unknown message from client: ${msg}`);
@@ -691,10 +756,10 @@ io.on("connection", function (socket) {
         logMsg("DR", "Init requested");
     }
 
-    function handleButtonOrCheckbox(buttonId) {
-        logMsg("DR", `Button/Checkbox: ${buttonId}`);
-        processButton(buttonId); // Process the button action
-    }
+    // function handleButtonOrCheckbox(buttonId) {
+    //     //logMsg("I", `Button/Checkbox: ${buttonId}`);
+    //     processButton(buttonId); // Process the button action
+    // }
 });
 
 logMsg('I', 'Starting http listen');
@@ -708,8 +773,9 @@ server.listen(conf.sockets.port, function(){
   
 // Process button or checkbox switch presses from the client
 
-function processButton(butID) {
-    logMsg('DR', `Handling button ${butID}`);
+// function processButton(butID) 
+function handleButtonOrCheckbox(butID) {
+    //logMsg('I', `Handling button ${butID}`);
     const sensor = conf.mysensors.sensornodes.find(s => s.id == butID);
 
     if (!sensor) {
@@ -718,7 +784,11 @@ function processButton(butID) {
     }
 
     updateSensorState(sensor);
-    handleSpecialActions(butID, sensor.value);
+
+    // Handle changes for Smart Plugs or special actions
+
+    // handleSpecialActions(butID, sensor.value);
+    handleSpecialActions(sensor);
 }
 
 function updateSensorState(sensor) {
@@ -726,19 +796,24 @@ function updateSensorState(sensor) {
     sensor.value = sensor.value === '0' ? '1' : '0';
     sensor.contact_status = '0';
 
-    logMsg('I', `Changing ${sensor.name} (${sensor.id}) to ${sensor.value}`);
+    // Send the updated sensor state to clients triggering a UI update
     io.emit('Sensor', JSON.stringify(sensor));
 }
 
-function handleSpecialActions(butID, value) {
-
+// Handle special actions based on the sensor id
+function handleSpecialActions(sensor) {
     const specialActions = {
+        '105': () => smartPlugs.toggleTPLinkPlug(sensor.name),   // Wardrobe
+        '23' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Sky
+        '24' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Sophie
+        '26' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Daves Blanket
+        '21' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Panel heater
         '103': () => toggleDebug(value),
         '997': () => shutdownApplication(),
         '998': () => triggerSettingsSave()
     };
 
-    specialActions[butID]?.();
+    specialActions[sensor.id]?.();
 }
 
 function toggleDebug(value) {

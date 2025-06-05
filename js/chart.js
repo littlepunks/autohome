@@ -1,7 +1,7 @@
 // charts.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  const ctx = document.getElementById('mainCanvas')?.getContext('2d');
+  const ctx = document.getElementById('graphCanvas')?.getContext('2d');
   if (!ctx) {
     console.error('Canvas context not found. Chart cannot be rendered.');
     return;
@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     temperatureGraph = new Chart(ctx, config);
   }
 
+  // May no longer be needed, but kept for reference
   function destroyChart() {
     if (temperatureGraph) {
       temperatureGraph.destroy();
@@ -113,7 +114,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   } 
 
+  // Start the chart with initial data
+  drawInitialChart();
+
+  // Expose the ability to update the chart from JSON data
   window.updateChartFromJSON = updateChartFromJSON;
-  window.drawInitialChart = drawInitialChart;
-  window.destroyChart = destroyChart;
 });

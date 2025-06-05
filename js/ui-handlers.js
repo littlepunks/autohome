@@ -1,21 +1,40 @@
 // ui-handlers.js (revised with DOMContentLoaded safety)
 
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById('mainCanvas');
+  const canvas = document.getElementById('homeCanvas');
   const contextMenu = document.getElementById('contextMenu');
+
+  // Start with drawing the dashboard (home screen)
+  window.drawDash();
 
   // Menu item click handler
   window.handleItemClick = function (action) {
+
+    function showOnlyCanvas(canvasId) {
+      //console.log(`Showing canvas: ${canvasId}`);
+      const allCanvases = document.querySelectorAll('.canvas-container canvas');
+      allCanvases.forEach(c => {
+        c.style.display = (c.id === canvasId) ? 'block' : 'none';
+      });
+    }
+
     switch (action) {
-      case 'Home':
-        window.destroyChart();
-        window.drawDash();
+      case 'homeCanvas':
+        showOnlyCanvas(action);
+        //window.drawDash();
         break;
-      case 'TempGraphs':
-        window.drawInitialChart();
+      case 'graphCanvas':
+        window.redrawWeatherGraphs();
+        showOnlyCanvas(action);
         break;
-      case 'TempHistoryGraphs':
-        window.location.href = '/graphs';
+      case 'switchesCanvas':
+          showOnlyCanvas(action);
+        break;
+      case 'weatherCanvas':
+        showOnlyCanvas(action);
+        break;
+      case 'weatherHistoryCanvas':
+        showOnlyCanvas(action);
         break;
       case 'Toggle Grid':
         window.showGrid = !window.showGrid;
@@ -34,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Context menu handling
+  //Context menu handling
   canvas.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     contextMenu.style.display = 'block';

@@ -15,70 +15,185 @@
 // hw_ver: hardware version
 // alias: friendly name
 
-function startTPLink() {		
-	const { Client } = require('tplink-smarthome-api');
-	const client = new Client();
 
-	client.on('plug-new', device => {
+// function logMsg(message) {
+//   const now = new Date();
+//   const formattedTime = `${now.getDate().toString().padStart(2, '0')}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+  
+//   console.log(`I ${formattedTime} ${message}`);
+// }
 
-		console.log(`Found TP-Link Smart Switch: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}`);  //false=off, true=on
+// Import logMsg functoin from autohome.js
+const parent = require('../autohome.js');
+function logMsg(code, message) {
+	parent.logMsg(code, message);
+}
 
-		// const sysInfo = device.sysInfo;
-		// console.log(`Device Info: ${JSON.stringify(sysInfo, null, 2)}`);
+// Set up TP-Link client
+const { Client } = require('tplink-smarthome-api');
+const TPLinkClient = new Client();
+const TPLinkDeviceRegistry = new Map();
+
+function startTPLink() {
+
+	TPLinkClient.on('plug-new', device => {
+
+		// alias      is the friendly name of the device
+		// host       is the IP address of the device
+		// relayState is true if the device is on, false if it is off
+		// sysInfo    contains detailed information about the device
+
 		const rssi = device.sysInfo.rssi;
+		let signalStrength = `, signal (${rssi}) is `;
 		switch (true) {
 			case (rssi < -90):
-				console.log('Signal is very weak\n');
+				signalStrength += 'very weak';
 				break;
 			case (rssi < -67):
-				console.log('Signal is fairly strong\n');
+				signalStrength += 'fairly strong';
 				break;
 			case (rssi < -55):
-				console.log('Signal is strong\n');
+				signalStrength += 'strong';
 				break;
 			default:
-				console.log(`Signal strength is ${rssi} dBm\n`);
+				signalStrength += 'very strong';
 				break;	
 		}
 
-		// Assumes plug will be found
-		let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-		decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
+		logMsg('I', `Found TP-Link Device: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}${signalStrength}`);  //false=off, true=on
 
+		// Add the device to the registry
+		// The registry is a Map where the key is the device alis (name)
+		// and the value is the device object itself.
+		if (!TPLinkDeviceRegistry.has(device.alias)) {
+			TPLinkDeviceRegistry.set(device.alias, device);
+		}
+
+		// Need to update conf.sesnors with current status
+		// use parent.getConf() to return conf object.
+		// Search for matching name then update conf.
+		parent.updateSmartDeviceStatus(device.alias, device.relayState);
+
+		// // decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
+		// if (conf)	{
+		// 	console.log('Conf: ', JSON.stringify(conf));
+		// }
 		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
 
 		device.startPolling(SENSORCHECKINTERVAL);
 	
 		device.on('power-on', () => {
-			console.log(`TP-Link device ${device.alias} is on`);
+			logMsg('I', `TP-Link device ${device.alias} is on`);
 			// Need to check if it exists otherwise the decode will error
 			let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
+			//(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';1');
 
 		});
 		device.on('power-off', () => {
-			console.log(`TP-Link device ${device.alias} is off`);
-			let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
-			decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
+			logMsg('I', `TP-Link device ${device.alias} is off`);
+			//let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
 
 		});
+		device.on('power-update', (powerState) => {
+			if (powerState) {
+				logMsg('I', `TP-Link device ${device.alias} was turned ON`);
+			} else {
+				logMsg('I', `TP-Link device ${device.alias} was turned OFF`);
+			}
+
+			let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
+			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';0');
+
+		});
+		
 		device.on('in-use-update', inUse => {
-			//logMsg('DI', `TP-Link device ${device.alias} is ${(device.relayState) ? 'on' : 'off'}`);
+			logMsg('I', `TP-Link device - in-use-update:  ${JSON.stringify(device)}`);
 			//let tpSensor = conf.mysensors.sensornodes.find(n => n.name == device.alias);
 			//decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));	
 		});  
 	});
-	client.on('plug-online', device => {
+	TPLinkClient.on('plug-online', device => {
+		// Seems to receive a high number of updates from device.
 		//logMsg('DI', `TP-Link device ${device.alias} is contactable`);
 		// Could mark sensor as uncontactable
 	});
-	client.on('plug-offline', device => {
-		console.log(`TP-Link device ${device.alias} is uncontactable`);
+	TPLinkClient.on('plug-offline', device => {
+		logMsg('E', `TP-Link device ${device.alias} is uncontactable`);
 	});
 
-	console.log('Starting TP-Link Device Discovery');
-	client.startDiscovery();
+	logMsg('I', 'Starting TP-Link Device Discovery');
+	TPLinkClient.startDiscovery();
 }
+
+// Toggle a TPLink Smart Plug based on its alias (name) -------------------
+async function toggleTPLinkPlug(deviceAlias) {
+	// Find the matchng device in the registry
+	const device = TPLinkDeviceRegistry.get(deviceAlias);
+	// If the device is not found, log an error and return
+	if (!device) {
+		logMsg('E', `TP-Link device with ID ${deviceAlias} not found in registry.`);
+		return;
+	}
+
+	// Read the power state of the Tuya switch then toggle it
+	const value = device.relayState ? '0' : '1'; // Toggle the state
+	logMsg('I', `TP-Link device ${device.alias} is being turned ${value === '1' ? 'on' : 'off'}`);
+
+	// Attempt to set the device state
+	try {
+        await device.setPowerState(value === '1' ? true : false);
+        logMsg('I', `TP-Link device ${device.alias} is now ${value === '1' ? 'on' : 'off'}`);
+	} catch (err) {
+		logMsg('E', `Failed to turn TP-Link device ${device.alias} ${value === '1' ? 'on' : 'off'}:`, err);
+	}
+}
+
+// Set the power state of a TPLink Smart Plug based on its name (alias) -------------------
+// State can be true (on) or false (off)
+async function setStateTPLinkPlug(deviceAlias, state) {
+	// Find the matchng device in the registry
+	const device = TPLinkDeviceRegistry.get(deviceAlias);
+	// If the device is not found, log an error and return
+	if (!device) {
+		logMsg('E', `TP-Link device with ID ${deviceId} not found in registry.`);
+		return;
+	}
+
+	// Attempt to set the device state
+	try {
+        await device.setPowerState(state);
+        logMsg('I', `TP-Link device ${device.alias} has been turned ${state ? 'on' : 'off'}`);
+	} catch (err) {
+		logMsg('E', `Failed to turn TP-Link device ${device.alias} ${state ? 'on' : 'off'}:`, err);
+	}
+}
+
+// TP-Link Example Usage ---------------------------------------------------------------
+
+// toggleTPLinkPlug('Sky'); // Wardrobe plug
+
+// setTimeout(() => {
+// 	setStateTPLinkPlug('Sky', true); // Wardrobe plug
+// }, 5000); // Toggle after 5 seconds	
+
+// setTimeout(() => {
+// 	setStateTPLinkPlug('Sky', false); // Wardrobe plug
+// }, 8000); // Toggle after 5 seconds	
+
+
+
+//--------------------------------------
+
+module.exports = {
+	startTPLink,
+	toggleTPLinkPlug,
+	setStateTPLinkPlug,
+	TPLinkDeviceRegistry
+	// handleSpecialActions,
+	// handleSmartSwitch,
+	// controlSonoffSwitch
+};
 
 
 // Tuya Switch setup ---------------------------------------------------------------------
@@ -135,16 +250,13 @@ function startTPLink() {
 	// 	setTimeout(() => { tuyaDev.disconnect(); }, 10000);
 	// }
 
-
-	// function toggleTuyaSwitch(value) {
-	//     logMsg('I', 'Tuya switch action underway...');
-	//     try {
-	//         tuyaDev.set({ set: value === '1' })
-	//             .then(() => logMsg('I', `Tuya device turned ${value === '1' ? 'on' : 'off'}`));
-	//     } catch (error) {
-	//         logMsg('E', `Tuya switching error: ${error}`);
-	//     }
+	// try {
+	// 	tuyaClient.set({ set: value === '1' })
+	// 		.then(() => logMsg('I', `Tuya device turned ${value === '1' ? 'on' : 'off'}`));
+	// } catch (error) {
+	// 	logMsg('E', `Tuya switching error: ${error}`);
 	// }
+
 
 
 	// // Need to carefully merge this function with the existing function in autohome.js
@@ -184,10 +296,3 @@ function startTPLink() {
 	// }
 
 
-module.exports = {
-	startTPLink
-	// toggleTuyaSwitch,
-	// handleSpecialActions,
-	// handleSmartSwitch,
-	// controlSonoffSwitch
-};
