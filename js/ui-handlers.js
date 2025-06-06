@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.drawDash();
         break;
       case 'Show All Items':
-        dash.forEach(item => item.enabled = true);
+        //window.dash.forEach(item => item.enabled = true);
         window.drawDash();
         break;
       case 'Grid Code':

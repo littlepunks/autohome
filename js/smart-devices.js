@@ -195,6 +195,21 @@ module.exports = {
 	// controlSonoffSwitch
 };
 
+// Samsung SmartThings API setup ---------------------------------------------------------------------
+// Notes:
+// - For more info refer to https://developer.smartthings.com/docs/api/public/#tag/Devices/operation/getDevices
+// - Personal Access Tokens (PATs) are probably the go
+// - OAuth2 scopes : generally in the form permission:entity-type:entity-id (wildcards may be used)
+// - Bearer Authentication Scopes :
+//		- l:devices : List devices
+//		- r:devices : Read device details
+//		- w:devices : Update or delete devices
+//		- x:devices : Execute commands on a device
+
+
+
+
+
 
 // Tuya Switch setup ---------------------------------------------------------------------
 	// if (enableTUYA) {

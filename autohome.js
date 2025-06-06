@@ -10,11 +10,11 @@
 // Import dependencies ---------------------------
 
 // Comms and server
-const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-const request = require("request");
-const geoip = require("geoip-lite");
+const express        = require("express");
+const http           = require("http");
+const socketIo       = require("socket.io");
+const request        = require("request");
+const geoip          = require("geoip-lite");
 const { SerialPort } = require("serialport");
 
 // Costmetic
@@ -22,8 +22,8 @@ const colors = require("colors");             // To use of colors in console mes
 const { styleText } = require("util");        // For colored console messages
 
 // File system, path handling and command line arguments
-const fs = require("fs");
-const args = require('minimist')(process.argv.slice(2)); // Using `minimist` for easier flag handling
+const fs        = require("fs");
+const args      = require('minimist')(process.argv.slice(2)); // Using `minimist` for easier flag handling
 const { spawn } = require("child_process");
 
 // Load environment variables
@@ -34,13 +34,11 @@ const MS = require("./modules/constants.js"); // MySensors API constants
 
 // Smart Plug definitions
 const enableWEMO   = false;   // Set to true to enable Wemo smart switches
-const enableTPLINK = true;   // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
+const enableTPLINK = true;    // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
 const enableTUYA   = false;   // Set to true to enable TUYA smart switches - WILL NEED TO UNCOMMENT RELATED CODE
 let plugs = [];   // List of smart plugs/switches
 
-// Get command-line arguments
-
-// Extract arguments
+// Extract command-line arguments
 let DEBUG = args.d || false; // Debug mode defaults to false
 
 // Add extra command line processing commands here if needed
@@ -51,34 +49,33 @@ let lastDataReceived = Date.now();
 let serialConnectionErrorTriggered = false;
 
 // Initialize Express app and HTTP server
-const app = express();
+const app    = express();
 const server = http.Server(app);
-const io = socketIo(server);
+const io     = socketIo(server);
 
+// Express settings
 app.use(express.urlencoded({ extended: false })); 
 app.use(express.json());
 
 // Allow modules for client access
-app.use('/css', express.static(__dirname + '/css'));
-app.use('/js', express.static(__dirname + '/js'));
-app.use('/images', express.static(__dirname + '/images'));
+app.use('/css',     express.static(__dirname + '/css'));
+app.use('/js',      express.static(__dirname + '/js'));
+app.use('/images',  express.static(__dirname + '/images'));
 app.use('/modules', express.static(__dirname + '/modules'));
 
 // RRDTool setup
-const TempsRRDFile = './temps.rrd'; // RRD file for temperature data
+const TempsRRDFile     = './temps.rrd'; // RRD file for temperature data
 const makeGraphCmdFile = 'make-graph.cmd'; // Command to create graphs
-const autohomeLogFile = './autohome.log'; // Log file for console messages
+const autohomeLogFile  = './autohome.log'; // Log file for console messages
+const settingsFile     = './settings.json'; // Settings file to load
 
 let conf = {}; // settings.json will be loaded in here later
-const settingsFile = './settings.json'; // Settings file to load
-
-
 
 const SENSORCHECKINTERVAL = 300000;  // 5 mins
-const RRDUPDATEINTERVAL = 300000;  // This should ALWAYS be 5 mins. That's what RRDTOOL expects.
+const RRDUPDATEINTERVAL   = 300000;  // This should ALWAYS be 5 mins. That's what RRDTOOL expects.
 
 // Used by the decode function
-let rNode 		= "";
+let rNode 	    = "";
 let rSensor 	= "";
 let rMsgtype 	= "";
 let rAck 		= "";
@@ -88,6 +85,7 @@ let rPayload 	= "";
 // AWS SES (Email) setup
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
+// Set AWS region and access key
 const ses = new SESClient({
   region: process.env.AWS_REGION,
   credentials: {
@@ -175,7 +173,6 @@ function runSensorCheck() {
     } else {
         serialConnectionErrorTriggered = false;
     }
-
 }
 
 // Get things started
@@ -184,9 +181,9 @@ startPolling();
 
 // Loop to do any regular activities 
 function updateStatuses() {
- 	// Update external temp/humidity/pressure
- 	getOutsideWeather();
-    getWeatherFromMetService(); // To be added later with MetService API
+ 	// Update external temp/humidity/pressure/weather
+ 	getOutsideWeather();        // From openweathermap.org
+    getWeatherFromMetService(); // From MetService API
 }
 
 // Regularly check sensor update times and highlight any missing by changing the colour
@@ -245,23 +242,65 @@ if (enableRRD) {
 
 // --------------------------------------
 
+
 function readSettings() {
-	logMsg('I', 'Reading settings');
+    logMsg('I', 'Reading settings');
+    
     try {
+        // Check if the settings file exists before reading
+        if (!fs.existsSync(settingsFile)) {
+            throw new Error(`Settings file not found: ${settingsFile}`);
+        }
+
+        // Read the file
         const fileContents = fs.readFileSync(settingsFile, "utf-8");
-        conf = JSON.parse(fileContents);
+
+        // Ensure the file is not empty
+        if (!fileContents.trim()) {
+            throw new Error("Settings file is empty.");
+        }
+
+        // Attempt to parse JSON with additional validation
+        const parsedConfig = JSON.parse(fileContents);
+
+        if (typeof parsedConfig !== 'object' || parsedConfig === null) {
+            throw new Error("Parsed settings are not a valid JSON object.");
+        }
+
+        // Assign parsed configuration
+        conf = parsedConfig;
+
     } catch (err) {
-        console.error("Error reading settings:", err);
+        console.error("Error reading settings:", err.message);
     }
 
-	logMsg('I', 'Settings loaded');
+    logMsg('I', 'Settings loaded');
 }
 
 // Asynchronous version (preferred)
 function writeSettings() {
-    fs.writeFile(settingsFile, JSON.stringify(conf, null, 2), "utf-8", err => {
-        if (err) logMsg('E', `Error saving settings: ${err}`);
-    });
+    try {
+        if (!conf || typeof conf !== "object") {
+            throw new Error("Invalid configuration object.");
+        }
+
+        const jsonData = JSON.stringify(conf, null, 2);
+
+        if (!jsonData) {
+            throw new Error("Failed to serialize configuration data.");
+        }
+
+        fs.writeFile(settingsFile, jsonData, "utf-8", (err) => {
+            if (err) {
+                logMsg('E', `Error saving settings: ${err.message}`);
+            } else {
+                logMsg('I', "Settings successfully saved.");
+            }
+        });
+
+    } catch (error) {
+        logMsg('E', `WriteSettings error: ${error.message}`);
+    }
 }
 
 // Synchronous version (not preferred, but used for shutdown)
@@ -372,20 +411,33 @@ async function getWeatherFromMetService() {
         }
     };
 
-    await fetch(url, options)
-        .then(response => {
-        return response.json();
-        }).then(json => {
+    try {
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error fetch from MetService. Status: ${response.status}`);
+        }
+        const json = await response.json();
+        if (!json.variables || !json.variables["precipitation.rate"] || !json.variables["precipitation.rate"].data) {
+            throw new Error("Invalid JSON structure returned from MetService. Missing precipitation rate data.");
+        }
+
+        // Ensure the precipitation rate data exists and is a valid number
+        const precipitationRate = json.variables["precipitation.rate"].data[0];
+        if (typeof precipitationRate !== "number") {
+            throw new Error(`Unexpected data type for precipitation rate: ${typeof precipitationRate}`);
+        }
+
         //console.log(JSON.stringify(json.dimensions.time.data, null, 2), JSON.stringify(json.variables["precipitation.rate"].data[0], null, 2));
         // Send the precipitation rate to the MySensors gateway
-        decode(`201;0;${MS.C_SET};0;${MS.V_TEMP};${json.variables["precipitation.rate"].data[0].toFixed(1)}`);
-    });
+        decode(`201;0;${MS.C_SET};0;${MS.V_TEMP};${precipitationRate.toFixed(1)}`);
+    } catch (error) {
+        logMsg('E', 'Error fetching from MetService: ' + error)
+    }
 }
 
 // Do initial fetch of weather data from MetService API
-getWeatherFromMetService().catch(error => {
-    logMsg('E', `Error fetching weather from MetService: ${error.message}`);
-});
+getWeatherFromMetService();
 
 async function getOutsideWeather() {
     logMsg("I", "Requesting updated external weather.");
@@ -416,7 +468,7 @@ function updateWeatherData(obj) {
         { id: 100, value: Math.round((obj.main.temp - 273.15) * 10) / 10 },
         { id: 50, value: obj.main.humidity },
         { id: 51, value: Math.round(obj.main.pressure) },
-        // { id: 201, value: getWeatherFromMetService() },    // To be added later with MetService API
+        // { id: 201, value: getWeatherFromMetService() },    // To be added later with MetService API. Precipitation (rain)
         { id: 202, value: obj.wind.deg },
         { id: 203, value: Math.round(3.6 * obj.wind.speed) },
         { id: 204, value: convertTimestampToTime(obj.sys.sunrise) },
@@ -516,13 +568,12 @@ const smartPlugs = require("./js/smart-devices.js"); // Smart devices module for
 const e = require("express");
 
 function updateSmartDeviceStatus(deviceName, deviceStatus){
-    logMsg('C', `Need to update ${deviceName} with ${deviceStatus}`);
+    //logMsg('C', `Need to update ${deviceName} with ${deviceStatus}`);
     let smartDevice = conf.mysensors.sensornodes.find(n => n.name == deviceName);
     if (smartDevice) {
         smartDevice.value = deviceStatus ? '1':'0';
         io.emit('Sensor', JSON.stringify(smartDevice));
-        logMsg('C', JSON.stringify(smartDevice));
-        
+        //logMsg('C', JSON.stringify(smartDevice));
     }
 }
 
