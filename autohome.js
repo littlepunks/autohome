@@ -36,7 +36,7 @@ const MS = require("./modules/constants.js"); // MySensors API constants
 const enableWEMO   = false;   // Set to true to enable Wemo smart switches
 const enableTPLINK = true;    // Set to true to enable TP-Link smart switches - WILL NEED TO UNCOMMENT RELATED CODE
 const enableTUYA   = false;   // Set to true to enable TUYA smart switches - WILL NEED TO UNCOMMENT RELATED CODE
-let plugs = [];   // List of smart plugs/switches
+//let plugs = [];   // List of smart plugs/switches
 
 // Extract command-line arguments
 let DEBUG = args.d || false; // Debug mode defaults to false
@@ -568,9 +568,9 @@ const smartPlugs = require("./js/smart-devices.js"); // Smart devices module for
 const e = require("express");
 
 function updateSmartDeviceStatus(deviceName, deviceStatus){
-    //logMsg('C', `Need to update ${deviceName} with ${deviceStatus}`);
     let smartDevice = conf.mysensors.sensornodes.find(n => n.name == deviceName);
-    if (smartDevice) {
+    //logMsg('C', `${deviceName}: old: ${smartDevice.value} new: ${deviceStatus ? '1' : '0'}`);
+    if (smartDevice && (smartDevice.value != (deviceStatus ? '1':'0'))) {
         smartDevice.value = deviceStatus ? '1':'0';
         io.emit('Sensor', JSON.stringify(smartDevice));
         //logMsg('C', JSON.stringify(smartDevice));
@@ -619,11 +619,11 @@ function decode(msg) {
 
 						// If from FanSwitch(25) then send of to fan switch (105)
 						// Check to see if the value has changed at all
-						if ((rNode == '25') && (rPayload != oldVal)) {
-							logMsg('I', 'Received message from Fan Switch. Sending to fan: ' + '105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
-							decode('105;0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + rPayload);
-							processButton('105');
-						}
+						// if ((rNode == '25') && (rPayload != oldVal)) {
+						// 	logMsg('I', 'Received message from Fan Switch. Sending to fan: ' + '105;0;'+ C_SET + ';0;' + V_SWITCH + ';' + rPayload);
+						// 	decode('105;0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + rPayload);
+						// 	processButton('105');
+						// }
 					} else {
 						logMsg('E', `Working with: ${msg} but wasn't found`);
 					}
@@ -635,7 +635,7 @@ function decode(msg) {
 				case MS.V_STATUS:
 					break;
 				default:
-					logMsg ('E', 'Unknown Sensor message: ' + rNode + ";" + rSensor + ";" + rMsgtype + ";" + rAck + ";" + rSubtype + ";" + String(rPayload));
+					logMsg ('E', `Unknown Sensor message: ${rNode};${rSensor};${rMsgtype};${rAck};${rSubtype};${String(rPayload)}`);
 			}
 			break;
 
@@ -666,48 +666,83 @@ function decode(msg) {
 	}
 }
 
-function checkSensor(sensor) {
+// function checkSensor(sensor) {
 
-	// Check if the sensor has a valid value and thresholds
+// 	// Check if the sensor has a valid value and thresholds
+//     function parseThreshold(threshold) {
+//         if (typeof threshold === 'number') return { operator: '=', number: threshold };
+        
+// 		// Check if the threshold is a string and matches the expected format
+// 		const match = threshold.match(/^([<>])(-?\d+)$/); 
+//         return match ? { operator: match[1], number: parseFloat(match[2]) } : null;
+//     }
+
+//     const warning = parseThreshold(sensor.warningThreshold);
+//     const alarm = parseThreshold(sensor.alarmThreshold);
+
+//     function shouldRaiseAlert(threshold) {
+//         const { operator, number } = threshold;
+//         return operator === '=' ? sensor.value === number :
+//                operator === '<' ? sensor.value < number :
+//                operator === '>' ? sensor.value > number :
+//                false;
+//     }
+
+// 	// Check if the sensor is now normal but alarmState was true and email things are ok
+// 	if (!(shouldRaiseAlert(alarm) || shouldRaiseAlert(warning)) && (sensor.alarmState !== 0)) {
+// 		const msgBody = `INFO: ${sensor.name} value (${sensor.value}) is back to normal!`;
+// 		logMsg('I', msgBody);
+// 		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Normal`, msgBody); 
+// 		sensor.alarmState = 0; // No threshold set, no alert
+// 	}
+
+// 	// Check if the sensor value exceeds the warning or alarm thresholds and email only if not in alarm state already
+// 	if (shouldRaiseAlert(alarm) && (sensor.alarmState !== 2)) {
+// 		const msgBody = `ALARM: ${sensor.name} value (${sensor.value}) exceeded threshold! (${alarm.operator}${alarm.number})`;
+// 		logMsg('E', msgBody);
+// 		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Alarm`, msgBody); 
+// 		sensor.alarmState = 2;
+//     } else if (shouldRaiseAlert(warning) && (sensor.alarmState !== 1))  {
+// 		const msgBody = `WARNING: ${sensor.name} value (${sensor.value}) near critical value! (${alarm.operator}${alarm.number})`;
+//         logMsg('C', msgBody);
+// 		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Warning`, msgBody); 
+// 		sensor.alarmState = 1;
+//     }
+// }
+
+// ----------------
+
+function checkSensor(sensor) {
     function parseThreshold(threshold) {
-        if (typeof threshold === 'number') {
-            return { operator: '=', number: threshold };
-        }
-		// Check if the threshold is a string and matches the expected format
-		const match = threshold.match(/^([<>])(-?\d+)$/); 
+        if (typeof threshold === "number") return { operator: "=", number: threshold };
+        const match = threshold.match(/^([<>])(-?\d+)$/);
         return match ? { operator: match[1], number: parseFloat(match[2]) } : null;
+    }
+
+    function shouldRaiseAlert(threshold) {
+        if (!threshold) return false;
+        const { operator, number } = threshold;
+        return operator === "=" ? sensor.value === number :
+               operator === "<" ? sensor.value < number :
+               operator === ">" ? sensor.value > number :
+               false;
+    }
+
+    function handleAlert(type, code, state, msg) {
+        logMsg(code, msg);
+        sendEmail("dave.jacobsen@gmail.com", `${sensor.name} ${type}`, msg);
+        sensor.alarmState = state;
     }
 
     const warning = parseThreshold(sensor.warningThreshold);
     const alarm = parseThreshold(sensor.alarmThreshold);
 
-    function shouldRaiseAlert(threshold) {
-        const { operator, number } = threshold;
-        return operator === '=' ? sensor.value === number :
-               operator === '<' ? sensor.value < number :
-               operator === '>' ? sensor.value > number :
-               false;
-    }
-
-	// Check if the sensor is now normal but alarmState was true and email things are ok
-	if (!(shouldRaiseAlert(alarm) || shouldRaiseAlert(warning)) && (sensor.alarmState !== 0)) {
-		const msgBody = `INFO: ${sensor.name} value (${sensor.value}) is back to normal!`;
-		logMsg('I', msgBody);
-		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Normal`, msgBody); 
-		sensor.alarmState = 0; // No threshold set, no alert
-	}
-
-	// Check if the sensor value exceeds the warning or alarm thresholds and email only if not in alarm state already
-	if (shouldRaiseAlert(alarm) && (sensor.alarmState !== 2)) {
-		const msgBody = `ALARM: ${sensor.name} value (${sensor.value}) exceeded threshold! (${alarm.operator}${alarm.number})`;
-		logMsg('E', msgBody);
-		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Alarm`, msgBody); 
-		sensor.alarmState = 2;
-    } else if (shouldRaiseAlert(warning) && (sensor.alarmState !== 1))  {
-		const msgBody = `WARNING: ${sensor.name} value (${sensor.value}) near critical value! (${alarm.operator}${alarm.number})`;
-        logMsg('C', msgBody);
-		sendEmail('dave.jacobsen@gmail.com', `${sensor.name} Warning`, msgBody); 
-		sensor.alarmState = 1;
+    if (!shouldRaiseAlert(alarm) && !shouldRaiseAlert(warning) && sensor.alarmState !== 0) {
+        handleAlert("Normal", "I", 0, `INFO: ${sensor.name} value (${sensor.value}) is back to normal!`);
+    } else if (shouldRaiseAlert(alarm) && sensor.alarmState !== 2) {
+        handleAlert("Alarm", "E", 2, `ALARM: ${sensor.name} value (${sensor.value}) exceeds threshold! (${alarm.operator}${alarm.number})`);
+    } else if (shouldRaiseAlert(warning) && sensor.alarmState !== 1) {
+        handleAlert("Warning", "C", 1, `WARNING: ${sensor.name} value (${sensor.value}) is near critical value! (${alarm.operator}${alarm.number})`);
     }
 }
 
@@ -730,7 +765,6 @@ app.get('/', function(req, res){
 		}
 	}
 	res.sendFile(sendFileName);
-
 });
 
 // Used for testing
@@ -854,11 +888,11 @@ function updateSensorState(sensor) {
 // Handle special actions based on the sensor id
 function handleSpecialActions(sensor) {
     const specialActions = {
-        '105': () => smartPlugs.toggleTPLinkPlug(sensor.name),   // Wardrobe
-        '23' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Sky
-        '24' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Sophie
-        '26' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Daves Blanket
-        '21' : () => smartPlugs.toggleTPLinkPlug(sensor.name),   //Panel heater
+        '105': () => smartPlugs.setStateTPLinkPlug(sensor.name, sensor.value),   // Wardrobe
+        '23' : () => smartPlugs.setStateTPLinkPlug(sensor.name, sensor.value),   //Sky
+        '24' : () => smartPlugs.setStateTPLinkPlug(sensor.name, sensor.value),   //Sophie
+        '26' : () => smartPlugs.setStateTPLinkPlug(sensor.name, sensor.value),   //Daves Blanket
+        '21' : () => smartPlugs.setStateTPLinkPlug(sensor.name, sensor.value),   //Panel heater
         '103': () => toggleDebug(value),
         '997': () => shutdownApplication(),
         '998': () => triggerSettingsSave()

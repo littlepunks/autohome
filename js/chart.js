@@ -1,6 +1,8 @@
 // charts.js
 
-const includeList = ['Bedroom', 'Balcony', 'Tom'];
+
+// List of sensors to be graphed. Should really be in settings.json
+const includeList = ['Bedroom', 'Balcony', 'Tom','Laundry', 'Freezer'];
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -45,10 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!temperatureChartData.labels.includes(isoTimeNow)) {
       temperatureChartData.labels.push(isoTimeNow);
     } else {
-      // If the same time then check the individual sensor and if it's
-      // null the value can be updated.
+      // If the same time then check the individual sensor and change to the latest value even if
+      // it was null.
       temperatureChartData.datasets.forEach(sensorDataset => {
-        if ((sensorDataset.label === sensorLabel) && (sensorDataset.data[sensorDataset.data.length-1] === null)) {
+        // if ((sensorDataset.label === sensorLabel) && (sensorDataset.data[sensorDataset.data.length-1] === null)) {
+        if (sensorDataset.label === sensorLabel) {
           sensorDataset.data[sensorDataset.data.length-1] = value;
           return;
         }
@@ -74,8 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    console.log(temperatureChartData.labels);
-    console.log(temperatureChartData.datasets);
   }
 
   // Update the chart from a JSON object checking it's usable.
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data: [],  // Maybe push initial value?
         backgroundColor: dataColors[temperatureChartData.datasets.length % dataColors.length],
         borderColor: dataColors[temperatureChartData.datasets.length % dataColors.length],
-        tension: 0.4
+        tension: 0.2     // Was 0.4
       };
       temperatureChartData.datasets.push(dataset);
     });
@@ -146,12 +147,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // May no longer be needed, but kept for reference
-  function destroyChart() {
-    if (temperatureGraph) {
-      temperatureGraph.destroy();
-      temperatureGraph = null;
-    }
-  } 
+  // function destroyChart() {
+  //   if (temperatureGraph) {
+  //     temperatureGraph.destroy();
+  //     temperatureGraph = null;
+  //   }
+  // } 
 
   // Start the chart with initial data
   drawInitialChart();

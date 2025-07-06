@@ -29,10 +29,18 @@ function logMsg(code, message) {
 	parent.logMsg(code, message);
 }
 
+const util = require("util");
+
+// ---------------------------------------------------------------------------------
 // Set up TP-Link client
+// Refer to https://plasticrake.github.io/tplink-smarthome-api/ for full API details
+
 const { Client } = require('tplink-smarthome-api');
 const TPLinkClient = new Client();
 const TPLinkDeviceRegistry = new Map();
+
+// How often to check the smart switch power status
+const DEVICEPOLLINGINTERVAL = 60*1000; //milliseconds
 
 function startTPLink() {
 
@@ -63,25 +71,36 @@ function startTPLink() {
 		logMsg('I', `Found TP-Link Device: ${device.alias} : ${device.host} : ${(device.relayState) ? 'on' : 'off'}${signalStrength}`);  //false=off, true=on
 
 		// Add the device to the registry
-		// The registry is a Map where the key is the device alis (name)
+		// The registry is a Map where the key is the device alias (name)
 		// and the value is the device object itself.
 		if (!TPLinkDeviceRegistry.has(device.alias)) {
 			TPLinkDeviceRegistry.set(device.alias, device);
 		}
 
-		// Need to update conf.sesnors with current status
+		// Need to update conf.sensors with current status
 		// use parent.getConf() to return conf object.
 		// Search for matching name then update conf.
-		parent.updateSmartDeviceStatus(device.alias, device.relayState);
+		//console.log('Calling parent to update');
+		try {
+			parent.updateSmartDeviceStatus(device.alias, device.relayState);
+		} catch (error) {
+			console.error('Error calling updateSmartDeviceStatus', error);
+		}
+			
 
-		// // decode(tpSensor.id + ';0;'+ MS.C_SET + ';0;' + MS.V_SWITCH + ';' + ((device.relayState) ? '1' : '0'));
-		// if (conf)	{
-		// 	console.log('Conf: ', JSON.stringify(conf));
-		// }
-		plugs.push({id:  tpSensor.id, host: device.host, type: "tplink"});
-
-		device.startPolling(SENSORCHECKINTERVAL);
+		// Poll regularly for state changes and send to clients
+		setTimeout(function pollDevice() {
+			const plugInfo = TPLinkClient.getDevice({host: device.host}).then((plugDetail) => {
+				plugDetail.getSysInfo().then(p => {
+					//console.log(`${p.alias}: ${p.relay_state}`)
+					parent.updateSmartDeviceStatus(p.alias, (p.relay_state === 1) ? true : false);
+				})				
+			})
+			setTimeout(pollDevice, DEVICEPOLLINGINTERVAL);
+		}, DEVICEPOLLINGINTERVAL);
 	
+		// device.prependListener('*', function() {console.log(this.event)});
+
 		device.on('power-on', () => {
 			logMsg('I', `TP-Link device ${device.alias} is on`);
 			// Need to check if it exists otherwise the decode will error
@@ -132,25 +151,26 @@ async function toggleTPLinkPlug(deviceAlias) {
 	const device = TPLinkDeviceRegistry.get(deviceAlias);
 	// If the device is not found, log an error and return
 	if (!device) {
-		logMsg('E', `TP-Link device with ID ${deviceAlias} not found in registry.`);
+		logMsg('E', `TP-Link device ${deviceAlias} not found in registry.`);
 		return;
 	}
 
 	// Read the power state of the Tuya switch then toggle it
 	const value = device.relayState ? '0' : '1'; // Toggle the state
-	logMsg('I', `TP-Link device ${device.alias} is being turned ${value === '1' ? 'on' : 'off'}`);
+	logMsg('I', `TP-Link device ${device.alias} is being toggled to ${value === '1' ? 'on' : 'off'}`);
 
 	// Attempt to set the device state
 	try {
         await device.setPowerState(value === '1' ? true : false);
-        logMsg('I', `TP-Link device ${device.alias} is now ${value === '1' ? 'on' : 'off'}`);
+        logMsg('I', `TP-Link device ${device.alias} has been toggled to ${value === '1' ? 'on' : 'off'}`);
 	} catch (err) {
-		logMsg('E', `Failed to turn TP-Link device ${device.alias} ${value === '1' ? 'on' : 'off'}:`, err);
+		//logMsg('E', `Failed to toggle TP-Link device ${device.alias} ${value === '1' ? 'on' : 'off'}:`, err);
 	}
 }
 
-// Set the power state of a TPLink Smart Plug based on its name (alias) -------------------
-// State can be true (on) or false (off)
+// Set the power state of a TPLink Smart Plug based on its name (alias)
+// State can be true (on) or false (off) <--- OLD
+// State can be '1'' (on) or '0'' (off)
 async function setStateTPLinkPlug(deviceAlias, state) {
 	// Find the matchng device in the registry
 	const device = TPLinkDeviceRegistry.get(deviceAlias);
@@ -161,29 +181,23 @@ async function setStateTPLinkPlug(deviceAlias, state) {
 	}
 
 	// Attempt to set the device state
+	//logMsg('I', `Attempting to set ${device.alias} to ${state} which is ${(state == '1') ? 'on' : 'off'}`);
+
 	try {
-        await device.setPowerState(state);
-        logMsg('I', `TP-Link device ${device.alias} has been turned ${state ? 'on' : 'off'}`);
+        await device.setPowerState((state == '1') ? true : false);
+        //logMsg('I', `TP-Link device ${device.alias} has been turned ${state ? 'on' : 'off'}`);
 	} catch (err) {
-		logMsg('E', `Failed to turn TP-Link device ${device.alias} ${state ? 'on' : 'off'}:`, err);
+		//logMsg('E', `Failed to turn TP-Link device ${device.alias} ${state ? 'on' : 'off'}:`, err);
 	}
 }
 
-// TP-Link Example Usage ---------------------------------------------------------------
+// TP-Link Examples --------------------------------------------
 
-// toggleTPLinkPlug('Sky'); // Wardrobe plug
+// 		toggleTPLinkPlug('Sky');
+// 		setStateTPLinkPlug('Sky', true);
+// 		setStateTPLinkPlug('Sky', false);
 
-// setTimeout(() => {
-// 	setStateTPLinkPlug('Sky', true); // Wardrobe plug
-// }, 5000); // Toggle after 5 seconds	
-
-// setTimeout(() => {
-// 	setStateTPLinkPlug('Sky', false); // Wardrobe plug
-// }, 8000); // Toggle after 5 seconds	
-
-
-
-//--------------------------------------
+//--------------------------------------------------------------
 
 module.exports = {
 	startTPLink,
@@ -205,8 +219,6 @@ module.exports = {
 //		- r:devices : Read device details
 //		- w:devices : Update or delete devices
 //		- x:devices : Execute commands on a device
-
-
 
 
 
