@@ -17,12 +17,12 @@
       {
         "id": "1",
         "name": "Tom",
-        "value": 17.4,
+        "value": 16.3,
         "control": "GAU",
-        "contact_status": "1",
+        "contact_status": "2",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751787134821,
+        "updated": 1751859476650,
         "freq": 300,
         "warningThreshold": ">32",
         "alarmThreshold": ">39",
@@ -36,12 +36,12 @@
       {
         "id": "2",
         "name": "Bedroom",
-        "value": 18.3,
+        "value": 15,
         "control": "GAU",
         "contact_status": "2",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751072430831,
+        "updated": 1751859603568,
         "freq": 300,
         "min": 0,
         "max": 40,
@@ -52,12 +52,12 @@
       {
         "id": "5",
         "name": "Balcony",
-        "value": 17.7,
+        "value": 18.8,
         "suffix": "°C",
         "control": "GAU",
-        "contact_status": "0",
+        "contact_status": "2",
         "type": "0",
-        "updated": 1751787513808,
+        "updated": 1751859672935,
         "freq": 300,
         "min": 0,
         "max": 40,
@@ -68,12 +68,12 @@
       {
         "id": "6",
         "name": "Laundry",
-        "value": 15.5,
+        "value": 13.9,
         "control": "GAU",
-        "contact_status": "0",
+        "contact_status": "2",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751787474854,
+        "updated": 1751859671503,
         "freq": 300,
         "min": 0,
         "max": 40,
@@ -86,10 +86,10 @@
         "name": "Laundry Status",
         "value": 1,
         "control": "STA",
-        "contact_status": "0",
+        "contact_status": "2",
         "suffix": "",
         "type": "2",
-        "updated": 1751787465080,
+        "updated": 1751859786373,
         "freq": 300,
         "col": 1,
         "row": 2,
@@ -145,12 +145,12 @@
       {
         "id": "14",
         "name": "Freezer",
-        "value": -16.4,
+        "value": -15.6,
         "control": "GAU",
-        "contact_status": "0",
+        "contact_status": "2",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751787439172,
+        "updated": 1751859653443,
         "freq": 300,
         "min": -30,
         "max": -5,
@@ -186,7 +186,7 @@
       {
         "id": "21",
         "name": "Panel Heater",
-        "value": "1",
+        "value": "0",
         "row": 2,
         "col": 4,
         "control": "BUT",
@@ -225,14 +225,14 @@
       {
         "id": "24",
         "name": "Sophie",
-        "value": "1",
+        "value": "0",
         "row": 3,
         "col": 3,
         "control": "BUT",
         "contact_status": "2",
         "suffix": "",
         "type": "15",
-        "updated": 1749286970762,
+        "updated": 1751789613035,
         "freq": 300,
         "enabled": true
       },
@@ -250,7 +250,7 @@
       {
         "id": "26",
         "name": "Daves Blanket",
-        "value": "1",
+        "value": "0",
         "row": 3,
         "col": 4,
         "control": "BUT",
@@ -264,12 +264,12 @@
       {
         "id": "50",
         "name": "Humidity",
-        "value": 71,
+        "value": 68,
         "control": "GAU",
         "contact_status": "0",
         "suffix": "%",
         "type": "0",
-        "updated": 1751785957536,
+        "updated": 1751860567603,
         "freq": 1800,
         "min": 0,
         "max": 100
@@ -277,12 +277,12 @@
       {
         "id": "51",
         "name": "Pressure",
-        "value": 1026,
+        "value": 1030,
         "control": "GAU",
         "contact_status": "0",
         "suffix": " mmHg",
         "type": "0",
-        "updated": 1751785957538,
+        "updated": 1751860567605,
         "freq": 1800,
         "min": 900,
         "max": 1110
@@ -295,7 +295,7 @@
         "contact_status": "0",
         "suffix": "",
         "type": "39",
-        "updated": 1751785957546,
+        "updated": 1751860567615,
         "freq": 1800
       },
       {
@@ -306,7 +306,7 @@
         "contact_status": "0",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751785957534,
+        "updated": 1751860567602,
         "freq": 1800,
         "min": -10,
         "max": 40
@@ -339,12 +339,12 @@
       {
         "id": "200",
         "name": "Weather",
-        "value": "http://openweathermap.org/img/w/04n.png",
+        "value": "http://openweathermap.org/img/w/04d.png",
         "control": "IMG",
         "contact_status": "0",
         "suffix": "",
         "type": "39",
-        "updated": 1751785957545,
+        "updated": 1751860567614,
         "freq": 1800
       },
       {
@@ -355,7 +355,7 @@
         "contact_status": "0",
         "suffix": " mm/Hr",
         "type": "0",
-        "updated": 1751785957695,
+        "updated": 1751860567898,
         "freq": 1800,
         "col": 3,
         "row": 2,
@@ -366,23 +366,23 @@
       {
         "id": "202",
         "name": "Wind",
-        "value": 164,
+        "value": 145,
         "control": "COM",
         "contact_status": "0",
         "suffix": "",
         "type": "10",
-        "updated": 1751785957539,
+        "updated": 1751860567606,
         "freq": 1800
       },
       {
         "id": "203",
         "name": "Speed",
-        "value": 18,
+        "value": 14,
         "control": "GAU",
         "contact_status": "0",
         "suffix": " km/h",
         "type": "0",
-        "updated": 1751785957540,
+        "updated": 1751860567607,
         "freq": 1800,
         "min": 0,
         "max": 200
@@ -395,7 +395,7 @@
         "contact_status": "0",
         "suffix": "",
         "type": "0",
-        "updated": 1751785957541,
+        "updated": 1751860567608,
         "freq": 1800
       },
       {
@@ -406,7 +406,7 @@
         "contact_status": "0",
         "suffix": "",
         "type": "0",
-        "updated": 1751785957542,
+        "updated": 1751860567609,
         "freq": 1800
       },
       {
@@ -417,7 +417,7 @@
         "contact_status": "0",
         "suffix": "",
         "type": "39",
-        "updated": 1751785957546,
+        "updated": 1751860567616,
         "freq": 1800
       },
       {
@@ -428,7 +428,7 @@
         "contact_status": "0",
         "suffix": "",
         "type": "39",
-        "updated": 1751785957547,
+        "updated": 1751860567617,
         "freq": 1800
       },
       {
@@ -439,18 +439,18 @@
         "contact_status": "0",
         "suffix": "",
         "type": "39",
-        "updated": 1751785957547,
+        "updated": 1751860567618,
         "freq": 1800
       },
       {
         "id": "209",
         "name": "W Desc",
-        "value": "broken clouds",
+        "value": "overcast clouds",
         "control": "GAU",
         "contact_status": "0",
         "suffix": "",
         "type": "0",
-        "updated": 1751785957543,
+        "updated": 1751860567610,
         "freq": 1800
       },
       {
@@ -461,18 +461,18 @@
         "contact_status": "0",
         "suffix": "",
         "type": "0",
-        "updated": 1751785957543,
+        "updated": 1751860567611,
         "freq": 1800
       },
       {
         "id": "211",
         "name": "Feels Like",
-        "value": 5,
+        "value": 5.5,
         "control": "GAU",
         "contact_status": "0",
         "suffix": "°C",
         "type": "0",
-        "updated": 1751785957544,
+        "updated": 1751860567612,
         "freq": 1800
       },
       {

@@ -13,6 +13,54 @@ const canvasWidth = Math.min(window.innerWidth, 500);
 
 
 // Show only the first (home) canvas and hide the others, also set size
+function showCanvasOrLog(targetId) {
+  document.querySelectorAll('.canvas-container canvas').forEach(canvas => {
+    canvas.style.display = (canvas.id === targetId) ? 'block' : 'none';
+    canvas.height = canvasHeight;
+    canvas.width = canvasWidth;
+  });
+  const logContainer = document.getElementById('activityLogContainer');
+  if (targetId === 'activityLogContainer') {
+    logContainer.style.display = 'block';
+    logContainer.scrollTop = logContainer.scrollHeight;
+  } else if (logContainer) {
+    logContainer.style.display = 'none';
+  }
+  document.currentCanvasName = targetId;
+}
+
+showCanvasOrLog('homeCanvas');
+
+window.handleItemClick = function(item) {
+  if (item === 'Activity') {
+    showCanvasOrLog('activityLogContainer');
+  } else if (item === 'homeCanvas' || item === 'graphCanvas' || item === 'switchesCanvas' || item === 'weatherCanvas' || item === 'weatherHistoryCanvas') {
+    showCanvasOrLog(item);
+  } else {
+    showCanvasOrLog('homeCanvas');
+  }
+}
+
+// Activity log logic
+const activityLog = [];
+const maxLogEntries = 200;
+function addToActivityLog(msg) {
+  if (activityLog.length >= maxLogEntries) {
+    activityLog.shift();
+  }
+  activityLog.push(msg);
+  const logDiv = document.getElementById('activityLog');
+  if (logDiv) {
+    logDiv.innerHTML = activityLog.map(e => `<div>${e}</div>`).join('');
+    // Only scroll if visible
+    const container = document.getElementById('activityLogContainer');
+    if (container && container.style.display !== 'none') {
+      container.scrollTop = container.scrollHeight;
+    }
+  }
+}
+
+// Show only the first (home) canvas and hide the others, also set size
 document.querySelectorAll('.canvas-container canvas').forEach(canvas => {
   canvas.style.display = (canvas.id === currentCanvasName) ? 'block' : 'none';
   canvas.height = canvasHeight;
@@ -85,6 +133,8 @@ const socket = io();
 
 // Handle the full set of sensor data from the server
 socket.on("AllSensors", (data) => {
+  const logMsg = `[${new Date().toLocaleTimeString()}] Received full set of sensor data.`;
+  addToActivityLog(logMsg);
   console.log('Received full set of sensor data (', new Date().toLocaleString(), ')');
 
   const parsed = JSON.parse(data);
@@ -102,6 +152,8 @@ socket.on("AllSensors", (data) => {
 // Handle individual sensor updates from the server
 socket.on("Sensor", (data) => {
   const obj = JSON.parse(data);
+  const logMsg = `[${new Date().toLocaleTimeString()}] Sensor: ${obj.name} = ${obj.value}`;
+  addToActivityLog(logMsg);
   // or use Date().isostring() for ISO format
   console.log('Received (', new Date().toLocaleString(), '):', obj);
 

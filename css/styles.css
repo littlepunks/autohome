@@ -103,3 +103,26 @@ display: inline-block;
   background: green;
   display: inline-block;
 }
+#activityLogContainer {
+  background: black;
+  color: white;
+  font-family: monospace;
+  font-size: 10px;
+  overflow-y: auto;
+  height: calc(100vh - 60px); /* leave space for menu bar */
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  position: fixed;   /* was absolute; */
+  top: 40px; /* adjust to match menu bar height */
+  left: 0;
+  text-align: left;
+}
+#activityLog {
+  font-family: monospace;
+  font-size: 10px;
+  width: 100%;
+  color: white;
+  background: black;
+  text-align: left;
+}

@@ -21,37 +21,69 @@ document.addEventListener("DOMContentLoaded", () => {
     switch (action) {
       case 'homeCanvas':
         showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
         //window.drawDash();
         break;
       case 'graphCanvas':
         window.redrawWeatherGraphs();
         showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'switchesCanvas':
-          showOnlyCanvas(action);
+        showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'weatherCanvas':
         showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'weatherHistoryCanvas':
         showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
+        break;
+      case 'Activity':
+        // Hide all canvases
+        const allCanvases = document.querySelectorAll('.canvas-container canvas');
+        allCanvases.forEach(c => c.style.display = 'none');
+        // Show the activity log
+        document.getElementById('activityLogContainer').style.display = 'block';
+        // Scroll to bottom
+        document.getElementById('activityLogContainer').scrollTop = document.getElementById('activityLogContainer').scrollHeight;
+        // Set the top position based on the menubar height
+        let offsetHeight = document.getElementById('menubar').offsetHeight;
+        document.getElementById('activityLogContainer').style.top = offsetHeight+'px';
         break;
       case 'Toggle Grid':
         window.showGrid = !window.showGrid;
         console.log(`Grid visibility toggled to: ${window.showGrid}`);
         window.drawDash();
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'Show All Items':
         //window.dash.forEach(item => item.enabled = true);
         window.drawDash();
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'Grid Code':
         console.log('Grid code toggle requested (not implemented)');
+        document.getElementById('activityLogContainer').style.display = 'none';
         break;
       default:
         console.log(`Unhandled menu action: ${action}`);
+        document.getElementById('activityLogContainer').style.display = 'none';
     }
   };
+
+  // Ensures the menus close after clicking
+  document.querySelectorAll('.menu li a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.dropdown-content').forEach(drop => {
+        drop.style.display = 'none';
+      });
+    });
+  });
+
+
 
   //Context menu handling
   canvas.addEventListener("contextmenu", (e) => {
