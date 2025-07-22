@@ -39,7 +39,7 @@
     <li class="dropdown">
       <a class="dropbtn">Services</a>
       <div class="dropdown-content">
-        <a onclick="handleItemClick('Web')">Web</a>
+        <a onclick="handleItemClick('powerCanvas')">Power</a>
         <a onclick="handleItemClick('Activity')">Activity</a>
       </div>
     </li>
@@ -52,7 +52,10 @@
         <a onclick="handleItemClick('Show All Items')">Show All Items</a>
       </div>
     </li>
-    <li><div id="connection-status"></div></li>
+    <li><div id="connection-status">
+        <div id="tooltip"><span style="color: lightgreen">Green</span> is good<br><span style="color: orangered">Red</span> is a problem</div>
+
+    </div></li>
   </ul>
 
   <div class="canvas-container">
@@ -61,6 +64,7 @@
     <canvas id="switchesCanvas" width="150" height="754"></canvas>
     <canvas id="weatherCanvas" width="150" height="754"></canvas>
     <canvas id="weatherHistoryCanvas" width="150" height="754"></canvas>
+    <canvas id="powerCanvas" width="150" height="754"></canvas>
     <div id="activityLogContainer" style="display:none; width:100%; height:754px; overflow-y:auto; background:black; color:white; font-family:monospace; font-size:14px; padding:10px; box-sizing:border-box;">
       <div id="activityLog" style="width:100%;"></div>
     </div>
@@ -76,6 +80,23 @@
 
 <!-- Setup some event handlers then good to go -->  
 <script>
+
+const myDiv = document.getElementById("connection-status");
+const tooltip = document.getElementById("tooltip");
+
+myDiv.addEventListener("mouseenter", () => {
+    tooltip.style.display = "block";
+});
+myDiv.addEventListener("mouseleave", () => {
+    tooltip.style.display = "none";
+});
+
+document.body.addEventListener("mouseover", (event) => {
+   const dropdown = event.target.closest(".dropdown");
+   if (dropdown) {
+      dropdown.querySelector(".dropdown-content").style.display = "block";
+   }
+});
 
 document.body.addEventListener("mouseover", (event) => {
    const dropdown = event.target.closest(".dropdown");

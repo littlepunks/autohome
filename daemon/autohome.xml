@@ -1,0 +1,35 @@
+<service>
+	<id>autohome.exe</id>
+	<name>AutoHome</name>
+	<description>Running AutoHome node.js as a background service</description>
+	<executable>C:\Program Files\nodejs\node.exe</executable>
+	<argument>--harmony</argument>
+	<argument>--max_old_space_size=4096</argument>
+	<argument>C:\Users\littlepunk\Documents\autohome\node_modules\node-windows\lib\wrapper.js</argument>
+	<argument>--file</argument>
+	<argument>C:\Users\littlepunk\Documents\autohome\autohome.js</argument>
+	<argument>--scriptoptions=</argument>
+	<argument>--log</argument>
+	<argument>AutoHome wrapper</argument>
+	<argument>--grow</argument>
+	<argument>0.9</argument>
+	<argument>--wait</argument>
+	<argument>30</argument>
+	<argument>--maxrestarts</argument>
+	<argument>3</argument>
+	<argument>--abortonerror</argument>
+	<argument>n</argument>
+	<argument>--stopparentfirst</argument>
+	<argument>undefined</argument>
+	<argument>--maxretries</argument>
+	<argument>5</argument>
+	<logmode>rotate</logmode>
+	<stoptimeout>30sec</stoptimeout>
+	<env name="NODE_ENV" value="production"/>
+	<serviceaccount>
+		<domain>DESKTOP-PMLCGET</domain>
+		<user>LocalSystem</user>
+		<password></password>
+	</serviceaccount>
+	<workingdirectory>C:\Users\littlepunk\Documents\autohome</workingdirectory>
+</service>

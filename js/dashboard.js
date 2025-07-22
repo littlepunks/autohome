@@ -231,6 +231,11 @@ function drawScaledImage(canvasId, fileName, position) {
   };
 }
 
+
+window.updatePower = function() {
+  console.log(`Update Power`);
+}
+
 // Redraw weather graphs on the weather canvas
 window.redrawWeatherGraphs = function() {
   drawScaledImage('weatherCanvas', 'images/temp_graph_1d.png', 'top');

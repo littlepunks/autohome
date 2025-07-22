@@ -3,9 +3,14 @@
 # Description
 
 AutoHome is a node.js based home automation controller that runs on a Raspberry Pi (or PC) and utilises a MySensors (www.mysensors.org) radio based (NRF24L01+ 2.4 Ghz) sensor network for sensor data.
+
 The controller module is connected to a USB/Serially attached MySensors gateway (Arduino Nano) that in turn connects to the sensors via radio.
+
 It supports TP-Link, Tuya and Wemo smart switches.
-The software is currently designed to connect to MySensors API 1.5
+
+The software is currently designed to connect to MySensors API 1.5.
+
+Instructions are provided, at least partially, for Windows (10/11), Raspbian and Ubuntu.
 
 # Files
 
@@ -22,11 +27,23 @@ All files must reside in the same folder:
 - sensor_mappings.xlsx
 - graphs.html
 - constants.js -     Useful constants for autohome.js
+- ... there may be more, this needs updating
 
 # Execution (New)
 
 From the autohome directory:
+```
 > npm start
+```
+
+## Windows Execution option
+Modify the path, change paramaters then run the install-as-windows-service.js file with:
+```
+> npm install node-windows
+> node install-as-windows-service.js
+```
+If successful open Services.msc and check that the AutoHome service is running ok.
+Refer to online documentation on node-windows for options and how to uninstall the service.
 
 ## Execution (OLD)
 
@@ -127,7 +144,7 @@ cd ~/ && git clone https://github.com/littlepunks/autohome.git && cd ./autohome 
 
 ## Windows
 
-Edit and use autohome-build-windows.ps1 file that automates most of the build. It has not been tested.
+Edit and use autohome-build-windows.ps1 file that automates most of the build. It has not been tested fully.
 
 # Sensor Details
 
@@ -185,7 +202,7 @@ At startup:
 # To Do
 
 ## General
-- Run periodic checks that messages are being received on the serial port. Anything longer than 15mins without should trigger an email once!
+- [Fixed] Run periodic checks that messages are being received on the serial port. Anything longer than 15mins without should trigger an email once!
 - [PI] Move /var/log to RAM to reduce load on SD (refer https://mcuoneclipse.com/2019/04/01/log2ram-extending-sd-card-lifetime-for-raspberry-pi-lorawan-gateway/) or use SSD
 - For each control have optional and default settings, especially related to visuals and alerting.
 () = optional
@@ -212,6 +229,25 @@ Temp Gauge --
 
 LEVELS of values that are critical, also need to know if higher or lower than matters
 
+## Power & Billing
+- Possible use Python library opower
+> pip install opower
+> python -m opower --utility mercury --username dave.jacobsen@gmail.com --password ukHh#0QP%2SF3t0k --start_date 2025-06-01  --end_date 2025-06-30 --usage_only --aggregate_type half_hour
+Getting historical data: account= Account(customer=Customer(uuid='4a36519e-0138-11ee-887c-0200170ed5c9'), uuid='fe2a8512-0138-11ee-887c-0200170ed5c9', utility_account_id='80100148379', id='80100148379', meter_type=<MeterType.ELEC: 'ELEC'>, read_resolution=<ReadResolution.HALF_HOUR: 'HALF_HOUR'>) aggregate_type= half_hour start_date= 2025-06-01 00:00:00 end_date= 2025-06-30 00:00:00
+start_time      end_time        consumption     start_minus_prev_end    end_minus_prev_end
+2025-06-01 00:00:00+12:00       2025-06-01 00:30:00+12:00       0.546   None    None
+2025-06-01 00:30:00+12:00       2025-06-01 01:00:00+12:00       0.474   0:00:00 0:30:00
+2025-06-01 01:00:00+12:00       2025-06-01 01:30:00+12:00       0.447   0:00:00 0:30:00
+2025-06-01 01:30:00+12:00       2025-06-01 02:00:00+12:00       0.797   0:00:00 0:30:00
+
+Chat GPT generate node.js version of the python opower library:
+node-opower.js
+
+Need to install a few pre-reqs:
+npm install axios axios-cookiejar-support tough-cookie
+
+
+
 ## Security
 - Use helmet module for greater security. Possible helmet options:
 		app.use(
@@ -234,7 +270,6 @@ LEVELS of values that are critical, also need to know if higher or lower than ma
 - RRDTOOL to capture motion events
 - dash-modern.html has the latest charting
 - Charts:
-	- Change to timeseries graphs and epoch timestamp data
 	- change addChartData to include timestamp
 	- Get controller to build up dataset, not dashboard
 	- Have client request (sockets) the data set to graph, then draw
@@ -285,14 +320,14 @@ LEVELS of values that are critical, also need to know if higher or lower than ma
 
 ## Gateway
 - more granular control of when to send emails, e.g. priority
-- Move to database for all data
+- Move to database for all data, maybe sqlite (works with node.js)
 - Have schedules and structure, e.g. alert on motion when no-one home, or heater on when after 5pm and someone home
 - Maybe add a "source" field to controls. e.g. "url:http://weatheraddress" or "sensor,sensorid" or "file:filename"
 - Gather all the functions that execute at startup in one place. Maybe wrap with a main()
 - Maybe combine nodemon and forever to cover all eventualities
 - Use 'winston-daily-rotate-file' or 'pino' module to manage log files
 - Improve timers - use setinterval
-- Move things like Tuya id and keys to environment variables, maybe using dotenv
+- [Done] Move things like Tuya id and keys to environment variables, maybe using dotenv
 - Implement rate limiting on http requests
 
 

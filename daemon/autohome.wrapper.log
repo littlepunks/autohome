@@ -1,0 +1,16 @@
+2025-07-10 20:36:31 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\littlepunk\Documents\autohome\node_modules\node-windows\lib\wrapper.js --file C:\Users\littlepunk\Documents\autohome\autohome.js --scriptoptions= --log "AutoHome wrapper" --grow 0.9 --wait 30 --maxrestarts 3 --abortonerror n --stopparentfirst undefined --maxretries 5
+2025-07-10 20:36:31 - Started 8700
+2025-07-22 18:34:46 - Stopping autohome.exe
+2025-07-22 18:34:46 - ProcessKill 8700
+2025-07-22 18:34:47 - Found child process: 4160 Name: conhost.exe
+2025-07-22 18:34:47 - Found child process: 1156 Name: node.exe
+2025-07-22 18:34:47 - Stopping process 4160
+2025-07-22 18:34:47 - Send SIGINT 4160
+2025-07-22 18:34:47 - SIGINT to 4160 failed - Killing as fallback
+2025-07-22 18:34:47 - Stopping process 1156
+2025-07-22 18:34:47 - Send SIGINT 1156
+2025-07-22 18:34:47 - SIGINT to 1156 failed - Killing as fallback
+2025-07-22 18:34:47 - Stopping process 8700
+2025-07-22 18:34:47 - Send SIGINT 8700
+2025-07-22 18:34:47 - SIGINT to 8700 failed - Killing as fallback
+2025-07-22 18:34:47 - Finished autohome.exe

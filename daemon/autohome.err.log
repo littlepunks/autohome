@@ -1,0 +1,32 @@
+TCP 192.168.68.60:9999 Error: TCP Timeout after 10000ms
+192.168.68.60:9999 {"system":{"get_sysinfo":{}}}
+    at Timeout._onTimeout (C:\Users\littlepunk\Documents\autohome\node_modules\tplink-smarthome-api\lib\network\tcp-socket.js:58:36)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+Error: TCP Timeout after 10000ms
+192.168.68.60:9999 {"system":{"get_sysinfo":{}}}
+    at Timeout._onTimeout (C:\Users\littlepunk\Documents\autohome\node_modules\tplink-smarthome-api\lib\network\tcp-socket.js:58:36)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+
+Node.js v22.14.0
+TCP 192.168.68.61:9999 Error: TCP Timeout after 10000ms
+192.168.68.61:9999 {"system":{"get_sysinfo":{}}}
+    at Timeout._onTimeout (C:\Users\littlepunk\Documents\autohome\node_modules\tplink-smarthome-api\lib\network\tcp-socket.js:58:36)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+node:internal/process/promises:394
+    triggerUncaughtException(err, true /* fromPromise */);
+    ^
+
+Error: TCP Timeout after 10000ms
+192.168.68.61:9999 {"system":{"get_sysinfo":{}}}
+    at Timeout._onTimeout (C:\Users\littlepunk\Documents\autohome\node_modules\tplink-smarthome-api\lib\network\tcp-socket.js:58:36)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+
+Node.js v22.14.0

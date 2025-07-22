@@ -379,6 +379,76 @@ function appendData(str) {
     }
 }
 
+
+// Get power usage data from Mercury Energy for the last month
+// =========================================================
+// Use these from .env
+//     OPOWER_USERNAME
+//     OPOWER_PASSWORD
+
+function getDateStringFromDelta(deltaDays) {
+  const date = new Date();
+  date.setDate(date.getDate() + deltaDays);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+// This removes unnecessary headers from the power data and returns just the data lines
+function trimToFirstDateLine(text) {
+  const lines = text.split(/\r?\n/);
+  const dateLineIndex = lines.findIndex(line => /^\d{4}-\d{2}-\d{2}/.test(line.trim()));
+
+  if (dateLineIndex === -1) {
+    console.log('No power data found');
+    return ''; // No date line found
+  }
+
+  return lines.slice(dateLineIndex).join('\n');
+}
+
+function trimEmptyLines(text) {
+  return text
+    .split(/\r?\n/)               // Split into lines
+    .filter(line => line.trim())  // Remove empty or whitespace-only lines
+    .join('\n');                  // Rejoin into a single string
+}
+
+
+const { OpowerClient } = require('./node-opower.js');
+
+
+// (async () => {
+async function getPowerData() {
+  try {
+    let opowerUser = process.env.OPOWER_USERNAME;
+    let opowerPassword = process.env.OPOWER_PASSWORD;
+
+    let startDate = getDateStringFromDelta(-90);
+    let endDate = getDateStringFromDelta(-60);
+    const clientConfig = {
+        username: opowerUser,
+        password: opowerPassword
+      };
+
+    const client = new OpowerClient(clientConfig);
+    logMsg('I', `Fetching power data from Mercury from ${startDate} to ${endDate} with ${opowerUser} ...`);
+    const usage = await client.getUsage(startDate, endDate);
+    const usageData = trimToFirstDateLine(usage);
+    logMsg('I',`Power data:\n${trimEmptyLines(usageData)}`);
+  }
+  catch (error) {
+    console.error('❌ Error fetching power data:', error);
+  }
+}
+// )();
+getPowerData();
+
+
+
 async function getWeatherFromMetService() {
     // Getting data from the MetService API
     // =========================================================

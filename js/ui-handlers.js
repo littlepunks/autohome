@@ -41,6 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showOnlyCanvas(action);
         document.getElementById('activityLogContainer').style.display = 'none';
         break;
+      case 'powerCanvas':
+        showOnlyCanvas(action);
+        document.getElementById('activityLogContainer').style.display = 'none';
+        window.updatePower();
+        break;
       case 'Activity':
         // Hide all canvases
         const allCanvases = document.querySelectorAll('.canvas-container canvas');
