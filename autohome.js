@@ -271,7 +271,7 @@ function readSettings() {
         conf = parsedConfig;
 
     } catch (err) {
-        console.error("Error reading settings:", err.message);
+        logMsg('E', "Error reading settings:", err.message);
     }
 
     logMsg('I', 'Settings loaded');
@@ -403,7 +403,7 @@ function trimToFirstDateLine(text) {
   const dateLineIndex = lines.findIndex(line => /^\d{4}-\d{2}-\d{2}/.test(line.trim()));
 
   if (dateLineIndex === -1) {
-    console.log('No power data found');
+    logMsg('E', 'No power data found in data returned from Mercury');
     return ''; // No date line found
   }
 
@@ -441,7 +441,17 @@ async function getPowerData() {
     logMsg('I',`Power data:\n${trimEmptyLines(usageData)}`);
   }
   catch (error) {
-    console.error('❌ Error fetching power data:', error);
+    // Check for Opower API error
+    if (error.message && error.message.includes('Unable to obtain a JWT')) {
+      logMsg('E', 'Could not fetch power data: The Opower service is temporarily unavailable (503 error). Please try again later.');
+    } else if (error.message && error.message.includes('opower exited')) {
+      // Show just the main error line for other opower errors
+      const lines = error.message.split('\n');
+      logMsg('E','Error fetching power data:', lines[0]);
+    } else {
+      // Fallback for other errors
+      logMsg('E', 'Error fetching power data:', error);
+    }
   }
 }
 // )();
@@ -498,7 +508,6 @@ async function getWeatherFromMetService() {
             throw new Error(`Unexpected data type for precipitation rate: ${typeof precipitationRate}`);
         }
 
-        //console.log(JSON.stringify(json.dimensions.time.data, null, 2), JSON.stringify(json.variables["precipitation.rate"].data[0], null, 2));
         // Send the precipitation rate to the MySensors gateway
         decode(`201;0;${MS.C_SET};0;${MS.V_TEMP};${precipitationRate.toFixed(1)}`);
     } catch (error) {

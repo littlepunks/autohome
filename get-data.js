@@ -50,7 +50,7 @@ const { OpowerClient } = require('./node-opower.js');
 
     const client = new OpowerClient(clientConfig);
     // const usage = await client.getUsage('2025-05-01', '2025-05-31');
-    console.log(`Fetching power data from Mercury from ${startDate} to ${endDate} with ${opowerUser} ...`);
+    console.log(`Fetching power data from Mercury from ${startDate} to ${endDate} with ${opowerUser} and ${opowerPassword}...`);
     const usage = await client.getUsage(startDate, endDate);
     //console.log("Here it is:" + usage);
     const usageData = trimToFirstDateLine(usage);
@@ -60,7 +60,17 @@ const { OpowerClient } = require('./node-opower.js');
     console.log(trimEmptyLines(usageData));
   }
   catch (error) {
-    console.error('❌ Error fetching power data:', error);
+    // Check for Opower API error
+    if (error.message && error.message.includes('Unable to obtain a JWT')) {
+      console.error('❌ Could not fetch power data: The Opower service is temporarily unavailable (503 error). Please try again later.');
+    } else if (error.message && error.message.includes('opower exited')) {
+      // Show just the main error line for other opower errors
+      const lines = error.message.split('\n');
+      console.error('❌ Error fetching power data:', lines[0]);
+    } else {
+      // Fallback for other errors
+      console.error('❌ Error fetching power data:', error);
+    }
   }
 }
 )();
