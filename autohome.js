@@ -439,6 +439,10 @@ async function getPowerData() {
     const usage = await client.getUsage(startDate, endDate);
     const usageData = trimToFirstDateLine(usage);
     logMsg('I',`Power data:\n${trimEmptyLines(usageData)}`);
+    //?? Add: Store and emit power data
+    latestPowerData = trimEmptyLines(usageData);
+    io.emit("PowerData", latestPowerData);
+    //??
   }
   catch (error) {
     // Check for Opower API error
@@ -825,6 +829,9 @@ function checkSensor(sensor) {
     }
 }
 
+//??
+let latestPowerData = ""; // Store latest power data for new clients
+//??
 
 // What to serve from the root address. http://localhost/
 app.get('/', function(req, res){
@@ -878,6 +885,12 @@ logMsg('I', 'Starting io handler');
 io.on("connection", function (socket) {
     logMsg("DC", "Web client connected");
 
+    //?? Send latest power data on connect
+    if (latestPowerData) {
+      socket.emit("PowerData", latestPowerData);
+    }
+    //??
+
     // Listen for client messages
     socket.on("ClientMsg", function (msg) {
         // Clean up and process the received message
@@ -918,6 +931,11 @@ io.on("connection", function (socket) {
     function handleInit() {
         io.emit("AllSensors", JSON.stringify(conf.mysensors.sensornodes)); // Emit sensor nodes data
         logMsg("DR", "Init requested");
+        //?? Send latest power data to this client
+        if (latestPowerData) {
+          socket.emit("PowerData", latestPowerData);
+        }
+        //??
     }
 
     // function handleButtonOrCheckbox(buttonId) {
