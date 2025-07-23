@@ -4,6 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById('homeCanvas');
   const contextMenu = document.getElementById('contextMenu');
 
+  // Add: Power log container reference
+  //??
+  const powerLogContainer = document.getElementById('powerLogContainer');
+  const powerLog = document.getElementById('powerLog');
+  //??
   // Start with drawing the dashboard (home screen)
   window.drawDash();
 
@@ -42,8 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('activityLogContainer').style.display = 'none';
         break;
       case 'powerCanvas':
+        // Hide all canvases
         showOnlyCanvas(action);
         document.getElementById('activityLogContainer').style.display = 'none';
+        //?? Show power log container, hide others
+        if (powerLogContainer) powerLogContainer.style.display = 'block';
+        //??
         window.updatePower();
         break;
       case 'Activity':
@@ -76,6 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
       default:
         console.log(`Unhandled menu action: ${action}`);
         document.getElementById('activityLogContainer').style.display = 'none';
+        //??
+        if (powerLogContainer) powerLogContainer.style.display = 'none';
+        //??
     }
   };
 
@@ -108,4 +120,24 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(`Context menu action: ${action}`);
     contextMenu.style.display = 'none';
   };
+
+  //?? Add: Function to update power log display
+  window.updatePowerLog = function (text) {
+    if (powerLog) {
+      powerLog.innerText = text;
+      if (powerLogContainer) {
+        powerLogContainer.style.display = 'block';
+        powerLogContainer.scrollTop = powerLogContainer.scrollHeight;
+      }
+    }
+  };
+
+  // Listen for power data from server
+  if (window.io) {
+    const socket = window.io();
+    socket.on("PowerData", (data) => {
+      window.updatePowerLog(data);
+    });
+  }
+  //??
 });
