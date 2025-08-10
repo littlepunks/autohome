@@ -2,9 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <!--<link rel="icon" type="image/x-icon" href="/images/favicon.ico"> -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+  <!-- PNG favicons for modern browsers -->
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48x48.png">
+
+  <!-- High-resolution icon for Apple devices -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+  <!-- Android/Progressive Web App icon -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
+
+  <!-- Safari pinned tab icon -->
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <!-- Windows tile icon -->
+  <meta name="msapplication-TileImage" content="/images/mstile-150x150.png">
+  <meta name="msapplication-TileColor" content="#2b5797">
+
+
   <title>Autohome - Modern Dash</title>
 
   <!-- External libraries -->
@@ -53,7 +74,7 @@
       </div>
     </li>
     <li><div id="connection-status">
-        <div id="tooltip"><span style="color: lightgreen">Green</span> is good<br><span style="color: orangered">Red</span> is a problem</div>
+        <div id="tooltip"><span class="status-green">Green</span> is good<br><span class="status-red">Red</span> is a problem</div>
 
     </div></li>
   </ul>
@@ -65,12 +86,12 @@
     <canvas id="weatherCanvas" width="150" height="754"></canvas>
     <canvas id="weatherHistoryCanvas" width="150" height="754"></canvas>
     <canvas id="powerCanvas" width="150" height="754"></canvas>
-    <div id="activityLogContainer" style="display:none; width:100%; height:754px; overflow-y:auto; background:black; color:white; font-family:monospace; font-size:14px; padding:10px; box-sizing:border-box;">
-      <div id="activityLog" style="width:100%;"></div>
+    <div id="activityLogContainer">
+      <div id="activityLog"></div>
     </div>
     <!-- //??-->
-    <div id="powerLogContainer" style="display:none; width:100%; height:754px; overflow-y:auto; background:black; color:white; font-family:monospace; font-size:14px; padding:10px; box-sizing:border-box;">
-      <div id="powerLog" style="width:100%;"></div>
+    <div id="powerLogContainer">
+      <div id="powerLog"></div>
     </div>
     <!-- //??-->
   </div>

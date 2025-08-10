@@ -37,7 +37,7 @@ class OpowerClient {
       // insert --utility flag before the utility name
       // const pyArgs = ['-m', 'opower', '--utility', this.utility, ...args];
       const pyArgs = ['-m', 'opower', '--utility', this.utility, '--username', this.username, '--password', this.password, ...args];
-      console.log(`Command line is: python ${pyArgs}`);
+      //console.log(`Command line is: python ${pyArgs}`);
       const py = spawn('python', pyArgs);
       let output = '';
       let error = '';

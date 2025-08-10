@@ -94,7 +94,17 @@ function startTPLink() {
 				plugDetail.getSysInfo().then(p => {
 					//console.log(`${p.alias}: ${p.relay_state}`)
 					parent.updateSmartDeviceStatus(p.alias, (p.relay_state === 1) ? true : false);
+				})
+				.catch(err => {
+					logMsg('E',`Error getting sysinfo for ${device.alias} (${device.host}): Device did not respond in time.`);
 				})				
+			})
+			.catch(err => {
+				if (err.message && err.message.startsWith('TCP Timeout')) {
+					logMsg('E', `Timeout polling TP-Link device ${device.alias} (${device.host}): Device did not respond in time.`);
+				} else {
+					logMsg('E', `Error polling TP-Link device ${device.alias} (${device.host}): ${err.message || err}`);
+				}
 			})
 			setTimeout(pollDevice, DEVICEPOLLINGINTERVAL);
 		}, DEVICEPOLLINGINTERVAL);

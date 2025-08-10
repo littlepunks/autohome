@@ -1,5 +1,12 @@
-require('dotenv').config();
+// This is a test script to get power data from Mercury using
+// the .env credentials and the underlying opower Python module
+// but is othwerwise independent of the rest of autohome.
+//
+// To help troubleshoot this file the following command line can 
+// be used to check that the Mercury end of things is ok:
+//    python -m opower --utility mercury --username dave.jacobsen@gmail.com --password {ENTER PASSWORD} --start_date 2025-04-24 --end_date 2025-05-24
 
+require('dotenv').config();
 
 // Return a YYYY-MM-DD strings from an integer delta based on todays date
 function getDateStringFromDelta(deltaDays) {
