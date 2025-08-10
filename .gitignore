@@ -15,6 +15,9 @@ test.sh
 .env
 backups/
 rrdtool/
-*.png
+*1d*.png
+*1w*.png
+*1m*.png
+*1y*.png
 sensor_chart.png
-images/*.png
+temp_g*.png
